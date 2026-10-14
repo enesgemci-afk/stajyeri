@@ -34,7 +34,11 @@ export default function OgrenciKayit() {
     })
 
     if (signUpError) {
-      setError(signUpError.message)
+      setError(
+        signUpError.message === 'User already registered'
+          ? 'Bu e-posta adresi ile zaten bir hesabınız var. Lütfen giriş yapın.'
+          : signUpError.message
+      )
       setLoading(false)
       return
     }

@@ -45,11 +45,9 @@ export default function GirisPage() {
           .eq('id', data.user.id)
           .maybeSingle();
 
-        // Role göre doğru panele veya ana sayfaya yönlendir
+        // Role göre doğru sayfaya yönlendir (öğrenci paneli henüz mevcut değil)
         if (profile?.role === 'employer') {
-          router.push('/isveren');
-        } else if (profile?.role === 'student') {
-          router.push('/ogrenci');
+          router.push('/ilan-ver');
         } else {
           router.push('/');
         }

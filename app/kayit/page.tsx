@@ -85,7 +85,7 @@ export default function KayitPage() {
           });
 
         if (stError) throw stError;
-        router.push('/ogrenci');
+        router.push('/');
       } else {
         const { error: compError } = await supabase
           .from('company_details')
@@ -98,11 +98,16 @@ export default function KayitPage() {
           });
 
         if (compError) throw compError;
-        router.push('/isveren');
+        router.push('/ilan-ver');
       }
 
     } catch (err: any) {
-      setErrorMsg(err.message || 'Kayıt işlemi sırasında bir hata oluştu.');
+      const msg = err?.message || '';
+      setErrorMsg(
+        msg === 'User already registered'
+          ? 'Bu e-posta adresi ile zaten bir hesabınız var. Lütfen giriş yapın.'
+          : msg || 'Kayıt işlemi sırasında bir hata oluştu.'
+      );
     } finally {
       setLoading(false);
     }

@@ -69,9 +69,14 @@ export default function IsverenKayitPage() {
 
       if (compError) throw compError;
 
-      router.push('/isveren');
+      router.push('/ilan-ver');
     } catch (err: any) {
-      setErrorMsg(err.message || 'Kayıt sırasında bir hata oluştu.');
+      const msg = err?.message || '';
+      setErrorMsg(
+        msg === 'User already registered'
+          ? 'Bu e-posta adresi ile zaten bir hesabınız var. Lütfen giriş yapın.'
+          : msg || 'Kayıt sırasında bir hata oluştu.'
+      );
     } finally {
       setLoading(false);
     }

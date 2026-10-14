@@ -4,148 +4,126 @@ import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { GraduationCap, Mail, Lock, ArrowLeft, AlertCircle, LogIn } from 'lucide-react';
 
-export default function OgrenciKayit() {
+export default function OgrenciGirisPage() {
   const router = useRouter();
-  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [field, setField] = useState('Bilişim Teknolojileri');
-  const [educationLevel, setEducationLevel] = useState('MESEM (Çırak - 9, 10, 11. Sınıf)');
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
+    setErrorMsg(null);
 
-    const { data, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: fullName,
-          role: 'student',
-          field,
-          education_level: educationLevel,
-        },
-      },
-    });
+    try {
+      // 1. Supabase ile Giriş Yap
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password: password.trim(),
+      });
 
-    if (signUpError) {
-      setError(signUpError.message);
+      if (error) throw error;
+
+      // 2. Giriş başarılıysa ana sayfadaki ilan listesine yönlendir
+      if (data.user) {
+        router.push('/');
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message === 'Invalid login credentials'
+        ? 'E-posta adresi veya şifre hatalı.'
+        : err.message || 'Giriş yapılırken bir hata oluştu.');
+    } finally {
       setLoading(false);
-      return;
     }
-
-    // Kayıt başarılı olunca doğrudan ana sayfaya yönlendir
-    router.push('/');
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
-        <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center mx-auto mb-3 text-2xl">
-            🎓
-          </div>
-          <h1 className="text-2xl font-bold text-slate-800">Öğrenci & Çırak Kaydı</h1>
-          <p className="text-sm text-slate-500 mt-1">Staj ve çıraklık fırsatlarına ulaşmak için profil oluşturun.</p>
-        </div>
-
-        {error && (
-          <div className="mb-6 p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2">
-            <span>⚠️</span>
-            <span>{error}</span>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Adınız Soyadınız</label>
-            <input
-              type="text"
-              required
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
-              placeholder="Örn: Enes Yılmaz"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">E-Posta Adresi</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
-              placeholder="ornek@mail.com"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Şifre</label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
-              placeholder="••••••••"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Meslek Alanınız</label>
-            <select
-              value={field}
-              onChange={(e) => setField(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-slate-800"
-            >
-              <option value="Bilişim Teknolojileri">Bilişim Teknolojileri</option>
-              <option value="Elektrik-Elektronik">Elektrik-Elektronik</option>
-              <option value="Motorlu Araçlar Teknolojisi">Motorlu Araçlar Teknolojisi</option>
-              <option value="Makine Teknolojisi">Makine Teknolojisi</option>
-              <option value="Muhasebe ve Finansman">Muhasebe ve Finansman</option>
-              <option value="Güzellik ve Saç Bakım">Güzellik ve Saç Bakım</option>
-              <option value="Yiyecek İçecek Hizmetleri">Yiyecek İçecek Hizmetleri</option>
-              <option value="Adalet">Adalet</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Eğitim Kademesi</label>
-            <select
-              value={educationLevel}
-              onChange={(e) => setEducationLevel(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-slate-800"
-            >
-              <option value="MESEM (Çırak - 9, 10, 11. Sınıf)">MESEM (Çırak - 9, 10, 11. Sınıf)</option>
-              <option value="MESEM (Kalfa - 12. Sınıf)">MESEM (Kalfa - 12. Sınıf)</option>
-              <option value="Meslek Lisesi (12. Sınıf Stajyeri)">Meslek Lisesi (12. Sınıf Stajyeri)</option>
-              <option value="Üniversite / Ön Lisans Stajyeri">Üniversite / Ön Lisans Stajyeri</option>
-            </select>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3.5 px-4 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl transition duration-200 shadow-sm disabled:opacity-50"
-          >
-            {loading ? 'Kayıt Yapılıyor...' : 'Öğrenci Profili Oluştur'}
-          </button>
-        </form>
-
-        <p className="mt-8 text-center text-sm text-slate-500">
-          Zaten bir hesabınız var mı?{' '}
-          <Link href="/ogrenci/giris" className="text-teal-600 font-semibold hover:underline">
-            Öğrenci Girişi Yap
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between font-sans">
+      <header className="bg-white border-b border-slate-200">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#00A8B5] transition">
+            <ArrowLeft className="w-4 h-4" /> Ana Sayfaya Dön
           </Link>
-        </p>
-      </div>
+          <Link href="/" className="flex items-center">
+            <img src="/logo.png" alt="Stajyeri.net" className="h-8 w-auto object-contain" />
+          </Link>
+        </div>
+      </header>
+
+      <main className="max-w-md w-full mx-auto px-4 py-12 flex-1 flex flex-col justify-center">
+        <div className="bg-white p-8 sm:p-10 rounded-3xl border border-slate-200 shadow-xl">
+          <div className="text-center mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-[#00A8B5]/10 text-[#00A8B5] flex items-center justify-center mx-auto mb-3">
+              <GraduationCap className="w-6 h-6" />
+            </div>
+            <h1 className="text-2xl font-black text-[#0A1931]">Öğrenci Girişi</h1>
+            <p className="text-xs text-slate-500 mt-1">Staj ve çıraklık fırsatlarına ulaşmak için giriş yapın.</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">E-Posta Adresi</label>
+              <div className="relative">
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="ornek@alanadi.com"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#00A8B5] focus:bg-white transition"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Şifre</label>
+              <div className="relative">
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#00A8B5] focus:bg-white transition"
+                />
+              </div>
+            </div>
+
+            {errorMsg && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-600 flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                <span>{errorMsg}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 bg-[#0A1931] hover:bg-[#00A8B5] text-white font-extrabold rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg cursor-pointer"
+            >
+              {loading ? 'Giriş Yapılıyor...' : <><LogIn className="w-4 h-4" /> Öğrenci Girişi</>}
+            </button>
+          </form>
+
+          <div className="mt-6 pt-5 border-t border-slate-100 text-center">
+            <p className="text-xs text-slate-500">
+              Henüz bir hesabınız yok mu?{' '}
+              <Link href="/ogrenci/kayit" className="font-extrabold text-[#00A8B5] hover:underline">
+                Öğrenci Hesabı Oluşturun
+              </Link>
+            </p>
+          </div>
+        </div>
+      </main>
+
+      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+        stajyeri.net &bull; Öğrenci & Çırak Portalı
+      </footer>
     </div>
   );
 }

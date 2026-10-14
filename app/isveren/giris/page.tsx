@@ -26,7 +26,7 @@ export default function IsverenGirisPage() {
 
       if (error) throw error;
       if (data.user) {
-        router.push('/isveren');
+        router.push('/ilan-ver');
       }
     } catch (err: any) {
       setErrorMsg(err.message === 'Invalid login credentials' ? 'E-posta veya şifre hatalı.' : err.message);
