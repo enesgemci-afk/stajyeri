@@ -41,12 +41,25 @@ export default function GirisPage() {
         // 2. Kullanıcının rolünü profilden kontrol et
         const { data: profile } = await supabase
           .from('profiles')
-          .select('role')
+          .select('user_type')
           .eq('id', data.user.id)
           .maybeSingle();
 
+        let isEmployer = profile?.user_type === 'employer';
+
+        // Profil kaydı yoksa ya da eski kayıtlardan rol bilgisi hatalıysa
+        // işletme detay kaydından kontrol et
+        if (!isEmployer) {
+          const { data: company } = await supabase
+            .from('company_details')
+            .select('id')
+            .eq('profile_id', data.user.id)
+            .maybeSingle();
+          isEmployer = !!company;
+        }
+
         // Role göre doğru sayfaya yönlendir (öğrenci paneli henüz mevcut değil)
-        if (profile?.role === 'employer') {
+        if (isEmployer) {
           router.push('/ilan-ver');
         } else {
           router.push('/');

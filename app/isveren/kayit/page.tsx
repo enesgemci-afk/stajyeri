@@ -42,7 +42,7 @@ export default function IsverenKayitPage() {
         options: {
           data: {
             full_name: authorizedName,
-            role: 'employer',
+            user_type: 'employer',
           },
         },
       });
@@ -55,7 +55,7 @@ export default function IsverenKayitPage() {
       await supabase.from('profiles').upsert({
         id: userId,
         full_name: authorizedName,
-        role: 'employer',
+        user_type: 'employer',
       });
 
       // 3. Company Details tablosuna işletme detayını ekle
@@ -73,7 +73,7 @@ export default function IsverenKayitPage() {
     } catch (err: any) {
       const msg = err?.message || '';
       setErrorMsg(
-        msg === 'User already registered'
+        msg.includes('already registered')
           ? 'Bu e-posta adresi ile zaten bir hesabınız var. Lütfen giriş yapın.'
           : msg || 'Kayıt sırasında bir hata oluştu.'
       );

@@ -51,7 +51,7 @@ export default function KayitPage() {
         options: {
           data: {
             full_name: fullName,
-            role: role,
+            user_type: role,
           },
         },
       });
@@ -69,7 +69,7 @@ export default function KayitPage() {
         .upsert({
           id: userId,
           full_name: fullName,
-          role: role,
+          user_type: role,
         });
 
       if (profileError) throw profileError;
@@ -104,7 +104,7 @@ export default function KayitPage() {
     } catch (err: any) {
       const msg = err?.message || '';
       setErrorMsg(
-        msg === 'User already registered'
+        msg.includes('already registered')
           ? 'Bu e-posta adresi ile zaten bir hesabınız var. Lütfen giriş yapın.'
           : msg || 'Kayıt işlemi sırasında bir hata oluştu.'
       );

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
+import { MESEM_FIELDS } from '@/lib/constants'
 
 export default function OgrenciKayit() {
   const router = useRouter()
@@ -26,7 +27,7 @@ export default function OgrenciKayit() {
       options: {
         data: {
           full_name: fullName,
-          role: 'student',
+          user_type: 'student',
           field,
           education_level: educationLevel,
         },
@@ -35,12 +36,36 @@ export default function OgrenciKayit() {
 
     if (signUpError) {
       setError(
-        signUpError.message === 'User already registered'
+        signUpError.message.includes('already registered')
           ? 'Bu e-posta adresi ile zaten bir hesabınız var. Lütfen giriş yapın.'
           : signUpError.message
       )
       setLoading(false)
       return
+    }
+
+    // Profil ve öğrenci detay kayıtlarının doğru oluştuğundan emin ol
+    const userId = data.user?.id
+    if (userId) {
+      await supabase
+        .from('profiles')
+        .upsert({ id: userId, full_name: fullName, user_type: 'student' })
+
+      const { data: existingStudent } = await supabase
+        .from('student_profiles')
+        .select('id')
+        .eq('profile_id', userId)
+        .maybeSingle()
+
+      if (!existingStudent) {
+        await supabase
+          .from('student_profiles')
+          .insert({
+            profile_id: userId,
+            field_name: field,
+            education_level: educationLevel,
+          })
+      }
     }
 
     // Doğrudan ana sayfaya yönlendir
@@ -108,14 +133,9 @@ export default function OgrenciKayit() {
               onChange={(e) => setField(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white"
             >
-              <option value="Bilişim Teknolojileri">Bilişim Teknolojileri</option>
-              <option value="Elektrik-Elektronik">Elektrik-Elektronik</option>
-              <option value="Motorlu Araçlar Teknolojisi">Motorlu Araçlar Teknolojisi</option>
-              <option value="Makine Teknolojisi">Makine Teknolojisi</option>
-              <option value="Muhasebe ve Finansman">Muhasebe ve Finansman</option>
-              <option value="Güzellik ve Saç Bakım">Güzellik ve Saç Bakım</option>
-              <option value="Yiyecek İçecek Hizmetleri">Yiyecek İçecek Hizmetleri</option>
-              <option value="Adalet">Adalet</option>
+              {MESEM_FIELDS.map((f) => (
+                <option key={f} value={f}>{f}</option>
+              ))}
             </select>
           </div>
 
