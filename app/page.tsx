@@ -100,6 +100,7 @@ export default function HomePage() {
 
             <nav className="hidden lg:flex items-center gap-7 text-xs font-bold text-slate-600">
               <Link href="/" className="text-[#00A8B5] transition">Ana Sayfa</Link>
+              <Link href="/basvurularim" className="hover:text-[#00A8B5] transition">Başvurularım</Link>
               <Link href="/tesvik-rehberi" className="hover:text-[#00A8B5] transition">İşletme Teşvik Rehberi</Link>
             </nav>
           </div>
