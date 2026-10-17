@@ -1,33 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Stajyeri.net
 
-## Getting Started
+MESEM çırak adayları, meslek lisesi ve üniversite öğrencileriyle stajyer arayan işletmeleri buluşturan staj platformu.
 
-First, run the development server:
+- **Canlı site:** https://stajyeri.vercel.app/
+- **Framework:** Next.js (App Router) + TypeScript + Tailwind CSS
+- **Veritabanı / Kimlik doğrulama:** Supabase (Auth, Postgres, RLS)
+
+## Özellikler
+
+- Öğrenci ve işveren için ayrı kayıt / giriş akışları (`/ogrenci/kayit`, `/isveren/kayit`)
+- İşletmelerin staj ilanı yayınlaması (`/ilan-ver`), ilan detay sayfaları (`/ilan/id`)
+- Ana sayfada meslek alanı, program tipi ve şehre göre filtrelenebilir ilan listesi
+- MESEM 41 meslek alanı ve 81 il desteği (`lib/constants.ts`)
+- Başvuru sistemi ve yönetim paneli (`/admin`)
+
+## Geliştirme
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ortam değişkenleri `.env.local` dosyasında tutulur (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Yayına Alma
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Depo `main` branch'ine bağlı; GitHub'a push edilen her commit Vercel tarafından otomatik olarak production'a deploy edilir.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
 ## Deploy on Vercel
 
