@@ -94,7 +94,7 @@ export default function HomePage() {
               <img 
                 src="/logo.png" 
                 alt="Stajyeri.net" 
-                style={{ height: '44px', width: 'auto', display: 'block' }}
+                style={{ height: '56px', width: 'auto', display: 'block' }}
               />
             </Link>
 
