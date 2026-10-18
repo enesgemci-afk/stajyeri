@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
 import { MESEM_FIELDS } from '@/lib/constants'
+import SiteHeader from '@/components/SiteHeader'
 
 export default function OgrenciKayit() {
   const router = useRouter()
@@ -73,7 +74,9 @@ export default function OgrenciKayit() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+      <SiteHeader />
+      <main className="flex-1 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
         <div className="text-center mb-8">
           <div className="w-12 h-12 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center mx-auto mb-3">
@@ -169,6 +172,7 @@ export default function OgrenciKayit() {
           </Link>
         </p>
       </div>
+      </main>
     </div>
   )
 }

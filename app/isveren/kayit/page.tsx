@@ -4,13 +4,14 @@ import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { TURKEY_CITIES } from '@/lib/constants';
 import Link from 'next/link';
+import SiteHeader from '@/components/SiteHeader';
 import { useRouter } from 'next/navigation';
 import { 
   Building2, 
   Mail, 
   Lock, 
   User, 
-  ArrowLeft, 
+   
   AlertCircle,
   MapPin,
   Briefcase
@@ -84,16 +85,7 @@ export default function IsverenKayitPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between font-sans">
-      <header className="bg-white border-b border-slate-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#00A8B5] transition">
-            <ArrowLeft className="w-4 h-4" /> Ana Sayfaya Dön
-          </Link>
-          <Link href="/" className="flex items-center">
-            <img src="/logo.png" alt="Stajyeri.net" className="h-8 w-auto object-contain" />
-          </Link>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main className="max-w-md w-full mx-auto px-4 py-10 flex-1 flex flex-col justify-center">
         <div className="bg-white p-8 sm:p-10 rounded-3xl border border-slate-200 shadow-xl">

@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import SiteHeader from '@/components/SiteHeader';
 import { 
   Calculator, 
   ShieldCheck, 
-  ArrowLeft, 
+   
   AlertCircle
 } from 'lucide-react';
 
@@ -37,17 +38,8 @@ export default function TesvikRehberiPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between font-sans">
       
-      {/* Üst Bar */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-          <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#00A8B5] transition">
-            <ArrowLeft className="w-4 h-4" /> Ana Sayfaya Dön
-          </Link>
-          <Link href="/" className="flex items-center">
-            <img src="/logo.png" alt="Stajyeri.net" className="h-10 w-auto object-contain" />
-          </Link>
-        </div>
-      </header>
+      {/* Üst Bar — ortak SiteHeader */}
+      <SiteHeader />
 
       {/* Hero Alanı */}
       <section className="bg-[#0A1931] text-white pt-12 pb-16 px-4 text-center">

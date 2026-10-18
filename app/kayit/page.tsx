@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { MESEM_FIELDS, TURKEY_CITIES } from '@/lib/constants';
 import Link from 'next/link';
+import SiteHeader from '@/components/SiteHeader';
 import { useRouter } from 'next/navigation';
 import { 
   UserPlus, 
@@ -12,7 +13,7 @@ import {
   User, 
   Building2, 
   GraduationCap, 
-  ArrowLeft, 
+   
   AlertCircle,
   MapPin,
   Briefcase
@@ -116,20 +117,8 @@ export default function KayitPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between font-sans">
       
-      {/* Üst Bar */}
-      <header className="bg-white border-b border-slate-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link 
-            href="/" 
-            className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#00A8B5] transition"
-          >
-            <ArrowLeft className="w-4 h-4" /> Ana Sayfaya Dön
-          </Link>
-          <Link href="/" className="flex items-center">
-            <img src="/logo.png" alt="Stajyeri.net" className="h-8 w-auto object-contain" />
-          </Link>
-        </div>
-      </header>
+      {/* Üst Bar — ortak SiteHeader */}
+      <SiteHeader />
 
       {/* Form Alanı */}
       <main className="max-w-lg w-full mx-auto px-4 py-10 flex-1 flex flex-col justify-center">

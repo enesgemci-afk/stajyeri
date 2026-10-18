@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { MESEM_FIELDS, PROGRAM_TYPES, TURKEY_CITIES } from '@/lib/constants';
 import Link from 'next/link';
+import SiteHeader from '@/components/SiteHeader';
+
 import { 
   Wrench, 
   Calendar, 
@@ -84,29 +86,10 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between font-sans">
       
-      {/* 1. Header (Kariyer.net Tipi Öğrenci & İşveren Ayrılmış Menü) */}
-      <header className="bg-white border-b border-slate-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          
-          {/* Sol: Logo ve Linkler */}
-          <div className="flex items-center gap-8">
-            <Link href="/" className="flex items-center">
-              <img 
-                src="/logo.png" 
-                alt="Stajyeri.net" 
-                style={{ height: '56px', width: 'auto', display: 'block' }}
-              />
-            </Link>
-
-            <nav className="hidden lg:flex items-center gap-7 text-xs font-bold text-slate-600">
-              <Link href="/" className="text-[#00A8B5] transition">Ana Sayfa</Link>
-              <Link href="/basvurularim" className="hover:text-[#00A8B5] transition">Başvurularım</Link>
-              <Link href="/tesvik-rehberi" className="hover:text-[#00A8B5] transition">İşletme Teşvik Rehberi</Link>
-            </nav>
-          </div>
-
-          {/* Sağ: Öğrenci Girişi & İşveren Girişi & İlan Ver */}
-          <div className="flex items-center gap-2 sm:gap-3">
+      {/* 1. Header — tüm sayfalarda ortak tek stil (SiteHeader) */}
+      <SiteHeader
+        right={
+          <>
             {/* Öğrenci Girişi */}
             <Link
               href="/ogrenci/giris"
@@ -130,10 +113,9 @@ export default function HomePage() {
             >
               <PlusCircle className="w-4 h-4" /> İlan Ver
             </Link>
-          </div>
-
-        </div>
-      </header>
+          </>
+        }
+      />
 
       {/* 2. Hero Bölümü */}
       <section className="bg-[#0A1931] text-white pt-20 pb-28 px-4 text-center relative overflow-hidden">

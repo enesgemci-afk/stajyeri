@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { MESEM_FIELDS, PROGRAM_TYPES, TURKEY_CITIES } from '@/lib/constants';
-import Link from 'next/link';
+import SiteHeader from '@/components/SiteHeader';
 import { useRouter } from 'next/navigation';
-import { Sparkles, ArrowLeft } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 export default function IlanVerPage() {
   const router = useRouter();
@@ -104,16 +104,9 @@ export default function IlanVerPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] py-10 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="max-w-3xl mx-auto">
-        <div className="mb-6 flex items-center justify-between">
-          <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#00A8B5] transition">
-            <ArrowLeft className="w-4 h-4" /> Ana Sayfaya Dön
-          </Link>
-          <span className="text-lg font-black text-[#0A1931]">
-            Stajyeri<span className="text-[#00A8B5]">.net</span>
-          </span>
-        </div>
+    <div className="min-h-screen bg-[#F8FAFC] font-sans">
+      <SiteHeader />
+      <div className="max-w-3xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
 
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-10">
           <div className="border-b border-slate-100 pb-5 mb-6">

@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import Link from 'next/link';
+import SiteHeader from '@/components/SiteHeader';
+
 import { 
   ShieldCheck, 
   Briefcase, 
@@ -257,40 +259,33 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between font-sans">
       
-      {/* Admin Üst Bar */}
-      <header className="bg-[#0A1931] text-white sticky top-0 z-50 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="inline-flex items-center gap-1 text-xs font-bold text-slate-300 hover:text-white transition">
-              <ArrowLeft className="w-4 h-4" /> Siteye Dön
-            </Link>
-            <div className="h-4 w-px bg-slate-700"></div>
-            <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-md bg-[#FF6B00] text-white text-[10px] font-black tracking-wider uppercase">
-                YÖNETİCİ: ENES
-              </span>
-              <h1 className="text-base font-black tracking-tight text-white flex items-center gap-1.5">
-                Stajyeri<span className="text-[#00A8B5]">.net</span> Admin Paneli
-              </h1>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
+      {/* Admin Üst Bar — ortak SiteHeader */}
+      <SiteHeader
+        backLabel="Siteye Dön"
+        right={
+          <>
+            <span className="px-2.5 py-0.5 rounded-md bg-[#FF6B00] text-white text-[10px] font-black tracking-wider uppercase">
+              YÖNETİCİ: ENES
+            </span>
             <button
               onClick={loadAdminData}
-              className="text-xs font-bold bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition cursor-pointer"
+              className="text-xs font-bold text-slate-600 hover:text-[#00A8B5] bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition cursor-pointer"
             >
               Yenile
             </button>
             <button
               onClick={handleAdminLogout}
-              className="text-xs font-bold bg-red-600/80 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg transition flex items-center gap-1 cursor-pointer"
+              className="text-xs font-bold bg-red-600/90 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg transition flex items-center gap-1 cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" /> Çıkış Yap
             </button>
-          </div>
-        </div>
-      </header>
+          </>
+        }
+      >
+        <h1 className="hidden md:flex text-sm sm:text-base font-black tracking-tight text-[#0A1931] items-center gap-1.5">
+          Stajyeri<span className="text-[#00A8B5]">.net</span> Admin Paneli
+        </h1>
+      </SiteHeader>
 
       {/* Ana İçerik */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
