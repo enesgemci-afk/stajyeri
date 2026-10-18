@@ -122,7 +122,7 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto relative z-10">
           
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00A8B5]/15 border border-[#00A8B5]/30 text-[#00E5FF] text-[11px] font-bold mb-6">
-            <Sparkles className="w-3.5 h-3.5" /> MESEM ve Meslek Lisesi Öğrencilerine Özel İlk Platform
+            <Sparkles className="w-3.5 h-3.5" /> MESEM ve Meslek Lisesi Öğrencilerine Özel Platform
           </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight">
@@ -131,14 +131,21 @@ export default function HomePage() {
           </h1>
 
           <p className="mt-5 text-slate-300 text-xs sm:text-sm max-w-2xl mx-auto font-normal leading-relaxed">
-            MEB 3308 Sayılı Kanun güvencesiyle çıraklık, kalfalık ve meslek lisesi stajyerlerini arayan binlerce onaylı işletmeyle anında eşleşin.
+            3308 sayılı Meslekî Eğitim Kanunu güvencesiyle MESEM çıraklığı ve meslek lisesi stajı arayan öğrencileri onaylı işletmelerle anında eşleştiriyoruz.
           </p>
+
+          <Link
+            href="/imep"
+            className="inline-flex items-center gap-1 mt-4 text-[11px] font-bold text-[#00E5FF] hover:text-white transition"
+          >
+            İMEP (İşletmelerde Mesleki Eğitim Programı) nedir? <ChevronRight className="w-3.5 h-3.5" />
+          </Link>
 
           {/* 3. Standart Dropdown Arama Çubuğu */}
           <div className="mt-10 bg-white p-3 rounded-2xl sm:rounded-full shadow-2xl max-w-4xl mx-auto text-left">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
               
-              {/* Meslek Alanı (33 MESEM Alanı) */}
+              {/* Meslek Alanı — MESEM alanları (lib/constants.ts) */}
               <div className="md:col-span-4 px-4 py-2 border-b md:border-b-0 md:border-r border-slate-100 flex items-center gap-3">
                 <Wrench className="w-4 h-4 text-[#00A8B5] flex-shrink-0" />
                 <div className="w-full">
@@ -206,6 +213,7 @@ export default function HomePage() {
                 )}
                 <button
                   type="button"
+                  onClick={() => document.getElementById('ilanlar')?.scrollIntoView({ behavior: 'smooth' })}
                   className="w-full py-3 bg-[#00A8B5] hover:bg-[#00929e] text-white font-extrabold rounded-xl sm:rounded-full text-xs transition flex items-center justify-center gap-1.5 shadow-md shadow-[#00A8B5]/25 cursor-pointer"
                 >
                   <Search className="w-3.5 h-3.5" /> Staj Bul
@@ -222,16 +230,16 @@ export default function HomePage() {
               <p className="text-[11px] text-slate-400 font-medium mt-0.5">Resmi Meslek Alanı</p>
             </div>
             <div>
-              <p className="text-2xl sm:text-3xl font-black text-[#00E5FF]">1.850+</p>
-              <p className="text-[11px] text-slate-400 font-medium mt-0.5">Onaylı Sanayi & İşletme</p>
+              <p className="text-2xl sm:text-3xl font-black text-[#00E5FF]">544B+</p>
+              <p className="text-[11px] text-slate-400 font-medium mt-0.5">MEB MESEM Öğrencisi</p>
             </div>
             <div>
-              <p className="text-2xl sm:text-3xl font-black text-[#FF6B00]">12.000+</p>
-              <p className="text-[11px] text-slate-400 font-medium mt-0.5">Kayıtlı Stajyer & Çırak</p>
+              <p className="text-2xl sm:text-3xl font-black text-[#FF6B00]">{TURKEY_CITIES.length}</p>
+              <p className="text-[11px] text-slate-400 font-medium mt-0.5">İlde Staj İmkânı</p>
             </div>
             <div>
-              <p className="text-2xl sm:text-3xl font-black text-white">%100</p>
-              <p className="text-[11px] text-slate-400 font-medium mt-0.5">MEB Teşvik Uyumu</p>
+              <p className="text-2xl sm:text-3xl font-black text-white">%30-%50</p>
+              <p className="text-[11px] text-slate-400 font-medium mt-0.5">Garantili Öğrenci Ücreti</p>
             </div>
           </div>
 
@@ -239,7 +247,7 @@ export default function HomePage() {
       </section>
 
       {/* 5. Canlı İlanlar Bölümü */}
-      <main className="max-w-6xl mx-auto px-4 py-16 flex-1 w-full">
+      <main id="ilanlar" className="max-w-6xl mx-auto px-4 py-16 flex-1 w-full">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-xl sm:text-2xl font-black text-[#0A1931]">

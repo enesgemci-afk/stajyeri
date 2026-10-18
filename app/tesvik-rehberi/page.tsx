@@ -15,7 +15,8 @@ export default function TesvikRehberiPage() {
   const [employeeCount, setEmployeeCount] = useState<number>(15);
   const [studentCount, setStudentCount] = useState<number>(2);
 
-  const netMinWage = 22104;
+  // 2026 yılı net asgari ücreti (brüt 33.030 TL / net 28.075 TL)
+  const netMinWage = 28075;
 
   let baseSalary = 0;
   let govContributionPerStudent = 0;
@@ -64,6 +65,11 @@ export default function TesvikRehberiPage() {
             <h2 className="text-base font-black text-[#0A1931] flex items-center gap-2">
               <Calculator className="w-5 h-5 text-[#00A8B5]" /> Hesaplama Parametreleri
             </h2>
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              Hesaplamalar <strong className="text-slate-600">2026 yılı net asgari ücreti (28.075 TL)</strong> esas alınır.
+              MESEM çırak ve meslek lisesi 12. sınıf stajyerlerine net asgari ücretin en az %30'u, MESEM kalfa
+              (12. sınıf) öğrencisine en az %50'si ödenir (3308 sayılı Kanun).
+            </p>
 
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-2">Öğrenci Kademesi / Program</label>

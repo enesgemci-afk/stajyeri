@@ -7,6 +7,7 @@ import { ArrowLeft } from 'lucide-react';
 
 const NAV_LINKS = [
   { href: '/', label: 'Ana Sayfa' },
+  { href: '/imep', label: 'İMEP Programı' },
   { href: '/basvurularim', label: 'Başvurularım' },
   { href: '/tesvik-rehberi', label: 'İşletme Teşvik Rehberi' },
 ];
