@@ -86,7 +86,7 @@ export default function KayitPage() {
           });
 
         if (stError) throw stError;
-        router.push('/');
+        router.push('/panel');
       } else {
         const { error: compError } = await supabase
           .from('company_details')
@@ -99,7 +99,7 @@ export default function KayitPage() {
           });
 
         if (compError) throw compError;
-        router.push('/ilan-ver');
+        router.push('/isveren/panel');
       }
 
     } catch (err: any) {

@@ -70,7 +70,7 @@ export default function IsverenKayitPage() {
 
       if (compError) throw compError;
 
-      router.push('/ilan-ver');
+      router.push('/isveren/panel');
     } catch (err: any) {
       const msg = err?.message || '';
       setErrorMsg(

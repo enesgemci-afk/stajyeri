@@ -70,7 +70,7 @@ export default function OgrenciKayit() {
     }
 
     // Doğrudan ana sayfaya yönlendir
-    router.push('/')
+    router.push('/panel')
   }
 
   return (

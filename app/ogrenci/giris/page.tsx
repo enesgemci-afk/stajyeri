@@ -30,7 +30,7 @@ export default function OgrenciGirisPage() {
 
       // 2. Giriş başarılıysa ana sayfadaki ilan listesine yönlendir
       if (data.user) {
-        router.push('/');
+        router.push('/panel');
       }
     } catch (err: any) {
       setErrorMsg(err.message === 'Invalid login credentials'
