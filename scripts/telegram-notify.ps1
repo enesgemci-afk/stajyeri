@@ -42,7 +42,7 @@ $body = @{
 if ($ParseMode -ne '') { $body['parse_mode'] = $ParseMode }
 
 try {
-  $resp = Invoke-RestMethod -Uri $uri -Method Post -Body $body
+  $resp = Invoke-RestMethod -Uri $uri -Method Post -Body $body -TimeoutSec 20
   if ($resp.ok) {
     Write-Host 'Telegram bildirimi gonderildi.'
     exit 0
