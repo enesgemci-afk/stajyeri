@@ -377,6 +377,13 @@ export default function IsverenPanelPage() {
 
             {tab === 'apps' && (
               <section className="mt-4 space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-[11px] text-slate-400 font-bold">Başvuruları aday detayıyla incelemek için:</p>
+                  <Link href="/isveren/basvurular" className="text-[11px] font-extrabold text-[#FF6B00] hover:underline flex items-center gap-1 whitespace-nowrap">
+                    Başvuru Değerlendirme Ekranı <ChevronRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+
                 {actionMsg && (
                   <div className={`p-3 rounded-xl text-[11px] font-bold flex items-center gap-2 ${actionMsg.type === 'ok' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'}`}>
                     <AlertCircle className="w-4 h-4 flex-shrink-0" /> {actionMsg.text}
