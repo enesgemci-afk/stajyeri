@@ -121,13 +121,6 @@ export default function HomePage() {
       <section className="bg-[#0A1931] text-white pt-20 pb-28 px-4 text-center relative overflow-hidden">
         <div className="max-w-5xl mx-auto relative z-10">
 
-          {/* Hero Logosu */}
-          <img
-            src="/logo.png"
-            alt="Stajyeri.net"
-            className="h-24 sm:h-32 w-auto object-contain mx-auto mb-6 drop-shadow-[0_12px_40px_rgba(0,229,255,0.35)]"
-          />
-
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00A8B5]/15 border border-[#00A8B5]/30 text-[#00E5FF] text-[11px] font-bold mb-6">
             <Sparkles className="w-3.5 h-3.5" /> MESEM ve Meslek Lisesi Öğrencilerine Özel Platform
           </div>
