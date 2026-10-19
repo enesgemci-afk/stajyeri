@@ -34,7 +34,10 @@ export default function SiteHeader({
   children,
 }: SiteHeaderProps) {
   const pathname = usePathname();
-  const isHome = pathname === '/';
+  // Menü her sayfada sabit gösterilir. Varsayılan 'Ana Sayfaya Dön' linki
+  // gereksiz olduğundan (Ana Sayfa menüde var) yalnızca özel geri linki
+  // verilmişse (ör. 'İşveren Paneli', 'Siteye Dön') gösterilir.
+  const showBack = backHref !== '/' || backLabel !== 'Ana Sayfaya Dön';
 
   return (
     <header className="bg-white/95 backdrop-blur border-b border-slate-200 sticky top-0 z-50">
@@ -47,27 +50,25 @@ export default function SiteHeader({
           </Link>
           {children}
 
-          {isHome && (
-            <nav className="hidden lg:flex items-center gap-6 text-xs font-bold">
-              {NAV_LINKS.map((link) => {
-                const active = pathname === link.href;
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={active ? 'text-[#00A8B5] transition' : 'text-slate-600 hover:text-[#00A8B5] transition'}
-                  >
-                    {link.label}
-                  </Link>
-                );
-              })}
-            </nav>
-          )}
+          <nav className="hidden lg:flex items-center gap-6 text-xs font-bold">
+            {NAV_LINKS.map((link) => {
+              const active = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={active ? 'text-[#00A8B5] transition' : 'text-slate-600 hover:text-[#00A8B5] transition'}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
         </div>
 
         {/* Sağ: Geri linki + sayfaya özel aksiyonlar */}
         <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-          {!isHome && (
+          {showBack && (
             <Link
               href={backHref}
               className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[#00A8B5] transition"
