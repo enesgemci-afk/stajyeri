@@ -18,7 +18,8 @@ import {
   Bus, 
   Sparkles, 
   ChevronRight, 
-  RotateCcw 
+  RotateCcw,
+  Heart,
 } from 'lucide-react';
 
 interface JobPost {
@@ -29,6 +30,7 @@ interface JobPost {
   city: string;
   district: string;
   quota?: number;
+  created_at?: string;
   has_lunch?: boolean;
   has_shuttle?: boolean;
   company_details?: {
@@ -45,6 +47,15 @@ export default function HomePage() {
   const [selectedField, setSelectedField] = useState<string>('');
   const [selectedProgram, setSelectedProgram] = useState<string>('');
   const [selectedCity, setSelectedCity] = useState<string>('');
+
+  // Tarih filtresi (Kariyer.net tarzı)
+  const [dateRange, setDateRange] = useState<'all' | '7' | '30'>('all');
+
+  // Favoriler (kalp) durumu
+  const [favIds, setFavIds] = useState<Set<string>>(new Set());
+  const [favBusyId, setFavBusyId] = useState<string | null>(null);
+  const [studentId, setStudentId] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     async function fetchJobs() {
@@ -67,20 +78,80 @@ export default function HomePage() {
     }
 
     fetchJobs();
+    loadFavorites();
   }, []);
+
+  // Oturum açmış öğrencinin favori ilanlarını yükle
+  async function loadFavorites() {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (!session?.user) return;
+    setIsLoggedIn(true);
+
+    const { data: sp } = await supabase
+      .from('student_profiles')
+      .select('id')
+      .eq('profile_id', session.user.id)
+      .maybeSingle();
+    if (!sp) return;
+    setStudentId(sp.id);
+
+    const { data: favs } = await supabase
+      .from('favorites')
+      .select('job_id')
+      .eq('student_id', sp.id);
+    if (favs) setFavIds(new Set((favs as { job_id: string }[]).map((f) => f.job_id)));
+  }
+
+  // Kalp butonu: favori ekle/çıkar (oturum yoksa öğrenci girişine yönlendir)
+  const toggleFav = async (jobId: string) => {
+    if (!isLoggedIn || !studentId) {
+      window.location.href = '/ogrenci/giris';
+      return;
+    }
+    if (favBusyId) return;
+    setFavBusyId(jobId);
+    try {
+      if (favIds.has(jobId)) {
+        const { error } = await supabase
+          .from('favorites')
+          .delete()
+          .eq('student_id', studentId)
+          .eq('job_id', jobId);
+        if (!error) {
+          const next = new Set(favIds);
+          next.delete(jobId);
+          setFavIds(next);
+        }
+      } else {
+        const { error } = await supabase
+          .from('favorites')
+          .insert({ job_id: jobId, student_id: studentId });
+        if (!error) setFavIds(new Set(favIds).add(jobId));
+      }
+    } finally {
+      setFavBusyId(null);
+    }
+  };
 
   // Dropdown Filtreleme Mantığı
   const filteredJobs = jobs.filter((job) => {
     const matchesField = selectedField === '' || job.field_name === selectedField;
     const matchesProgram = selectedProgram === '' || job.program_type === selectedProgram;
     const matchesCity = selectedCity === '' || (job.city && job.city.toLowerCase() === selectedCity.toLowerCase());
-    return matchesField && matchesProgram && matchesCity;
+    const matchesDate =
+      dateRange === 'all' ||
+      (job.created_at &&
+        Date.now() - new Date(job.created_at).getTime() <= Number(dateRange) * 24 * 60 * 60 * 1000);
+    return matchesField && matchesProgram && matchesCity && matchesDate;
   });
 
   const handleResetFilters = () => {
     setSelectedField('');
     setSelectedProgram('');
     setSelectedCity('');
+    setDateRange('all');
   };
 
   return (
@@ -146,7 +217,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
               
               {/* Meslek Alanı — MESEM alanları (lib/constants.ts) */}
-              <div className="md:col-span-4 px-4 py-2 border-b md:border-b-0 md:border-r border-slate-100 flex items-center gap-3">
+              <div className="md:col-span-3 px-4 py-2 border-b md:border-b-0 md:border-r border-slate-100 flex items-center gap-3">
                 <Wrench className="w-4 h-4 text-[#00A8B5] flex-shrink-0" />
                 <div className="w-full">
                   <label className="block text-[9px] font-extrabold uppercase tracking-wider text-slate-400">MESLEK ALANI (MESEM)</label>
@@ -164,7 +235,7 @@ export default function HomePage() {
               </div>
 
               {/* Staj Modeli */}
-              <div className="md:col-span-3 px-4 py-2 border-b md:border-b-0 md:border-r border-slate-100 flex items-center gap-3">
+              <div className="md:col-span-2 px-4 py-2 border-b md:border-b-0 md:border-r border-slate-100 flex items-center gap-3">
                 <Calendar className="w-4 h-4 text-[#00A8B5] flex-shrink-0" />
                 <div className="w-full">
                   <label className="block text-[9px] font-extrabold uppercase tracking-wider text-slate-400">STAJ MODELİ</label>
@@ -199,9 +270,26 @@ export default function HomePage() {
                 </div>
               </div>
 
+              {/* Tarih (Kariyer.net tarzı yayın zamanı filtresi) */}
+              <div className="md:col-span-2 px-4 py-2 flex items-center gap-3">
+                <Calendar className="w-4 h-4 text-[#00A8B5] flex-shrink-0" />
+                <div className="w-full">
+                  <label className="block text-[9px] font-extrabold uppercase tracking-wider text-slate-400">YAYIN TARİHİ</label>
+                  <select
+                    value={dateRange}
+                    onChange={(e) => setDateRange(e.target.value as 'all' | '7' | '30')}
+                    className="w-full bg-transparent text-xs font-bold text-slate-800 focus:outline-none cursor-pointer truncate"
+                  >
+                    <option value="all">Tüm İlanlar</option>
+                    <option value="7">Son 7 Gün</option>
+                    <option value="30">Son 30 Gün</option>
+                  </select>
+                </div>
+              </div>
+
               {/* Arama / Sıfırla Butonları */}
               <div className="md:col-span-2 flex items-center gap-1">
-                {(selectedField || selectedProgram || selectedCity) && (
+                {(selectedField || selectedProgram || selectedCity || dateRange !== 'all') && (
                   <button
                     type="button"
                     onClick={handleResetFilters}
@@ -251,20 +339,28 @@ export default function HomePage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-xl sm:text-2xl font-black text-[#0A1931]">
-              {selectedField || selectedCity ? 'Filtrelenen İlanlar' : 'Güncel Staj & Çıraklık İlanları'}
+              {selectedField || selectedCity || selectedProgram || dateRange !== 'all' ? 'Filtrelenen İlanlar' : 'Güncel Staj & Çıraklık İlanları'}
             </h2>
             <p className="text-xs text-slate-500 mt-1">
               {filteredJobs.length} adet onaylı stajyer pozisyonu listeleniyor.
             </p>
           </div>
-          {(selectedField || selectedProgram || selectedCity) && (
-            <button
-              onClick={handleResetFilters}
-              className="text-xs font-bold text-[#FF6B00] hover:underline flex items-center gap-1 cursor-pointer"
+          <div className="flex items-center gap-4 flex-shrink-0">
+            <Link
+              href="/favorilerim"
+              className="text-xs font-bold text-slate-600 hover:text-[#00A8B5] flex items-center gap-1.5 transition"
             >
-              <RotateCcw className="w-3 h-3" /> Filtreleri Temizle
-            </button>
-          )}
+              <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" /> Favorilerim
+            </Link>
+            {(selectedField || selectedProgram || selectedCity || dateRange !== 'all') && (
+              <button
+                onClick={handleResetFilters}
+                className="text-xs font-bold text-[#FF6B00] hover:underline flex items-center gap-1 cursor-pointer"
+              >
+                <RotateCcw className="w-3 h-3" /> Filtreleri Temizle
+              </button>
+            )}
+          </div>
         </div>
 
         {loading ? (
@@ -288,12 +384,35 @@ export default function HomePage() {
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="px-3 py-1 bg-[#00A8B5]/10 text-[#00A8B5] text-[11px] font-extrabold rounded-full">
-                      {job.program_type === 'MESEM_4_1' ? 'MESEM (4 Gün İşletme)' : job.program_type}
-                    </span>
-                    <span className="text-[11px] font-bold text-slate-400">
-                      Kontenjan: <strong className="text-slate-700">{job.quota || 1}</strong>
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 bg-[#00A8B5]/10 text-[#00A8B5] text-[11px] font-extrabold rounded-full">
+                        {job.program_type === 'MESEM_4_1' ? 'MESEM (4 Gün İşletme)' : job.program_type}
+                      </span>
+                      {job.created_at &&
+                        Date.now() - new Date(job.created_at).getTime() < 3 * 24 * 60 * 60 * 1000 && (
+                          <span className="px-2 py-1 bg-[#FF6B00]/10 text-[#FF6B00] text-[10px] font-black rounded-full">
+                            YENİ
+                          </span>
+                        )}
+                    </div>
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      <span className="text-[11px] font-bold text-slate-400">
+                        Kontenjan: <strong className="text-slate-700">{job.quota || 1}</strong>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => toggleFav(job.id)}
+                        disabled={favBusyId === job.id}
+                        title={favIds.has(job.id) ? 'Favorilerden çıkar' : 'Favorilere ekle'}
+                        className={`p-1.5 rounded-lg transition cursor-pointer disabled:opacity-50 ${
+                          favIds.has(job.id)
+                            ? 'text-red-500 hover:bg-red-50'
+                            : 'text-slate-300 hover:text-red-500 hover:bg-red-50'
+                        }`}
+                      >
+                        <Heart className={`w-4 h-4 ${favIds.has(job.id) ? 'fill-red-500' : ''}`} />
+                      </button>
+                    </div>
                   </div>
 
                   <h3 className="text-base font-bold text-[#0A1931] group-hover:text-[#00A8B5] transition line-clamp-1">

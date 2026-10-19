@@ -17,6 +17,8 @@ import {
   Bus,
   Send,
   AlertCircle,
+  Heart,
+  ShieldCheck,
   LogIn,
   ClipboardList,
   Phone,
@@ -62,6 +64,9 @@ export default function IlanDetayPage() {
   const [studentEducation, setStudentEducation] = useState<string | null>(null);
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const [isFav, setIsFav] = useState(false);
+  const [favBusy, setFavBusy] = useState(false);
+  const [kvkkOk, setKvkkOk] = useState(false);
 
   const programLabel =
     PROGRAM_TYPES.find((p) => p.value === job?.program_type)?.label ?? job?.program_type;
@@ -127,6 +132,15 @@ export default function IlanDetayPage() {
           .maybeSingle();
 
         if (existing) setApplied(true);
+
+        // Bu ilan favorilerde mi? (favorites tablosu yoksa sessizce false kalır)
+        const { data: fav } = await supabase
+          .from('favorites')
+          .select('job_id')
+          .eq('student_id', sp.id)
+          .eq('job_id', jobId)
+          .maybeSingle();
+        setIsFav(!!fav);
       }
 
       setLoading(false);
@@ -135,8 +149,39 @@ export default function IlanDetayPage() {
     init();
   }, [jobId]);
 
+  // Kalp butonu: favori ekle/çıkar (oturum yoksa öğrenci girişine yönlendir)
+  const toggleFav = async () => {
+    if (!isLoggedIn || !studentId) {
+      router.push('/ogrenci/giris');
+      return;
+    }
+    if (favBusy) return;
+    setFavBusy(true);
+    try {
+      if (isFav) {
+        const { error } = await supabase
+          .from('favorites')
+          .delete()
+          .eq('student_id', studentId)
+          .eq('job_id', jobId);
+        if (!error) setIsFav(false);
+      } else {
+        const { error } = await supabase
+          .from('favorites')
+          .insert({ job_id: jobId, student_id: studentId });
+        if (!error) setIsFav(true);
+      }
+    } finally {
+      setFavBusy(false);
+    }
+  };
+
   const handleApply = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!kvkkOk) {
+      setErrorMsg('Devam etmek için KVKK Aydınlatma Metni’ni onaylamanız gerekiyor.');
+      return;
+    }
     setErrorMsg('');
     setApplying(true);
 
@@ -167,14 +212,21 @@ export default function IlanDetayPage() {
         setStudentId(sid);
       }
 
-      // 2. Başvuruyu kaydet
-      const { error: appError } = await supabase.from('applications').insert({
+      // 2. Başvuruyu kaydet (KVKK açık rızasıyla; kolon yoksa rıza alanı olmadan dener)
+      const baseApp = {
         job_id: jobId,
         student_id: sid,
         status: 'pending',
         phone: phone.trim() || null,
         message: message.trim() || null,
-      });
+      };
+      let { error: appError } = await supabase
+        .from('applications')
+        .insert({ ...baseApp, kvkk_consented_at: new Date().toISOString() });
+
+      if (appError && /kvkk_consented_at/.test(appError.message)) {
+        ({ error: appError } = await supabase.from('applications').insert(baseApp));
+      }
 
       if (appError) {
         if (appError.code === '23505') {
@@ -346,7 +398,24 @@ export default function IlanDetayPage() {
                 ) : (
                   <form onSubmit={handleApply} className="space-y-4">
                     <div>
-                      <h3 className="text-base font-black text-[#0A1931]">Bu ilana başvurun</h3>
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="text-base font-black text-[#0A1931]">Bu ilana başvurun</h3>
+                        <button
+                          type="button"
+                          onClick={toggleFav}
+                          disabled={favBusy}
+                          title={isFav ? 'Favorilerden çıkar' : 'Favorilere ekle'}
+                          className={`p-2 rounded-xl border transition cursor-pointer disabled:opacity-50 flex-shrink-0 ${
+                            isFav
+                              ? 'bg-red-50 border-red-200'
+                              : 'bg-white border-slate-200 hover:border-red-300'
+                          }`}
+                        >
+                          <Heart
+                            className={`w-4 h-4 ${isFav ? 'fill-red-500 text-red-500' : 'text-slate-400'}`}
+                          />
+                        </button>
+                      </div>
                       <p className="text-xs text-slate-500 mt-1">
                         Bilgileriniz başvuruyla birlikte işletmeye iletilecektir.
                       </p>
@@ -401,6 +470,23 @@ export default function IlanDetayPage() {
                           className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition resize-none"
                         />
                       </div>
+                    </div>
+
+                    <div className="flex items-start gap-2.5 bg-slate-50/70 border border-slate-100 rounded-xl p-3">
+                      <input
+                        id="kvkk-consent"
+                        type="checkbox"
+                        checked={kvkkOk}
+                        onChange={(e) => setKvkkOk(e.target.checked)}
+                        className="mt-0.5 w-4 h-4 accent-[#00A8B5] cursor-pointer flex-shrink-0"
+                      />
+                      <label htmlFor="kvkk-consent" className="text-[11px] text-slate-600 leading-relaxed cursor-pointer">
+                        <Link href="/kvkk" target="_blank" className="font-extrabold text-[#00A8B5] hover:underline">
+                          KVKK Aydınlatma Metni
+                        </Link>
+                        'ni okudum; ad, telefon, meslek alanı ve ön yazı bilgilerimin başvurduğum işletmeyle
+                        paylaşılmasına açık rıza veriyorum. <span className="text-red-500 font-bold">*</span>
+                      </label>
                     </div>
 
                     {errorMsg && (
