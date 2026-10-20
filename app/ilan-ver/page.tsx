@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { MESEM_FIELDS, PROGRAM_TYPES, TURKEY_CITIES } from '@/lib/constants';
+import { JOB_TEMPLATES, GENERIC_JOB_TEMPLATE } from '@/lib/jobTemplates';
 import SiteHeader from '@/components/SiteHeader';
 import { useRouter } from 'next/navigation';
 import { Sparkles } from 'lucide-react';
@@ -231,6 +232,30 @@ export default function IlanVerPage() {
                 />
                 Servis / Ulaşım Var
               </label>
+            </div>
+
+            {/* Hazır iş tanımı şablonu (kariyer.net "Akıllı İlan" mini versiyonu) */}
+            <div className="flex items-start gap-3 bg-[#FF6B00]/5 border border-[#FF6B00]/20 rounded-xl p-3.5">
+              <Sparkles className="w-4 h-4 text-[#FF6B00] flex-shrink-0 mt-0.5" />
+              <div className="min-w-0">
+                <p className="text-[11px] font-bold text-slate-500">
+                  Seçtiğin alan için hazır şablon — 1 dakikada ilan:
+                </p>
+                <p className="text-xs font-black text-[#0A1931] mt-0.5">
+                  {(JOB_TEMPLATES[fieldName] ?? GENERIC_JOB_TEMPLATE).title}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const tpl = JOB_TEMPLATES[fieldName] ?? GENERIC_JOB_TEMPLATE;
+                    setTitle(tpl.title);
+                    setDescription(tpl.description);
+                  }}
+                  className="mt-1.5 text-[11px] font-extrabold text-[#FF6B00] hover:underline cursor-pointer"
+                >
+                  ✨ Bu hazır iş tanımını ilana uygula
+                </button>
+              </div>
             </div>
 
             <div>

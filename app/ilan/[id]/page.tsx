@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import { PROGRAM_TYPES } from '@/lib/constants';
+import { ONYAZI_EXAMPLES } from '@/lib/onyaziExamples';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import {
@@ -25,6 +26,10 @@ import {
   FileText,
   Wrench,
   Calendar,
+  MessageCircle,
+  Share2,
+  Link2,
+  Check,
 } from 'lucide-react';
 
 interface JobDetail {
@@ -43,6 +48,18 @@ interface JobDetail {
     company_name: string;
     has_master_trainer: boolean;
   };
+}
+
+// Benzer ilanlar kartı (Paket 2): detay nesnesinin hafif hali
+interface SimilarJob {
+  id: string;
+  title: string;
+  field_name: string;
+  program_type: string;
+  city: string;
+  district: string;
+  created_at: string;
+  company_details?: { company_name?: string } | null;
 }
 
 export default function IlanDetayPage() {
@@ -68,6 +85,10 @@ export default function IlanDetayPage() {
   const [favBusy, setFavBusy] = useState(false);
   const [kvkkOk, setKvkkOk] = useState(false);
 
+  // Benzer ilanlar (Paket 2) ve paylaşım
+  const [similarJobs, setSimilarJobs] = useState<SimilarJob[]>([]);
+  const [copied, setCopied] = useState(false);
+
   const programLabel =
     PROGRAM_TYPES.find((p) => p.value === job?.program_type)?.label ?? job?.program_type;
 
@@ -88,7 +109,41 @@ export default function IlanDetayPage() {
         .eq('id', jobId)
         .single();
 
-      if (!error && data) setJob(data);
+      if (!error && data) {
+        setJob(data);
+
+        // Benzer ilanlar (Paket 2): önce aynı meslek alanı, yetmezse aynı şehir
+        const similarSelect =
+          'id, title, field_name, program_type, city, district, created_at, company_details ( company_name )';
+
+        const { data: byField } = await supabase
+          .from('job_posts')
+          .select(similarSelect)
+          .eq('is_active', true)
+          .eq('field_name', data.field_name)
+          .neq('id', jobId)
+          .order('created_at', { ascending: false })
+          .limit(6);
+
+        let similar = ((byField ?? []) as unknown as SimilarJob[]).filter(Boolean);
+
+        if (similar.length < 3) {
+          const { data: byCity } = await supabase
+            .from('job_posts')
+            .select(similarSelect)
+            .eq('is_active', true)
+            .eq('city', data.city)
+            .neq('id', jobId)
+            .order('created_at', { ascending: false })
+            .limit(6);
+          const seen = new Set(similar.map((s) => s.id));
+          for (const s of ((byCity ?? []) as unknown as SimilarJob[]).filter(Boolean)) {
+            if (!seen.has(s.id)) similar = [...similar, s];
+          }
+        }
+
+        setSimilarJobs(similar.slice(0, 3));
+      }
 
       // 2. Oturum ve profil bilgilerini yükle
       const {
@@ -245,6 +300,24 @@ export default function IlanDetayPage() {
     }
   };
 
+  // Paylaşım (Paket 2): WhatsApp / X / bağlantı kopyalama
+  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const shareText = job
+    ? `${job.title} - ${job.company_details?.company_name || 'Onaylı İşletme'} staj ilanı (stajyeri.net)`
+    : 'stajyeri.net staj ilanı';
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`${shareText}: ${shareUrl}`)}`;
+  const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`;
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // panoya erisilemediyse sessizce gec
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between font-sans">
       <SiteHeader />
@@ -336,6 +409,47 @@ export default function IlanDetayPage() {
                     </span>
                   )}
                 </div>
+
+                {/* Paylaşım (Paket 2: kariyer.net tarzı) */}
+                <div className="flex items-center flex-wrap gap-2 mt-5 pt-4 border-t border-slate-100">
+                  <span className="text-[11px] font-bold text-slate-400 mr-1 flex items-center gap-1">
+                    <Share2 className="w-3.5 h-3.5" /> Paylaş:
+                  </span>
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="WhatsApp'ta paylaş"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-full text-[11px] font-bold transition"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
+                  </a>
+                  <a
+                    href={xUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X'te (Twitter) paylaş"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full text-[11px] font-bold transition"
+                  >
+                    <Share2 className="w-3.5 h-3.5" /> X
+                  </a>
+                  <button
+                    type="button"
+                    onClick={copyLink}
+                    title="Bağlantıyı kopyala"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full text-[11px] font-bold transition cursor-pointer"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" /> Kopyalandı
+                      </>
+                    ) : (
+                      <>
+                        <Link2 className="w-3.5 h-3.5" /> Bağlantıyı Kopyala
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
 
               <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
@@ -346,6 +460,39 @@ export default function IlanDetayPage() {
                   {job.description || 'İlan açıklaması girilmemiş.'}
                 </p>
               </div>
+
+              {/* Benzer İlanlar (Paket 2) */}
+              {similarJobs.length > 0 && (
+                <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
+                  <h2 className="text-sm font-black text-[#0A1931] mb-4 flex items-center gap-2">
+                    <Briefcase className="w-4 h-4 text-[#00A8B5]" /> Benzer İlanlar
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {similarJobs.map((s) => (
+                      <Link
+                        key={s.id}
+                        href={`/ilan/${s.id}`}
+                        className="group bg-slate-50 hover:bg-white border border-slate-100 hover:border-[#00A8B5] rounded-2xl p-4 transition-all flex flex-col gap-2"
+                      >
+                        <span className="px-2 py-0.5 bg-[#00A8B5]/10 text-[#00A8B5] text-[10px] font-extrabold rounded-full w-fit">
+                          {s.field_name}
+                        </span>
+                        <h3 className="text-xs font-black text-[#0A1931] group-hover:text-[#00A8B5] transition line-clamp-2">
+                          {s.title}
+                        </h3>
+                        <p className="text-[11px] font-bold text-slate-600 flex items-center gap-1 truncate">
+                          <Building2 className="w-3 h-3 text-slate-400 flex-shrink-0" />
+                          {s.company_details?.company_name || 'Onaylı İşletme'}
+                        </p>
+                        <p className="text-[11px] text-slate-500 flex items-center gap-1 mt-auto">
+                          <MapPin className="w-3 h-3 flex-shrink-0" />
+                          {s.district ? `${s.district} / ` : ''}{s.city}
+                        </p>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* SAĞ: Başvuru Paneli (yapışkan) */}
@@ -470,6 +617,30 @@ export default function IlanDetayPage() {
                           className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition resize-none"
                         />
                       </div>
+
+                      {/* Hazır ön yazı şablonları (kariyer.net "Hazır Yazı Örnekleri" mini versiyonu) */}
+                      <div className="flex flex-wrap gap-1.5 mt-2">
+                        {ONYAZI_EXAMPLES.map((ex) => (
+                          <button
+                            key={ex.id}
+                            type="button"
+                            title={ex.when}
+                            onClick={() =>
+                              setMessage((prev) => (prev.trim() ? `${prev.trimEnd()}\n\n${ex.body}` : ex.body))
+                            }
+                            className="px-2.5 py-1 bg-slate-100 hover:bg-[#00A8B5]/10 hover:text-[#00A8B5] text-slate-600 rounded-full text-[10px] font-extrabold transition cursor-pointer"
+                          >
+                            + {ex.title}
+                          </button>
+                        ))}
+                      </div>
+                      <Link
+                        href="/rehber/onyazi"
+                        target="_blank"
+                        className="inline-block mt-1.5 text-[10px] font-bold text-[#00A8B5] hover:underline"
+                      >
+                        Ön yazı nasıl yazılır? Rehbere göz atın &rarr;
+                      </Link>
                     </div>
 
                     <div className="flex items-start gap-2.5 bg-slate-50/70 border border-slate-100 rounded-xl p-3">

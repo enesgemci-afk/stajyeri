@@ -20,6 +20,7 @@ import {
   ChevronRight, 
   RotateCcw,
   Heart,
+  ArrowUpDown,
 } from 'lucide-react';
 
 interface JobPost {
@@ -33,6 +34,7 @@ interface JobPost {
   created_at?: string;
   has_lunch?: boolean;
   has_shuttle?: boolean;
+  description?: string;
   company_details?: {
     company_name?: string;
     has_master_trainer?: boolean;
@@ -49,7 +51,19 @@ export default function HomePage() {
   const [selectedCity, setSelectedCity] = useState<string>('');
 
   // Tarih filtresi (Kariyer.net tarzı)
-  const [dateRange, setDateRange] = useState<'all' | '7' | '30'>('all');
+  const [dateRange, setDateRange] = useState<'all' | 'today' | '7' | '30'>('all');
+
+  // Anahtar kelime araması (Paket 2: kariyer.net tarzı metin arama)
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Sıralama (Paket 2: en yeni / en eski)
+  const [sortBy, setSortBy] = useState<'newest' | 'oldest'>('newest');
+
+  // İlçe filtresi (Paket 3: seçilen şehre göre ilanlardan türetilir)
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+
+  // Alan seçim asistanından gelen çoklu alan filtresi (/?alan=A&alan=B#ilanlar)
+  const [paramFields, setParamFields] = useState<string[]>([]);
 
   // Favoriler (kalp) durumu
   const [favIds, setFavIds] = useState<Set<string>>(new Set());
@@ -58,6 +72,14 @@ export default function HomePage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    // Alan seçim asistanı ?alan=A&alan=B#ilanlar ile yönlendirdiğinde filtreleri uygula
+    if (typeof window !== 'undefined') {
+      const fromUrl = new URLSearchParams(window.location.search)
+        .getAll('alan')
+        .filter((f) => MESEM_FIELDS.includes(f));
+      if (fromUrl.length > 0) setParamFields(fromUrl);
+    }
+
     async function fetchJobs() {
       const { data, error } = await supabase
         .from('job_posts')
@@ -135,23 +157,74 @@ export default function HomePage() {
     }
   };
 
-  // Dropdown Filtreleme Mantığı
+  // Dropdown + anahtar kelime filtreleme mantığı (Paket 2)
+  const normalizedQuery = searchQuery.trim().toLocaleLowerCase('tr-TR');
   const filteredJobs = jobs.filter((job) => {
     const matchesField = selectedField === '' || job.field_name === selectedField;
     const matchesProgram = selectedProgram === '' || job.program_type === selectedProgram;
     const matchesCity = selectedCity === '' || (job.city && job.city.toLowerCase() === selectedCity.toLowerCase());
+    const ageMs = job.created_at ? Date.now() - new Date(job.created_at).getTime() : Infinity;
     const matchesDate =
       dateRange === 'all' ||
-      (job.created_at &&
-        Date.now() - new Date(job.created_at).getTime() <= Number(dateRange) * 24 * 60 * 60 * 1000);
-    return matchesField && matchesProgram && matchesCity && matchesDate;
+      (dateRange === 'today'
+        ? ageMs <= 24 * 60 * 60 * 1000
+        : ageMs <= Number(dateRange) * 24 * 60 * 60 * 1000);
+    // Metin araması: pozisyon, işletme adı, açıklama, alan ve konum üzerinde
+    const matchesQuery =
+      normalizedQuery === '' ||
+      [
+        job.title,
+        job.description,
+        job.field_name,
+        job.city,
+        job.district,
+        job.company_details?.company_name,
+      ].some((v) => !!v && v.toLocaleLowerCase('tr-TR').includes(normalizedQuery));
+    const matchesDistrict =
+      selectedDistrict === '' ||
+      (!!job.district && job.district.toLowerCase() === selectedDistrict.toLowerCase());
+    const matchesParamFields = paramFields.length === 0 || paramFields.includes(job.field_name);
+    return (
+      matchesField &&
+      matchesProgram &&
+      matchesCity &&
+      matchesDate &&
+      matchesDistrict &&
+      matchesParamFields &&
+      matchesQuery
+    );
   });
+
+  // Sıralama (Paket 2: en yeni / en eski)
+  const sortedJobs = [...filteredJobs].sort((a, b) => {
+    const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
+    const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
+    return sortBy === 'newest' ? tb - ta : ta - tb;
+  });
+
+  // İlçe listesi: seçilen şehre göre ilanlardan türetilir (Paket 3)
+  const availableDistricts = Array.from(
+    new Set(
+      jobs
+        .filter((j) =>
+          selectedCity === '' ? true : (j.city ?? '').toLowerCase() === selectedCity.toLowerCase()
+        )
+        .map((j) => j.district)
+        .filter((d): d is string => !!d)
+    )
+  ).sort((a, b) => a.localeCompare(b, 'tr-TR'));
 
   const handleResetFilters = () => {
     setSelectedField('');
     setSelectedProgram('');
     setSelectedCity('');
+    setSelectedDistrict('');
     setDateRange('all');
+    setSearchQuery('');
+    setParamFields([]);
+    if (typeof window !== 'undefined' && window.location.search) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.hash);
+    }
   };
 
   return (
@@ -212,8 +285,31 @@ export default function HomePage() {
             İMEP (İşletmelerde Mesleki Eğitim Programı) nedir? <ChevronRight className="w-3.5 h-3.5" />
           </Link>
 
-          {/* 3. Standart Dropdown Arama Çubuğu */}
-          <div className="mt-10 bg-white p-3 rounded-2xl sm:rounded-full shadow-2xl max-w-4xl mx-auto text-left">
+          {/* 3. Standart Dropdown Arama Çubuğu (Paket 2: anahtar kelime araması eklendi) */}
+          <div className="mt-10 bg-white p-3 rounded-2xl sm:rounded-3xl shadow-2xl max-w-4xl mx-auto text-left">
+
+            {/* Anahtar Kelime Araması */}
+            <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 mb-2">
+              <Search className="w-4 h-4 text-[#00A8B5] flex-shrink-0" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Pozisyon, işletme adı veya anahtar kelime ara..."
+                className="w-full bg-transparent text-xs font-bold text-slate-800 focus:outline-none placeholder:text-slate-400 placeholder:font-medium"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  title="Aramayı temizle"
+                  className="p-1 text-slate-400 hover:text-slate-600 transition flex-shrink-0 cursor-pointer"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
               
               {/* Meslek Alanı — MESEM alanları (lib/constants.ts) */}
@@ -270,17 +366,37 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Tarih (Kariyer.net tarzı yayın zamanı filtresi) */}
+              {/* İlçe — seçilen şehre göre ilanlardan türetilir (Paket 3) */}
+              <div className="md:col-span-2 px-4 py-2 border-b md:border-b-0 md:border-r border-slate-100 flex items-center gap-3">
+                <MapPin className="w-4 h-4 text-[#00A8B5] flex-shrink-0" />
+                <div className="w-full">
+                  <label className="block text-[9px] font-extrabold uppercase tracking-wider text-slate-400">İLÇE / BÖLGE</label>
+                  <select
+                    value={selectedDistrict}
+                    onChange={(e) => setSelectedDistrict(e.target.value)}
+                    disabled={availableDistricts.length === 0}
+                    className="w-full bg-transparent text-xs font-bold text-slate-800 focus:outline-none cursor-pointer truncate disabled:cursor-not-allowed disabled:text-slate-400"
+                  >
+                    <option value="">{availableDistricts.length === 0 ? 'Önce Şehir Seçin' : 'Tüm İlçeler'}</option>
+                    {availableDistricts.map((d) => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Tarih (Kariyer.net tarzı yayın zamanı filtresi — "Bugün" dahil) */}
               <div className="md:col-span-2 px-4 py-2 flex items-center gap-3">
                 <Calendar className="w-4 h-4 text-[#00A8B5] flex-shrink-0" />
                 <div className="w-full">
                   <label className="block text-[9px] font-extrabold uppercase tracking-wider text-slate-400">YAYIN TARİHİ</label>
                   <select
                     value={dateRange}
-                    onChange={(e) => setDateRange(e.target.value as 'all' | '7' | '30')}
+                    onChange={(e) => setDateRange(e.target.value as 'all' | 'today' | '7' | '30')}
                     className="w-full bg-transparent text-xs font-bold text-slate-800 focus:outline-none cursor-pointer truncate"
                   >
                     <option value="all">Tüm İlanlar</option>
+                    <option value="today">Bugün</option>
                     <option value="7">Son 7 Gün</option>
                     <option value="30">Son 30 Gün</option>
                   </select>
@@ -289,7 +405,7 @@ export default function HomePage() {
 
               {/* Arama / Sıfırla Butonları */}
               <div className="md:col-span-2 flex items-center gap-1">
-                {(selectedField || selectedProgram || selectedCity || dateRange !== 'all') && (
+                {(selectedField || selectedProgram || selectedCity || selectedDistrict || dateRange !== 'all' || searchQuery || paramFields.length > 0) && (
                   <button
                     type="button"
                     onClick={handleResetFilters}
@@ -339,20 +455,33 @@ export default function HomePage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-xl sm:text-2xl font-black text-[#0A1931]">
-              {selectedField || selectedCity || selectedProgram || dateRange !== 'all' ? 'Filtrelenen İlanlar' : 'Güncel Staj & Çıraklık İlanları'}
+              {selectedField || selectedCity || selectedProgram || selectedDistrict || dateRange !== 'all' || searchQuery || paramFields.length > 0 ? 'Filtrelenen İlanlar' : 'Güncel Staj & Çıraklık İlanları'}
             </h2>
             <p className="text-xs text-slate-500 mt-1">
               {filteredJobs.length} adet onaylı stajyer pozisyonu listeleniyor.
             </p>
           </div>
           <div className="flex items-center gap-4 flex-shrink-0">
+            {/* Sıralama (Paket 2: kariyer.net tarzı) */}
+            <div className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl px-3 py-2">
+              <ArrowUpDown className="w-3.5 h-3.5 text-[#00A8B5]" />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest')}
+                title="Sıralama"
+                className="bg-transparent text-xs font-bold text-slate-700 focus:outline-none cursor-pointer"
+              >
+                <option value="newest">En Yeni</option>
+                <option value="oldest">En Eski</option>
+              </select>
+            </div>
             <Link
               href="/favorilerim"
               className="text-xs font-bold text-slate-600 hover:text-[#00A8B5] flex items-center gap-1.5 transition"
             >
               <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" /> Favorilerim
             </Link>
-            {(selectedField || selectedProgram || selectedCity || dateRange !== 'all') && (
+            {(selectedField || selectedProgram || selectedCity || selectedDistrict || dateRange !== 'all' || searchQuery || paramFields.length > 0) && (
               <button
                 onClick={handleResetFilters}
                 className="text-xs font-bold text-[#FF6B00] hover:underline flex items-center gap-1 cursor-pointer"
@@ -377,7 +506,7 @@ export default function HomePage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {filteredJobs.map((job) => (
+            {sortedJobs.map((job) => (
               <div
                 key={job.id}
                 className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:border-[#00A8B5] transition-all flex flex-col justify-between gap-5 group"

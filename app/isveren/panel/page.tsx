@@ -376,8 +376,13 @@ export default function IsverenPanelPage() {
 
             {tab === 'apps' && (
               <section className="mt-4 space-y-3">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-[11px] text-slate-400 font-bold">Başvuruları aday detayıyla incelemek için:</p>
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="text-[11px] text-slate-400 font-bold">Başvuruları aday detayıyla incelemek için:</p>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full text-[10px] font-extrabold">
+                      <CheckCircle2 className="w-3 h-3" /> KVKK uyumlu açık rızayla gelir ✅
+                    </span>
+                  </div>
                   <Link href="/isveren/basvurular" className="text-[11px] font-extrabold text-[#FF6B00] hover:underline flex items-center gap-1 whitespace-nowrap">
                     Başvuru Değerlendirme Ekranı <ChevronRight className="w-3.5 h-3.5" />
                   </Link>
