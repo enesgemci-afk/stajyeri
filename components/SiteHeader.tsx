@@ -1,17 +1,27 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { ArrowLeft } from 'lucide-react';
+import { supabase } from '@/lib/supabaseClient';
 
-const NAV_LINKS = [
-  { href: '/', label: 'Ana Sayfa' },
-  { href: '/alan-secim', label: 'Alan Seçim Testi' },
-  { href: '/cv-olustur', label: 'CV Oluştur' },
-  { href: '/rehber/mulakat-sorulari', label: 'Mülakat Soruları' },
-  { href: '/imep', label: 'İMEP Programı' },
-  { href: '/tesvik-rehberi', label: 'İşletme Teşvik Rehberi' },
+type HeaderRole = 'guest' | 'student' | 'employer';
+
+// Rol bazlı menüler:
+// - Girişsiz: keşif (Ana Sayfa + Tüm İlanlar)
+// - Öğrenci: kariyer araçları (Alan Seçim, CV Oluştur, Mülakat Soruları)
+// - İşveren: işveren kaynakları (İMEP, Teşvik Rehberi, İşveren Paneli)
+const NAV_LINKS: { href: string; label: string; roles: HeaderRole[] }[] = [
+  { href: '/', label: 'Ana Sayfa', roles: ['guest', 'student', 'employer'] },
+  { href: '/ilanlar', label: 'Tüm İlanlar', roles: ['guest', 'student', 'employer'] },
+  { href: '/alan-secim', label: 'Alan Seçim Testi', roles: ['student'] },
+  { href: '/cv-olustur', label: 'CV Oluştur', roles: ['student'] },
+  { href: '/rehber/mulakat-sorulari', label: 'Mülakat Soruları', roles: ['student'] },
+  { href: '/imep', label: 'İMEP Programı', roles: ['employer'] },
+  { href: '/tesvik-rehberi', label: 'İşletme Teşvik Rehberi', roles: ['employer'] },
+  { href: '/isveren/panel', label: 'İşveren Paneli', roles: ['employer'] },
 ];
 
 interface SiteHeaderProps {
@@ -37,6 +47,40 @@ export default function SiteHeader({
   children,
 }: SiteHeaderProps) {
   const pathname = usePathname();
+  // Oturum rolüne göre menü: girişsiz / öğrenci / işveren
+  const [role, setRole] = useState<HeaderRole>('guest');
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadRole() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!active) return;
+      if (!session?.user) {
+        setRole('guest');
+        return;
+      }
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('user_type')
+        .eq('id', session.user.id)
+        .maybeSingle();
+      if (!active) return;
+      setRole(profile?.user_type === 'employer' ? 'employer' : 'student');
+    }
+
+    loadRole();
+    const { data: sub } = supabase.auth.onAuthStateChange(() => loadRole());
+    return () => {
+      active = false;
+      sub?.subscription?.unsubscribe();
+    };
+  }, []);
+
+  const navLinks = NAV_LINKS.filter((link) => link.roles.includes(role));
+
   // Menü her sayfada sabit gösterilir. Varsayılan 'Ana Sayfaya Dön' linki
   // gereksiz olduğundan (Ana Sayfa menüde var) yalnızca özel geri linki
   // verilmişse (ör. 'İşveren Paneli', 'Siteye Dön') gösterilir.

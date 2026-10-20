@@ -214,6 +214,8 @@ export default function HomePage() {
     )
   ).sort((a, b) => a.localeCompare(b, 'tr-TR'));
 
+  const featuredJobs = sortedJobs.slice(0, 6);
+
   const handleResetFilters = () => {
     setSelectedField('');
     setSelectedProgram('');
@@ -455,10 +457,10 @@ export default function HomePage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-xl sm:text-2xl font-black text-[#0A1931]">
-              {selectedField || selectedCity || selectedProgram || selectedDistrict || dateRange !== 'all' || searchQuery || paramFields.length > 0 ? 'Filtrelenen İlanlar' : 'Güncel Staj & Çıraklık İlanları'}
+              {selectedField || selectedCity || selectedProgram || selectedDistrict || dateRange !== 'all' || searchQuery || paramFields.length > 0 ? 'Filtrelenen İlanlar' : 'Öne Çıkan İlanlar'}
             </h2>
             <p className="text-xs text-slate-500 mt-1">
-              {filteredJobs.length} adet onaylı stajyer pozisyonu listeleniyor.
+              {filteredJobs.length} ilan bulundu; vitrinde en güncel {featuredJobs.length} tanesi listeleniyor.
             </p>
           </div>
           <div className="flex items-center gap-4 flex-shrink-0">
@@ -476,6 +478,12 @@ export default function HomePage() {
               </select>
             </div>
             <Link
+                href="/ilanlar"
+                className="text-xs font-extrabold text-white bg-[#0A1931] hover:bg-[#00A8B5] px-3 py-2 rounded-xl transition"
+              >
+                Tüm İlanları Gör
+              </Link>
+              <Link
               href="/favorilerim"
               className="text-xs font-bold text-slate-600 hover:text-[#00A8B5] flex items-center gap-1.5 transition"
             >
@@ -506,7 +514,7 @@ export default function HomePage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {sortedJobs.map((job) => (
+            {featuredJobs.map((job) => (
               <div
                 key={job.id}
                 className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:border-[#00A8B5] transition-all flex flex-col justify-between gap-5 group"
