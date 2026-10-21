@@ -94,6 +94,16 @@ create policy "isveren logo siler"
     and (storage.foldername(name))[1] = auth.uid()::text
   );
 
+-- SELECT policy: upsert/çakışma kontrolü ve dosya listeleme için gerekli
+drop policy if exists "isveren logo goruntuler" on storage.objects;
+create policy "isveren logo goruntuler"
+  on storage.objects for select
+  to authenticated
+  using (
+    bucket_id = 'company-logos'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
 -- Öğrenci yalnızca kendi klasörüne (uid/) CV fotoğrafı yükler/günceller/siler
 drop policy if exists "ogrenci cv foto yukler" on storage.objects;
 create policy "ogrenci cv foto yukler"
@@ -116,6 +126,16 @@ create policy "ogrenci cv foto gunceller"
 drop policy if exists "ogrenci cv foto siler" on storage.objects;
 create policy "ogrenci cv foto siler"
   on storage.objects for delete
+  to authenticated
+  using (
+    bucket_id = 'cv-photos'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+-- SELECT policy: upsert/çakışma kontrolü ve dosya listeleme için gerekli
+drop policy if exists "ogrenci cv foto goruntuler" on storage.objects;
+create policy "ogrenci cv foto goruntuler"
+  on storage.objects for select
   to authenticated
   using (
     bucket_id = 'cv-photos'
@@ -148,7 +168,7 @@ create policy "isveren kendi ilanini gunceller"
 
 -- ============================================================
 -- DOĞRULAMA — Run sonrası bu iki sorgunun sonucu görünür:
---   1. sorguda 6 satır (2 bucket x 3 işlem) policy,
+--   1. sorguda 8 satır (2 bucket x 4 işlem) policy,
 --   2. sorguda 2 satır, ikisinde de public = true olmalıdır.
 -- Sorun yaşarsanız bu çıktıyı bize iletin.
 -- ============================================================

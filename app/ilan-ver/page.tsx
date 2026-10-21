@@ -66,7 +66,12 @@ export default function IlanVerPage() {
     try {
       const ext = (file.name.split('.').pop() || 'png').toLowerCase();
       const path = `${uid}/logo.${ext}`;
-      const { error } = await supabase.storage.from('company-logos').upload(path, file, { upsert: true });
+      // upsert KULLANMA: çakışma kontrolü ek SELECT policy ister (RLS hatası çıkarır).
+      // Bunun yerine eski logoları (tüm uzantıları) temizle, sonra düz yükleme yap.
+      await supabase.storage
+        .from('company-logos')
+        .remove([`${uid}/logo.jpg`, `${uid}/logo.jpeg`, `${uid}/logo.png`, `${uid}/logo.webp`]);
+      const { error } = await supabase.storage.from('company-logos').upload(path, file);
       if (error) throw error;
       const { data: pub } = supabase.storage.from('company-logos').getPublicUrl(path);
       setLogoUrl(pub.publicUrl);
@@ -76,7 +81,7 @@ export default function IlanVerPage() {
       console.error('Logo yükleme hatası:', raw);
       // RLS hatası = Supabase'te storage politikası eksik/yanlış; SQL güncellemesi gerekir
       const msg = /row-level security/i.test(raw)
-        ? 'Logo yüklenemedi (güvenlik ayarı güncelleniyor). Lütfen birkaç dakika sonra tekrar deneyin.'
+        ? 'Logo yüklenemedi: depolama güvenlik politikası (RLS) tanımlı değil. Site yöneticisi Supabase güncellemesini çalıştırmalı.'
         : raw;
       setLogoMsg(msg);
     } finally {

@@ -133,7 +133,13 @@ export default function CVOlusturPage() {
       }
       const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
       const path = `${session.user.id}/photo.${ext}`;
-      const { error } = await supabase.storage.from('cv-photos').upload(path, file, { upsert: true });
+      // upsert KULLANMA: çakışma kontrolü ek SELECT policy ister (RLS hatası çıkarır).
+      // Bunun yerine eski fotoğrafları (tüm uzantıları) temizle, sonra düz yükleme yap.
+      const folder = session.user.id;
+      await supabase.storage
+        .from('cv-photos')
+        .remove([`${folder}/photo.jpg`, `${folder}/photo.jpeg`, `${folder}/photo.png`, `${folder}/photo.webp`]);
+      const { error } = await supabase.storage.from('cv-photos').upload(path, file);
       if (error) throw new Error(error.message);
       const { data: pub } = supabase.storage.from('cv-photos').getPublicUrl(path);
       setPhotoUrl(pub.publicUrl);
@@ -143,7 +149,7 @@ export default function CVOlusturPage() {
       console.error('CV foto yükleme hatası:', raw);
       // RLS hatası = Supabase'te storage politikası eksik/yanlış; SQL güncellemesi gerekir
       const msg = /row-level security/i.test(raw)
-        ? 'Fotoğraf yüklenemedi (güvenlik ayarı güncelleniyor). Lütfen birkaç dakika sonra tekrar dene.'
+        ? 'Yükleme engellendi: depolama güvenlik politikası (RLS) tanımlı değil. Site yöneticisi Supabase güncellemesini çalıştırmalı.'
         : raw;
       setPhotoMsg({ type: 'err', text: msg });
     } finally {
