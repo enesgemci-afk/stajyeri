@@ -2,10 +2,10 @@
 
 import Link from 'next/link';
 import { PROGRAM_TYPES } from '@/lib/constants';
+import { resolveCompanyIcon } from '@/lib/companyIcons';
 import {
   Briefcase,
   MapPin,
-  Building2,
   Utensils,
   Bus,
   Heart,
@@ -34,6 +34,10 @@ export interface JobCardData {
 
 const AVATAR_COLORS = ['#00A8B5', '#FF6B00', '#6366F1', '#EC4899', '#10B981', '#F59E0B', '#8B5CF6', '#0EA5E9'];
 
+// Sayfanın yüklenme anı — "YENİ" rozeti render sırasında Date.now() çağrısı yapmak
+// yerine (React purity kuralı) bu sabitle hesaplanır.
+const PAGE_LOADED_AT = Date.now();
+
 /** İşletme adından her seferinde aynı rengi üretir (logo yoksa baş harf avatarı için). */
 export function companyColor(name: string): string {
   let h = 0;
@@ -42,8 +46,9 @@ export function companyColor(name: string): string {
 }
 
 /**
- * Logo yüklenmişse gösterir; yüklenmemişse işletme adının baş harfini
- * renkli rozet olarak basar (şablon). size: sm kart içi, lg detay sayfası.
+ * Logo yüklenmişse gösterir; 'icon:' önekli hazır sembol seçilmişse ikonu renkli
+ * rozet olarak basar; hiçbiri yoksa işletme adının baş harfini basar.
+ * size: sm kart içi, lg detay sayfası.
  */
 export function CompanyAvatar({
   job,
@@ -60,6 +65,22 @@ export function CompanyAvatar({
       : size === 'lg'
         ? 'w-16 h-16 text-2xl rounded-2xl'
         : 'w-10 h-10 text-base rounded-xl';
+
+  // Hazır sektör sembolü (logo_url = 'icon:fabrika' vb.)
+  const preset = resolveCompanyIcon(logo);
+  if (preset) {
+    const color = job.company_details?.logo_color || companyColor(name);
+    const iconDim = size === 'sm' ? 'w-4 h-4' : size === 'lg' ? 'w-8 h-8' : 'w-5 h-5';
+    return (
+      <div
+        className={`${dim} flex items-center justify-center flex-shrink-0 select-none`}
+        style={{ backgroundColor: color }}
+        aria-hidden
+      >
+        <preset.Icon className={`${iconDim} text-white`} />
+      </div>
+    );
+  }
 
   if (logo) {
     return (
@@ -103,7 +124,7 @@ export default function JobCard({
   const programLabel =
     PROGRAM_TYPES.find((p) => p.value === job.program_type)?.label ?? job.program_type;
   const isNew =
-    !!job.created_at && Date.now() - new Date(job.created_at).getTime() < 3 * 24 * 60 * 60 * 1000;
+    !!job.created_at && PAGE_LOADED_AT - new Date(job.created_at).getTime() < 3 * 24 * 60 * 60 * 1000;
 
   return (
     <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:border-[#00A8B5] transition-all flex flex-col justify-between gap-4 group">

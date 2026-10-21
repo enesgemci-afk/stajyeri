@@ -7,6 +7,7 @@ import { PROGRAM_TYPES } from '@/lib/constants';
 import { ONYAZI_EXAMPLES } from '@/lib/onyaziExamples';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import { CompanyAvatar } from '@/components/JobCard';
 import {
   Briefcase,
   MapPin,
@@ -47,6 +48,8 @@ interface JobDetail {
   company_details?: {
     company_name: string;
     has_master_trainer: boolean;
+    logo_url?: string | null;
+    logo_color?: string | null;
   };
 }
 
@@ -103,7 +106,9 @@ export default function IlanDetayPage() {
           `*,
           company_details (
             company_name,
-            has_master_trainer
+            has_master_trainer,
+            logo_url,
+            logo_color
           )`
         )
         .eq('id', jobId)
@@ -347,11 +352,14 @@ export default function IlanDetayPage() {
             <div className="lg:col-span-2 space-y-6">
               <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
                 <div className="flex items-start justify-between gap-4 flex-wrap">
-                  <div>
-                    <h1 className="text-xl sm:text-2xl font-black text-[#0A1931] leading-snug">{job.title}</h1>
-                    <div className="flex items-center gap-2 mt-2 text-sm text-slate-600 font-bold">
-                      <Building2 className="w-4 h-4 text-[#00A8B5]" />
-                      {job.company_details?.company_name || 'İşletme adı belirtilmemiş'}
+                  <div className="flex items-start gap-4">
+                    <CompanyAvatar job={job} size="lg" />
+                    <div>
+                      <h1 className="text-xl sm:text-2xl font-black text-[#0A1931] leading-snug">{job.title}</h1>
+                      <div className="flex items-center gap-2 mt-2 text-sm text-slate-600 font-bold">
+                        <Building2 className="w-4 h-4 text-[#00A8B5]" />
+                        {job.company_details?.company_name || 'İşletme adı belirtilmemiş'}
+                      </div>
                     </div>
                   </div>
                   <span className="px-3 py-1.5 bg-[#00A8B5]/10 text-[#00A8B5] rounded-full text-[11px] font-black whitespace-nowrap">

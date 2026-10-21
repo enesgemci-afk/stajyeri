@@ -7,6 +7,8 @@ import { JOB_TEMPLATES, GENERIC_JOB_TEMPLATE } from '@/lib/jobTemplates';
 import SiteHeader from '@/components/SiteHeader';
 import { useRouter } from 'next/navigation';
 import { Sparkles, Palette } from 'lucide-react';
+import { COMPANY_ICON_PRESETS, resolveCompanyIcon } from '@/lib/companyIcons';
+import { companyColor } from '@/components/JobCard';
 
 // Logo yüklemezse işletme baş harfi bu renklerden biriyle gösterilir (JobCard şablonu)
 const LOGO_COLORS = ['#00A8B5', '#FF6B00', '#6366F1', '#EC4899', '#10B981', '#F59E0B', '#8B5CF6', '#0EA5E9'];
@@ -92,7 +94,7 @@ export default function IlanVerPage() {
     setStatusMsg(null);
 
     try {
-      let { data: company } = await supabase
+      const { data: company } = await supabase
         .from('company_details')
         .select('id')
         .eq('profile_id', currentUserId)
@@ -163,12 +165,15 @@ export default function IlanVerPage() {
         router.push('/');
       }, 1500);
 
-    } catch (err: any) {
-      setStatusMsg({ type: 'error', text: err.message || 'İlan kaydedilirken bir hata oluştu.' });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'İlan kaydedilirken bir hata oluştu.';
+      setStatusMsg({ type: 'error', text: msg });
     } finally {
       setLoading(false);
     }
   };
+
+  const logoPreset = resolveCompanyIcon(logoUrl);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans">
@@ -204,7 +209,15 @@ export default function IlanVerPage() {
                 <Palette className="w-3.5 h-3.5 text-[#00A8B5]" /> İşletme Logosu (opsiyonel)
               </p>
               <div className="flex items-center gap-3 mt-2.5">
-                {logoUrl ? (
+                {logoPreset ? (
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center select-none"
+                    style={{ backgroundColor: logoColor ?? companyColor(companyName.trim() || 'İşletme') }}
+                    title={logoPreset.label}
+                  >
+                    <logoPreset.Icon className="w-6 h-6 text-white" />
+                  </div>
+                ) : logoUrl ? (
                   <img
                     src={logoUrl}
                     alt="Logo önizleme"
@@ -213,7 +226,7 @@ export default function IlanVerPage() {
                 ) : (
                   <div
                     className="w-11 h-11 rounded-xl flex items-center justify-center font-black text-white select-none"
-                    style={{ backgroundColor: logoColor ?? '#94A3B8' }}
+                    style={{ backgroundColor: logoColor ?? companyColor(companyName.trim() || 'İşletme') }}
                   >
                     {(companyName.trim() || 'İ').charAt(0).toLocaleUpperCase('tr-TR')}
                   </div>
@@ -257,6 +270,33 @@ export default function IlanVerPage() {
                     style={{ backgroundColor: c }}
                   />
                 ))}
+              </div>
+
+              <p className="text-[10px] text-slate-400 mt-3">
+                Ya da hazır sektör sembolünden birini seç — logon yerine ilan kartlarında görünecek:
+              </p>
+              <div className="grid grid-cols-7 gap-1.5 mt-1.5">
+                {COMPANY_ICON_PRESETS.map((p) => {
+                  const selected = logoUrl === `icon:${p.key}`;
+                  return (
+                    <button
+                      key={p.key}
+                      type="button"
+                      title={p.label}
+                      onClick={() => {
+                        setLogoUrl(selected ? null : `icon:${p.key}`);
+                        setLogoMsg(null);
+                      }}
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center transition cursor-pointer border ${
+                        selected
+                          ? 'border-[#0A1931] ring-2 ring-[#0A1931]/20 scale-105'
+                          : 'border-slate-200 bg-white hover:border-[#00A8B5] hover:scale-105'
+                      }`}
+                    >
+                      <p.Icon className={`w-4 h-4 ${selected ? 'text-[#0A1931]' : 'text-slate-500'}`} />
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
