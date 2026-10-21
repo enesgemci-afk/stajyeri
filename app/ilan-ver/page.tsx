@@ -72,7 +72,12 @@ export default function IlanVerPage() {
       setLogoUrl(pub.publicUrl);
       setLogoMsg('Logo yüklendi ✓ İlanınızda görünecek.');
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Logo yüklenemedi. Lütfen tekrar deneyin.';
+      const raw = err instanceof Error ? err.message : 'Logo yüklenemedi. Lütfen tekrar deneyin.';
+      console.error('Logo yükleme hatası:', raw);
+      // RLS hatası = Supabase'te storage politikası eksik/yanlış; SQL güncellemesi gerekir
+      const msg = /row-level security/i.test(raw)
+        ? 'Logo yüklenemedi (güvenlik ayarı güncelleniyor). Lütfen birkaç dakika sonra tekrar deneyin.'
+        : raw;
       setLogoMsg(msg);
     } finally {
       setLogoUploading(false);

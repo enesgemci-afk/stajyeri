@@ -30,11 +30,41 @@ alter table public.student_cvs
 -- 4) Storage bucket'ları (herkese açık okuma, kimlikli yazma)
 insert into storage.buckets (id, name, public)
 values ('company-logos', 'company-logos', true)
-on conflict (id) do nothing;
+on conflict (id) do update set public = true;
 
 insert into storage.buckets (id, name, public)
 values ('cv-photos', 'cv-photos', true)
-on conflict (id) do nothing;
+on conflict (id) do update set public = true;
+
+-- 4a) ÖNEMLİ TEMİZLİK: Bu dosyanın eski sürümlerinde politikalar farklı
+--     bucket adlarına ('logolar', 'cv-fotolar') bağlıydı. Eski adlara bağlı
+--     policy'ler kalarsa 'cv-photos'a yükleme RLS hatasıyla reddedilir
+--     ("new row violates row-level security policy"). Aşağıdaki blok, bu
+--     bucket'lara (eski adlar dahil) değinen TÜM politikaları siler.
+do $$
+declare
+  r record;
+begin
+  for r in
+    select policyname
+    from pg_policies
+    where schemaname = 'storage'
+      and tablename = 'objects'
+      and (
+        coalesce(qual, '') like '%company-logos%'
+        or coalesce(with_check, '') like '%company-logos%'
+        or coalesce(qual, '') like '%cv-photos%'
+        or coalesce(with_check, '') like '%cv-photos%'
+        or coalesce(qual, '') like '%logolar%'
+        or coalesce(with_check, '') like '%logolar%'
+        or coalesce(qual, '') like '%cv-fotolar%'
+        or coalesce(with_check, '') like '%cv-fotolar%'
+      )
+  loop
+    execute format('drop policy %I on storage.objects', r.policyname);
+  end loop;
+end
+$$;
 
 -- İşveren yalnızca kendi klasörüne (uid/) logo yükler/günceller/siler
 drop policy if exists "isveren logo yukler" on storage.objects;
@@ -115,3 +145,20 @@ create policy "isveren kendi ilanini gunceller"
   with check (
     company_id in (select id from public.company_details where profile_id = auth.uid())
   );
+
+-- ============================================================
+-- DOĞRULAMA — Run sonrası bu iki sorgunun sonucu görünür:
+--   1. sorguda 6 satır (2 bucket x 3 işlem) policy,
+--   2. sorguda 2 satır, ikisinde de public = true olmalıdır.
+-- Sorun yaşarsanız bu çıktıyı bize iletin.
+-- ============================================================
+select policyname, cmd
+from pg_policies
+where schemaname = 'storage'
+  and tablename = 'objects'
+order by policyname;
+
+select id, public
+from storage.buckets
+where id in ('company-logos', 'cv-photos')
+order by id;

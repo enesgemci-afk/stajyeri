@@ -139,7 +139,12 @@ export default function CVOlusturPage() {
       setPhotoUrl(pub.publicUrl);
       setSaved(false);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Fotoğraf yüklenemedi.';
+      const raw = err instanceof Error ? err.message : 'Fotoğraf yüklenemedi.';
+      console.error('CV foto yükleme hatası:', raw);
+      // RLS hatası = Supabase'te storage politikası eksik/yanlış; SQL güncellemesi gerekir
+      const msg = /row-level security/i.test(raw)
+        ? 'Fotoğraf yüklenemedi (güvenlik ayarı güncelleniyor). Lütfen birkaç dakika sonra tekrar dene.'
+        : raw;
       setPhotoMsg({ type: 'err', text: msg });
     } finally {
       setPhotoUploading(false);
@@ -258,7 +263,7 @@ export default function CVOlusturPage() {
               Stajyer CV Oluşturucu
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 mt-2 max-w-xl mx-auto">
-              Bilgilerini gir, CV'ni anında gör; yazdır butonuyla PDF olarak kaydet.
+              Bilgilerini gir, CV{'\''}ni anında gör; yazdır butonuyla PDF olarak kaydet.
               Deneyimsiz öğrenciler için hazırlandı.
             </p>
           </div>
@@ -576,7 +581,7 @@ export default function CVOlusturPage() {
                   </button>
                 </div>
                 <p className="text-[10px] text-slate-400 text-center">
-                  Yazdır penceresinde "PDF olarak kaydet" seçeneğini seçebilirsin.
+                  Yazdır penceresinde {'"PDF olarak kaydet"'} seçeneğini seçebilirsin.
                 </p>
               </div>
             </div>
@@ -585,7 +590,7 @@ export default function CVOlusturPage() {
             <div className="lg:sticky lg:top-20">
               <div className="no-print flex items-center gap-2 mb-3 text-[11px] font-bold text-slate-500">
                 <Sparkles className="w-3.5 h-3.5 text-[#00A8B5]" />
-                Canlı Önizleme — bilgileri doldurdukça CV'n burada oluşur
+                Canlı Önizleme — bilgileri doldurdukça CV{'\''}n burada oluşur
               </div>
 
               <div id="cv-print" className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
@@ -701,7 +706,7 @@ export default function CVOlusturPage() {
               </div>
 
               <p className="no-print text-[10px] text-slate-400 mt-3 text-center">
-                "Yazdır / PDF İndir" butonu yalnızca bu CV bölgesini çıktı olarak verir.
+                {'"Yazdır / PDF İndir"'} butonu yalnızca bu CV bölgesini çıktı olarak verir.
               </p>
             </div>
 
