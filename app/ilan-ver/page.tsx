@@ -6,7 +6,10 @@ import { MESEM_FIELDS, PROGRAM_TYPES, TURKEY_CITIES } from '@/lib/constants';
 import { JOB_TEMPLATES, GENERIC_JOB_TEMPLATE } from '@/lib/jobTemplates';
 import SiteHeader from '@/components/SiteHeader';
 import { useRouter } from 'next/navigation';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Palette } from 'lucide-react';
+
+// Logo yüklemezse işletme baş harfi bu renklerden biriyle gösterilir (JobCard şablonu)
+const LOGO_COLORS = ['#00A8B5', '#FF6B00', '#6366F1', '#EC4899', '#10B981', '#F59E0B', '#8B5CF6', '#0EA5E9'];
 
 export default function IlanVerPage() {
   const router = useRouter();
@@ -24,6 +27,11 @@ export default function IlanVerPage() {
   const [hasShuttle, setHasShuttle] = useState(false);
   const [hasLunch, setHasLunch] = useState(true);
   const [description, setDescription] = useState('');
+  const [wageInfo, setWageInfo] = useState('');
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [logoColor, setLogoColor] = useState<string | null>(null);
+  const [logoUploading, setLogoUploading] = useState(false);
+  const [logoMsg, setLogoMsg] = useState<string | null>(null);
   const [statusMsg, setStatusMsg] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
 
   useEffect(() => {
@@ -33,6 +41,41 @@ export default function IlanVerPage() {
       }
     });
   }, []);
+
+  // İşletme logosunu Supabase Storage'a yükler (kendi klasörüne: uid/logo.xxx)
+  async function handleLogoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+
+    const { data: { session } } = await supabase.auth.getSession();
+    const uid = session?.user?.id ?? userId;
+    if (!uid) {
+      setLogoMsg('Logo yüklemek için lütfen önce giriş yapın.');
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setLogoMsg('Logo dosyası en fazla 2MB olabilir.');
+      return;
+    }
+
+    setLogoUploading(true);
+    setLogoMsg(null);
+    try {
+      const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+      const path = `${uid}/logo.${ext}`;
+      const { error } = await supabase.storage.from('company-logos').upload(path, file, { upsert: true });
+      if (error) throw error;
+      const { data: pub } = supabase.storage.from('company-logos').getPublicUrl(path);
+      setLogoUrl(pub.publicUrl);
+      setLogoMsg('Logo yüklendi ✓ İlanınızda görünecek.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Logo yüklenemedi. Lütfen tekrar deneyin.';
+      setLogoMsg(msg);
+    } finally {
+      setLogoUploading(false);
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +117,7 @@ export default function IlanVerPage() {
         companyId = newCompany.id;
       }
 
-      const { error: postError } = await supabase
+      const { data: newPost, error: postError } = await supabase
         .from('job_posts')
         .insert({
           company_id: companyId,
@@ -88,9 +131,32 @@ export default function IlanVerPage() {
           has_lunch: hasLunch,
           description,
           is_active: true,
-        });
+        })
+        .select('id')
+        .single();
 
       if (postError) throw postError;
+
+      // Ücret bilgisi (kolon henüz açılmamışsa sessizce atlanır, ilan yine yayınlanır)
+      if (newPost && wageInfo.trim()) {
+        try {
+          await supabase.from('job_posts').update({ wage_info: wageInfo.trim() }).eq('id', newPost.id);
+        } catch {
+          /* wage_info kolonu yoksa kritik değil */
+        }
+      }
+
+      // Logo / renk şablonu işletme kaydına yazılır (kolonlar yoksa sessizce atlanır)
+      if (logoUrl || logoColor) {
+        try {
+          const patch: { logo_url?: string; logo_color?: string } = {};
+          if (logoUrl) patch.logo_url = logoUrl;
+          if (logoColor) patch.logo_color = logoColor;
+          await supabase.from('company_details').update(patch).eq('id', companyId);
+        } catch {
+          /* logo kolonları yoksa kritik değil */
+        }
+      }
 
       setStatusMsg({ type: 'success', text: 'İlan başarıyla yayınlandı! Ana sayfaya yönlendiriliyorsunuz...' });
       setTimeout(() => {
@@ -130,6 +196,68 @@ export default function IlanVerPage() {
                 placeholder="Örn: Eren Otomotiv San. ve Tic. Ltd. Şti."
                 className="mt-1 w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#00A8B5]"
               />
+            </div>
+
+            {/* İşletme logosu + renk şablonu (logosuz işletmeler için baş harf rozeti) */}
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <p className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                <Palette className="w-3.5 h-3.5 text-[#00A8B5]" /> İşletme Logosu (opsiyonel)
+              </p>
+              <div className="flex items-center gap-3 mt-2.5">
+                {logoUrl ? (
+                  <img
+                    src={logoUrl}
+                    alt="Logo önizleme"
+                    className="w-11 h-11 rounded-xl object-cover border border-slate-200 bg-white"
+                  />
+                ) : (
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center font-black text-white select-none"
+                    style={{ backgroundColor: logoColor ?? '#94A3B8' }}
+                  >
+                    {(companyName.trim() || 'İ').charAt(0).toLocaleUpperCase('tr-TR')}
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:border-[#00A8B5] rounded-xl text-[11px] font-bold text-slate-700 transition cursor-pointer">
+                    {logoUploading ? 'Yükleniyor...' : logoUrl ? 'Logoyu Değiştir' : 'Logo Yükle (JPG/PNG, maks 2MB)'}
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      className="hidden"
+                      onChange={handleLogoChange}
+                      disabled={logoUploading}
+                    />
+                  </label>
+                  {logoUrl && (
+                    <button
+                      type="button"
+                      onClick={() => { setLogoUrl(null); setLogoMsg(null); }}
+                      className="block mt-1 text-[10px] font-bold text-slate-400 hover:text-red-500 transition cursor-pointer"
+                    >
+                      Logoyu Kaldır
+                    </button>
+                  )}
+                </div>
+              </div>
+              {logoMsg && (
+                <p className={`text-[10px] font-bold mt-2 ${logoUrl ? 'text-green-600' : 'text-red-500'}`}>{logoMsg}</p>
+              )}
+              <p className="text-[10px] text-slate-400 mt-2">
+                Logo yok mu? Sorun değil — işletme adının baş harfi, seçtiğin renkte ilan kartlarında görünecek:
+              </p>
+              <div className="flex gap-1.5 mt-1.5">
+                {LOGO_COLORS.map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => setLogoColor(logoColor === c ? null : c)}
+                    title="Şablon rengi seç"
+                    className={`w-6 h-6 rounded-full transition cursor-pointer ${logoColor === c ? 'ring-2 ring-offset-2 ring-[#0A1931] scale-110' : 'hover:scale-110'}`}
+                    style={{ backgroundColor: c }}
+                  />
+                ))}
+              </div>
             </div>
 
             <div>
@@ -210,6 +338,20 @@ export default function IlanVerPage() {
                   className="mt-1 w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#00A8B5]"
                 />
               </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700">Ücret / Destek Bilgisi (opsiyonel)</label>
+              <input
+                type="text"
+                value={wageInfo}
+                onChange={(e) => setWageInfo(e.target.value)}
+                placeholder="Örn: Günlük 450 TL + yemek ve servis dahil"
+                className="mt-1 w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#00A8B5]"
+              />
+              <p className="text-[10px] text-slate-400 mt-1">
+                Ücret bilgisi yazan ilanlar öğrencilerde belirgin şekilde daha çok ilgi görür.
+              </p>
             </div>
 
             <div className="flex gap-6 pt-2">

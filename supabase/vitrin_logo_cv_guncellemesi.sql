@@ -91,3 +91,27 @@ create policy "ogrenci cv foto siler"
     bucket_id = 'cv-photos'
     and (storage.foldername(name))[1] = auth.uid()::text
   );
+
+-- 5) İşveren kendi işletme kaydını günceller (logo / renk şablonu kaydı için)
+alter table public.company_details enable row level security;
+
+drop policy if exists "isveren kendi isletmesini gunceller" on public.company_details;
+create policy "isveren kendi isletmesini gunceller"
+  on public.company_details for update
+  to authenticated
+  using (profile_id = auth.uid())
+  with check (profile_id = auth.uid());
+
+-- 6) İşveren kendi ilanını günceller (ücret bilgisi vb. sonraki güncellemeler için)
+alter table public.job_posts enable row level security;
+
+drop policy if exists "isveren kendi ilanini gunceller" on public.job_posts;
+create policy "isveren kendi ilanini gunceller"
+  on public.job_posts for update
+  to authenticated
+  using (
+    company_id in (select id from public.company_details where profile_id = auth.uid())
+  )
+  with check (
+    company_id in (select id from public.company_details where profile_id = auth.uid())
+  );

@@ -8,7 +8,7 @@ import SiteHeader from '@/components/SiteHeader';
 import Link from 'next/link';
 import {
   FileText, Sparkles, User, Phone, Mail, GraduationCap, Wrench, Save,
-  Printer, CheckCircle2, AlertCircle, Plus, X, Lightbulb, ArrowRight, MapPin,
+  Printer, CheckCircle2, AlertCircle, Plus, X, Lightbulb, ArrowRight, MapPin, Camera,
 } from 'lucide-react';
 
 interface ExperienceItem {
@@ -65,6 +65,9 @@ export default function CVOlusturPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [saveMsg, setSaveMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [photoUploading, setPhotoUploading] = useState(false);
+  const [photoMsg, setPhotoMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
 
   function set<K extends keyof CVData>(key: K, value: CVData[K]) {
     setData((d) => ({ ...d, [key]: value }));
@@ -104,6 +107,45 @@ export default function CVOlusturPage() {
     setSaved(false);
   }
 
+  // Profil fotoğrafını yükler: giriş yapılmışsa Supabase Storage'a (uid/photo.xxx),
+  // yapılmamışsa yalnızca ekranda ve PDF çıktısında görünür (blob adresi, kaydedilmez)
+  async function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+
+    if (file.size > 2 * 1024 * 1024) {
+      setPhotoMsg({ type: 'err', text: 'Fotoğraf en fazla 2MB olabilir.' });
+      return;
+    }
+
+    setPhotoUploading(true);
+    setPhotoMsg(null);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        setPhotoUrl(URL.createObjectURL(file));
+        setPhotoMsg({
+          type: 'err',
+          text: 'Giriş yapmadığın için fotoğraf bu ekranda ve PDF çıktısında görünecek, hesabına kaydedilmeyecek.',
+        });
+        return;
+      }
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+      const path = `${session.user.id}/photo.${ext}`;
+      const { error } = await supabase.storage.from('cv-photos').upload(path, file, { upsert: true });
+      if (error) throw new Error(error.message);
+      const { data: pub } = supabase.storage.from('cv-photos').getPublicUrl(path);
+      setPhotoUrl(pub.publicUrl);
+      setSaved(false);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Fotoğraf yüklenemedi.';
+      setPhotoMsg({ type: 'err', text: msg });
+    } finally {
+      setPhotoUploading(false);
+    }
+  }
+
   async function handleSave() {
     setSaving(true);
     setSaveMsg(null);
@@ -136,11 +178,29 @@ export default function CVOlusturPage() {
         updated_at: new Date().toISOString(),
       };
 
-      const { error } = existing
-        ? await supabase.from('student_cvs').update(payload).eq('id', existing.id)
-        : await supabase.from('student_cvs').insert(payload);
+      let cvId = existing?.id;
+      if (existing) {
+        const { error } = await supabase.from('student_cvs').update(payload).eq('id', existing.id);
+        if (error) throw new Error(error.message);
+      } else {
+        const { data: inserted, error } = await supabase
+          .from('student_cvs')
+          .insert(payload)
+          .select('id')
+          .single();
+        if (error) throw new Error(error.message);
+        cvId = inserted?.id;
+      }
 
-      if (error) throw new Error(error.message);
+      // Fotoğraf adresi (kolon henüz açılmamışsa sessizce atlanır — CV yine kaydedilir)
+      if (cvId && photoUrl && /^https?:\/\//.test(photoUrl)) {
+        try {
+          await supabase.from('student_cvs').update({ photo_url: photoUrl }).eq('id', cvId);
+        } catch {
+          /* photo_url kolonu yoksa kritik değil */
+        }
+      }
+
       setSaved(true);
       setSaveMsg({ type: 'ok', text: 'CV\'nin hesabına kaydedildi. Bir dahaki sefere hazır gelir.' });
     } catch (err: unknown) {
@@ -174,6 +234,7 @@ export default function CVOlusturPage() {
           skills: Array.isArray(row.skills) ? row.skills : [],
           experiences: Array.isArray(row.experiences) ? row.experiences : [],
         });
+        setPhotoUrl(typeof row.photo_url === 'string' ? row.photo_url : null);
       }
     }
     loadSaved();
@@ -212,6 +273,50 @@ export default function CVOlusturPage() {
                 <h2 className="text-sm font-black text-[#0A1931] mb-4 flex items-center gap-2">
                   <User className="w-4 h-4 text-[#00A8B5]" /> Kişisel Bilgiler
                 </h2>
+
+                {/* Profil fotoğrafı (opsiyonel) */}
+                <div className="flex items-center gap-4 mb-4 pb-4 border-b border-slate-100">
+                  {photoUrl ? (
+                    <img
+                      src={photoUrl}
+                      alt="Profil fotoğrafın"
+                      className="w-16 h-16 rounded-full object-cover border-2 border-[#00A8B5]/30"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-slate-100 border-2 border-dashed border-slate-300 flex items-center justify-center">
+                      <User className="w-6 h-6 text-slate-300" />
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <label className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#00A8B5]/10 hover:bg-[#00A8B5]/20 text-[#00A8B5] rounded-xl text-[11px] font-bold transition cursor-pointer">
+                      <Camera className="w-3.5 h-3.5" />
+                      {photoUploading ? 'Yükleniyor...' : photoUrl ? 'Fotoğrafı Değiştir' : 'Fotoğraf Ekle (opsiyonel)'}
+                      <input
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp"
+                        className="hidden"
+                        onChange={handlePhotoChange}
+                        disabled={photoUploading}
+                      />
+                    </label>
+                    {photoUrl && (
+                      <button
+                        type="button"
+                        onClick={() => { setPhotoUrl(null); setSaved(false); }}
+                        className="block mt-1 text-[10px] font-bold text-slate-400 hover:text-red-500 transition cursor-pointer"
+                      >
+                        Kaldır
+                      </button>
+                    )}
+                    <p className="text-[10px] text-slate-400 mt-1">JPG/PNG, en fazla 2MB — CV başlığında görünür.</p>
+                    {photoMsg && (
+                      <p className={`text-[10px] font-bold mt-1 max-w-xs ${photoMsg.type === 'ok' ? 'text-green-600' : 'text-red-500'}`}>
+                        {photoMsg.text}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="sm:col-span-2">
                     <label className="block text-[11px] font-bold text-slate-600 mb-1">Ad Soyad *</label>
@@ -486,9 +591,18 @@ export default function CVOlusturPage() {
               <div id="cv-print" className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
                 {/* Üst bant */}
                 <div className="bg-[#0A1931] px-7 py-6 text-white">
-                  <h2 className="text-xl font-black leading-snug">
-                    {data.fullName.trim() || 'Ad Soyad'}
-                  </h2>
+                  <div className="flex items-center gap-4">
+                    {photoUrl && (
+                      <img
+                        src={photoUrl}
+                        alt=""
+                        className="w-16 h-16 rounded-full object-cover border-2 border-[#00E5FF]/40 flex-shrink-0"
+                      />
+                    )}
+                    <h2 className="text-xl font-black leading-snug">
+                      {data.fullName.trim() || 'Ad Soyad'}
+                    </h2>
+                  </div>
                   <p className="text-[11px] font-bold text-[#00E5FF] mt-1">
                     {[data.field, data.education].filter(Boolean).join(' · ') || 'Meslek Alanı · Eğitim Durumu'}
                   </p>
