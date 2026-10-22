@@ -29,8 +29,10 @@ interface NavGroup {
  *  Ana Sayfa          → herkese doğrudan
  *  İlanlar ▾          → Tüm İlanlar (herkes) + Favorilerim (öğrenci)
  *  Kariyer Araçları ▾ → girişsiz + öğrenci: Alan Seçim, CV Oluştur, Mülakat, Ön Yazı
- *  İşveren ▾          → işveren: Panel + İlan Ver + İMEP + Teşvik
- *                       girişsiz: İlan Ver + İMEP + Teşvik (işveren kayıt dönüşümü)
+ *  İşveren ▾          → HERKESE görünür (kariyer.net'teki gibi):
+ *                        işveren: Panel + İlan Ver + İMEP + Teşvik
+ *                        öğrenci: İMEP + Teşvik + İşveren Girişi
+ *                        girişsiz: İlan Ver + İMEP + Teşvik + İşveren Girişi
  */
 function getMenu(role: HeaderRole): NavGroup[] {
   const groups: NavGroup[] = [
@@ -65,22 +67,31 @@ function getMenu(role: HeaderRole): NavGroup[] {
     });
   }
 
-  if (role !== 'student') {
-    groups.push({
-      key: 'isveren',
-      label: 'İşveren',
-      items: [
-        ...(role === 'employer'
+  // İşveren grubu HERKESE görünür — işveren adayları siteyi hangi rolde
+  // gezerse gezsin (girişsiz / öğrenci) bu menüye ulaşabilmeli.
+  groups.push({
+    key: 'isveren',
+    label: 'İşveren',
+    items: [
+      ...(role === 'employer'
+        ? [
+            { href: '/isveren/panel', label: 'İşveren Paneli', desc: 'İlanların ve başvuruların' },
+            { href: '/ilan-ver', label: 'İlan Ver', desc: '1 dakikada stajyer ilanı yayınla' },
+          ]
+        : role === 'student'
           ? [
-              { href: '/isveren/panel', label: 'İşveren Paneli', desc: 'İlanların ve başvuruların' },
-              { href: '/ilan-ver', label: 'İlan Ver', desc: '1 dakikada stajyer ilanı yayınla' },
+              // Öğrenci hesabıyla "İlan Ver" gösterilmez (izin yok),
+              // ancak işletme sahibi biriyse farklı hesapla girebilsin
+              { href: '/isveren/giris', label: 'İşveren Girişi', desc: 'İşletme hesabına geç' },
             ]
-          : [{ href: '/ilan-ver', label: 'İlan Ver', desc: 'Stajyer aramaya başla' }]),
-        { href: '/imep', label: 'İMEP Programı', desc: 'İMEP stajyer desteği rehberi' },
-        { href: '/tesvik-rehberi', label: 'İşletme Teşvik Rehberi', desc: '3308 kapsamındaki destekler' },
-      ],
-    });
-  }
+          : [
+              { href: '/ilan-ver', label: 'İlan Ver', desc: 'Stajyer aramaya başla' },
+              { href: '/isveren/giris', label: 'İşveren Girişi', desc: 'İşletme hesabına giriş yap' },
+            ]),
+      { href: '/imep', label: 'İMEP Programı', desc: 'İMEP stajyer desteği rehberi' },
+      { href: '/tesvik-rehberi', label: 'İşletme Teşvik Rehberi', desc: '3308 kapsamındaki destekler' },
+    ],
+  });
 
   return groups;
 }
