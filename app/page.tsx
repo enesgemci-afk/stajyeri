@@ -21,6 +21,11 @@ import {
   RotateCcw,
   Heart,
   ArrowUpDown,
+  Compass,
+  FileText,
+  MessageCircle,
+  PenLine,
+  ArrowRight,
 } from 'lucide-react';
 
 interface JobPost {
@@ -596,6 +601,77 @@ export default function HomePage() {
             ))}
           </div>
         )}
+      {/* Kariyer Araçları — giriş gerektirmez, herkes görebilir ve kullanabilir */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FF6B00]/10 border border-[#FF6B00]/20 text-[#FF6B00] text-[11px] font-black mb-4">
+            <Sparkles className="w-3.5 h-3.5" /> ÜCRETSİZ ARAÇLAR
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-black text-[#0A1931]">
+            Kariyer Araçları
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-500 mt-2 max-w-xl mx-auto">
+            Staj yolculuğunun her adımında yanındayız. Giriş yapmana gerek yok — hemen dene.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          {[
+            {
+              href: '/alan-secim',
+              Icon: Compass,
+              color: '#00A8B5',
+              title: 'Alan Seçim Testi',
+              desc: '9. sınıfa geçenler için: 6 soruda sana en uygun MESEM alanlarını keşfet.',
+            },
+            {
+              href: '/cv-olustur',
+              Icon: FileText,
+              color: '#FF6B00',
+              title: 'CV Oluştur',
+              desc: "Dakikalar içinde stajyer CV'si hazırla, PDF olarak indir.",
+            },
+            {
+              href: '/rehber/mulakat-sorulari',
+              Icon: MessageCircle,
+              color: '#6366F1',
+              title: 'Mülakat Soruları',
+              desc: 'Staj mülakatında ne sorulur? Alanına göre sorular ve ipuçları.',
+            },
+            {
+              href: '/rehber/onyazi',
+              Icon: PenLine,
+              color: '#EC4899',
+              title: 'Ön Yazı Örnekleri',
+              desc: 'Başvurunu güçlendiren hazır ön yazı şablonları ve yazım rehberi.',
+            },
+          ].map(({ href, Icon, color, title, desc }) => (
+            <Link
+              key={href}
+              href={href}
+              className="group bg-white rounded-3xl border border-slate-200 hover:border-[#00A8B5] hover:shadow-lg hover:shadow-[#00A8B5]/10 transition-all p-6 flex flex-col gap-3"
+            >
+              <div
+                className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                style={{ backgroundColor: `${color}15` }}
+              >
+                <Icon className="w-6 h-6" style={{ color }} />
+              </div>
+              <h3 className="text-sm font-black text-[#0A1931] group-hover:text-[#00A8B5] transition">
+                {title}
+              </h3>
+              <p className="text-[11px] text-slate-500 leading-relaxed">{desc}</p>
+              <span className="mt-auto text-[11px] font-black text-[#00A8B5] flex items-center gap-1 group-hover:gap-2 transition-all">
+                Hemen Dene <ArrowRight className="w-3.5 h-3.5" />
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        <p className="text-center text-[11px] text-slate-400 mt-8">
+          4904 sayılı kanun gereğince öğrencilerden iş bulma karşılığında ücret alınmaz — tüm araçlar ücretsizdir.
+        </p>
+      </section>
       </main>
 
       {/* 6. Footer */}
