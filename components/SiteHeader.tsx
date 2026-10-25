@@ -89,6 +89,7 @@ function getMenu(role: HeaderRole): NavGroup[] {
               { href: '/isveren/giris', label: 'İşveren Girişi', desc: 'İşletme hesabına giriş yap' },
             ]),
       { href: '/imep', label: 'İMEP Programı', desc: 'İMEP stajyer desteği rehberi' },
+      { href: '/tesvik-simulasyon', label: 'Teşvik Simülatörü', desc: 'Stajyer size gerçekte neye mal olur?' },
       { href: '/tesvik-rehberi', label: 'İşletme Teşvik Rehberi', desc: '3308 kapsamındaki destekler' },
     ],
   });
