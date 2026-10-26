@@ -6,7 +6,6 @@ import { PROGRAM_TYPES } from '@/lib/constants';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import {
-  
   Building2,
   ClipboardList,
   LogIn,
@@ -16,6 +15,8 @@ import {
   CheckCircle2,
   XCircle,
   FileText,
+  ShieldAlert,
+  MessageCircle,
 } from 'lucide-react';
 
 type AppStatus = 'pending' | 'approved' | 'rejected';
@@ -23,6 +24,7 @@ type AppStatus = 'pending' | 'approved' | 'rejected';
 interface ApplicationRow {
   id: string;
   status: AppStatus;
+  guardian_status: string | null;
   phone: string | null;
   message: string | null;
   created_at: string;
@@ -57,12 +59,20 @@ const STATUS_META: Record<AppStatus, { label: string; badge: string; dot: string
 
 type FilterKey = 'all' | AppStatus;
 
+// VELI_ONAY_ENTEGRASYON — veli onay bağlantısı (SSR'da window yoksa sabit origin)
+const consentLink = (token: string) =>
+  typeof window !== 'undefined'
+    ? `${window.location.origin}/veli-onay/${token}`
+    : `https://stajyeri.vercel.app/veli-onay/${token}`;
+
 export default function BasvurularimPage() {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [applications, setApplications] = useState<ApplicationRow[]>([]);
   const [filter, setFilter] = useState<FilterKey>('all');
   const [errorMsg, setErrorMsg] = useState('');
+  // VELI_ONAY_ENTEGRASYON — başvuruId -> bekleyen veli onay token'ı (tekrar gönderme için)
+  const [consentMap, setConsentMap] = useState<Record<string, string>>({});
 
   useEffect(() => {
     async function load() {
@@ -89,12 +99,12 @@ export default function BasvurularimPage() {
         return;
       }
 
-      // Başvuruları ilan ve işletme bilgisiyle çek
-      const { data: apps, error } = await supabase
+      // Başvuruları ilan ve işletme bilgisiyle çek (veli kolonu yoksa klasik sorguya geri dön)
+      let { data: apps, error } = await supabase
         .from('applications')
         .select(
           `
-          id, status, phone, message, created_at,
+          id, status, guardian_status, phone, message, created_at,
           job_posts (
             id, title, city, district, program_type, field_name,
             company_details ( company_name )
@@ -104,10 +114,43 @@ export default function BasvurularimPage() {
         .eq('student_id', sp.id)
         .order('created_at', { ascending: false });
 
+      if (error && /guardian_status/.test(error.message)) {
+        const fallback = await supabase
+          .from('applications')
+          .select(
+            `
+            id, status, phone, message, created_at,
+            job_posts (
+              id, title, city, district, program_type, field_name,
+              company_details ( company_name )
+            )
+          `
+          )
+          .eq('student_id', sp.id)
+          .order('created_at', { ascending: false });
+        apps = (fallback.data ?? null) as unknown as typeof apps;
+        error = fallback.error;
+      }
+
       if (error) {
         setErrorMsg('Başvurular yüklenirken bir hata oluştu.');
       } else if (apps) {
         setApplications(apps as unknown as ApplicationRow[]);
+      }
+
+      // VELI_ONAY_ENTEGRASYON — bekleyen veli onay bağlantılarını çek (tekrar gönderme için)
+      const { data: consents } = await supabase
+        .from('guardian_consents')
+        .select('application_id, consent_token')
+        .eq('student_id', sp.id)
+        .eq('status', 'pending');
+
+      if (consents) {
+        const map: Record<string, string> = {};
+        consents.forEach((c: { application_id: string; consent_token: string }) => {
+          map[c.application_id] = c.consent_token;
+        });
+        setConsentMap(map);
       }
 
       setLoading(false);
@@ -267,6 +310,30 @@ export default function BasvurularimPage() {
                                   <span>{programLabelOf(app.job_posts.program_type)}</span>
                                 )}
                               </div>
+                              {app.guardian_status === 'pending' && (
+                                <div className="mt-2 flex flex-wrap items-center gap-2">
+                                  <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
+                                    <ShieldAlert className="w-3 h-3" /> Veli onayı bekleniyor
+                                  </span>
+                                  {consentMap[app.id] && (
+                                    <a
+                                      href={`https://wa.me/?text=${encodeURIComponent(
+                                        `Staj başvurum için veli onayınız gerekiyor. Onaylamak için: ${consentLink(consentMap[app.id])}`
+                                      )}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-500 hover:bg-emerald-600 text-white flex items-center gap-1 transition"
+                                    >
+                                      <MessageCircle className="w-3 h-3" /> Onayı Tekrar Gönder
+                                    </a>
+                                  )}
+                                </div>
+                              )}
+                              {app.guardian_status === 'approved' && (
+                                <span className="mt-2 inline-flex px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-50 text-emerald-700 border border-emerald-200 items-center gap-1">
+                                  <CheckCircle2 className="w-3 h-3" /> Veli onayı verildi
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
