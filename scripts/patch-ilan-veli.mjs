@@ -1,4 +1,4 @@
-// scripts/patch-ilan-veli.mjs
+﻿// scripts/patch-ilan-veli.mjs
 // Entegrasyon 1: ilan detay basvuru akisina "Veli Onay" katmani.
 // Regex tabanli + atomik (bir patch bile tutmazsa dosya degismez) + idempotent.
 // guardian_consents kolonlari supabase/guven_katmani.sql'den okunur; payload ona uyarlanir.
