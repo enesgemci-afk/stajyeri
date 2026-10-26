@@ -31,7 +31,22 @@ import {
   Share2,
   Link2,
   Check,
+  Clock,
 } from 'lucide-react';
+
+// VELI_ONAY_ENTEGRASYON — 18 yaş altı veli muvafakat modülü kapsam sabitleri
+const THIS_YEAR = new Date().getFullYear();
+const BIRTH_YEARS: number[] = [];
+for (let __by = THIS_YEAR - 13; __by <= THIS_YEAR; __by += 1) BIRTH_YEARS.push(__by);
+
+// Seçilen doğum yılı 18 yaş altı mı? (3308 gereği veli onayı gerekir)
+const isMinorYear = (year: string) => !!year && THIS_YEAR - Number(year) < 18;
+
+// Veli onay bağlantısı için benzersiz token (girişsiz onay sayfası bu token'ı okur)
+const makeConsentToken = () =>
+  typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+    ? crypto.randomUUID()
+    : `gc-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
 
 interface JobDetail {
   id: string;
@@ -84,6 +99,12 @@ export default function IlanDetayPage() {
   const [studentEducation, setStudentEducation] = useState<string | null>(null);
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  // VELI_ONAY_ENTEGRASYON — veli onay state'leri
+  const [birthYear, setBirthYear] = useState('');
+  const [guardianName, setGuardianName] = useState('');
+  const [guardianPhone, setGuardianPhone] = useState('');
+  const [guardianRelation, setGuardianRelation] = useState('Anne');
+  const [guardianLink, setGuardianLink] = useState<string | null>(null);
   const [isFav, setIsFav] = useState(false);
   const [favBusy, setFavBusy] = useState(false);
   const [kvkkOk, setKvkkOk] = useState(false);
@@ -272,6 +293,19 @@ export default function IlanDetayPage() {
         setStudentId(sid);
       }
 
+      // VELI_ONAY_ENTEGRASYON — 18 yaş altı ise veli bilgileri zorunludur
+      const minor = isMinorYear(birthYear);
+      if (minor) {
+        if (!guardianName.trim()) {
+          throw new Error(
+            '18 yaş altı başvurular için veli adı-soyadı zorunludur (3308 sayılı Kanun kapsamında veli muvafakati).'
+          );
+        }
+        if (guardianPhone.replace(/\D/g, '').length < 10) {
+          throw new Error('Veli telefon numarası geçerli değil; onay bağlantısı bu numaraya iletilir.');
+        }
+      }
+
       // 2. Başvuruyu kaydet (KVKK açık rızasıyla; kolon yoksa rıza alanı olmadan dener)
       const baseApp = {
         job_id: jobId,
@@ -280,12 +314,24 @@ export default function IlanDetayPage() {
         phone: phone.trim() || null,
         message: message.trim() || null,
       };
-      let { error: appError } = await supabase
+      // VELI_ONAY_ENTEGRASYON — doğum yılı + veli durumu (kolonlar yoksa baseApp'e düşer)
+      const veliApp = {
+        ...baseApp,
+        birth_year: birthYear ? Number(birthYear) : null,
+        guardian_status: minor ? 'pending' : 'not_required',
+      };
+      let { data: newApp, error: appError } = await supabase
         .from('applications')
-        .insert({ ...baseApp, kvkk_consented_at: new Date().toISOString() });
+        .insert({ ...veliApp, kvkk_consented_at: new Date().toISOString() })
+        .select('id')
+        .single();
 
-      if (appError && /kvkk_consented_at/.test(appError.message)) {
-        ({ error: appError } = await supabase.from('applications').insert(baseApp));
+      if (appError && /kvkk_consented_at|birth_year|guardian_status/.test(appError.message)) {
+        ({ data: newApp, error: appError } = await supabase
+          .from('applications')
+          .insert(baseApp)
+          .select('id')
+          .single());
       }
 
       if (appError) {
@@ -295,6 +341,29 @@ export default function IlanDetayPage() {
           );
         }
         throw new Error(appError.message || 'Başvuru gönderilirken bir hata oluştu.');
+      }
+
+      // VELI_ONAY_ENTEGRASYON — 18 yaş altı: muvafakatname kaydı oluştur + onay bağlantısı üret
+      if (minor && newApp?.id) {
+        const token = makeConsentToken();
+        const { error: consentError } = await supabase.from('guardian_consents').insert({
+          application_id: newApp.id,
+          student_id: sid,
+          guardian_name: guardianName.trim(),
+          guardian_phone: guardianPhone.trim() || null,
+          relation: guardianRelation,
+          student_birth_year: birthYear ? Number(birthYear) : null,
+          consent_token: token,
+          provider: 'link',
+        });
+        if (!consentError) {
+          const origin =
+            typeof window !== 'undefined' ? window.location.origin : 'https://stajyeri.vercel.app';
+          setGuardianLink(`${origin}/veli-onay/${token}`);
+        } else {
+          // Tablo yoksa (SQL henüz çalıştırılmadıysa) başvuru yine geçerli; onay akışı devre dışı kalır
+          console.warn('[veli-onay] guardian_consents kaydı oluşturulamadı:', consentError.message);
+        }
       }
 
       setApplied(true);
@@ -543,13 +612,51 @@ export default function IlanDetayPage() {
                   </div>
                 ) : applied ? (
                   <div className="text-center py-2">
-                    <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center mx-auto mb-3">
-                      <CheckCircle2 className="w-6 h-6" />
+                    <div
+                      className={`w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 ${
+                        guardianLink ? 'bg-amber-50 text-amber-500' : 'bg-emerald-50 text-emerald-500'
+                      }`}
+                    >
+                      {guardianLink ? <Clock className="w-6 h-6" /> : <CheckCircle2 className="w-6 h-6" />}
                     </div>
-                    <h3 className="text-base font-black text-[#0A1931] mb-1.5">Başvurunuz Alındı</h3>
+                    <h3 className="text-base font-black text-[#0A1931] mb-1.5">
+                      {guardianLink ? 'Veli Onayı Bekleniyor' : 'Başvurunuz Alındı'}
+                    </h3>
                     <p className="text-xs text-slate-500 mb-5">
-                      Başvurunuz işletmeye iletildi. Durumunu Başvurularım sayfasından takip edebilirsiniz.
+                      {guardianLink
+                        ? 'Başvurunuz kaydedildi. 18 yaş altı başvurular, veli onayına kadar işletmeye "onay bekliyor" olarak görünür. Aşağıdaki bağlantıyı WhatsApp\'tan velinize iletin; onay verdiğinde başvurunuz otomatik olarak işletmeye açılır.'
+                        : 'Başvurunuz işletmeye iletildi. Durumunu Başvurularım sayfasından takip edebilirsiniz.'}
                     </p>
+                    {guardianLink && (
+                      <div className="space-y-2.5 mb-5 text-left">
+                        <a
+                          href={`https://wa.me/?text=${encodeURIComponent(
+                            `${fullName || 'Çocuğunuz'} adına staj başvurusu için veli onayınız gerekiyor. Onaylamak için: ${guardianLink}`
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30"
+                        >
+                          <MessageCircle className="w-4 h-4" /> WhatsApp'tan Veliye Gönder
+                        </a>
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            try {
+                              await navigator.clipboard.writeText(guardianLink);
+                              setCopied(true);
+                              setTimeout(() => setCopied(false), 2000);
+                            } catch {
+                              /* pano erişimi yoksa sessizce geç */
+                            }
+                          }}
+                          className="w-full py-3 bg-white border border-slate-200 hover:border-[#00A8B5] text-slate-700 font-bold rounded-xl text-xs transition flex items-center justify-center gap-2 cursor-pointer"
+                        >
+                          {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Link2 className="w-4 h-4" />}
+                          {copied ? 'Kopyalandı!' : 'Onay Bağlantısını Kopyala'}
+                        </button>
+                      </div>
+                    )}
                     <Link
                       href="/basvurularim"
                       className="w-full py-3 bg-[#00A8B5] hover:bg-[#008e9a] text-white font-black rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-[#00A8B5]/30"
@@ -663,6 +770,82 @@ export default function IlanDetayPage() {
                         Ön yazı nasıl yazılır? Rehbere göz atın &rarr;
                       </Link>
                     </div>
+
+                    {/* VELI_ONAY_ENTEGRASYON — doğum yılı + veli muvafakat (18 yaş altı) */}
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                        Doğum Yılınız{' '}
+                        <span className="text-slate-400 font-medium">(18 yaş altıysanız veli onayı gerekir)</span>
+                      </label>
+                      <div className="relative">
+                        <Calendar className="w-4 h-4 text-slate-400 absolute left-3.5 top-3 pointer-events-none" />
+                        <select
+                          value={birthYear}
+                          onChange={(e) => setBirthYear(e.target.value)}
+                          className="w-full pl-10 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition appearance-none cursor-pointer"
+                        >
+                          <option value="">Seçiniz (önerilir)</option>
+                          {BIRTH_YEARS.map((y) => (
+                            <option key={y} value={String(y)}>
+                              {y}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    {isMinorYear(birthYear) && (
+                      <div className="bg-amber-50/70 border border-amber-200 rounded-2xl p-4 space-y-3">
+                        <p className="text-[11px] text-amber-800 font-bold leading-relaxed flex items-start gap-1.5">
+                          <ShieldCheck className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                          18 yaş altı olduğunuz için 3308 sayılı Kanun gereği veli muvafakati gerekli.
+                          Başvurunuz, veliniz bağlantıyı onaylayana kadar işletmeye "onay bekliyor" olarak iletilir.
+                        </p>
+                        <div>
+                          <label className="block text-xs font-bold text-slate-700 mb-1">
+                            Veli Adı Soyadı <span className="text-red-500 font-bold">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={guardianName}
+                            onChange={(e) => setGuardianName(e.target.value)}
+                            placeholder="Örn: Ayşe Yılmaz"
+                            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-slate-700 mb-1">
+                            Veli Telefonu <span className="text-red-500 font-bold">*</span>
+                          </label>
+                          <div className="relative">
+                            <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                            <input
+                              type="tel"
+                              value={guardianPhone}
+                              onChange={(e) => setGuardianPhone(e.target.value)}
+                              placeholder="05XX XXX XX XX"
+                              className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition"
+                            />
+                          </div>
+                          <p className="text-[10px] text-slate-500 mt-1">
+                            Onay bağlantısını WhatsApp'tan velinize ileteceksiniz; numara yalnızca onay sürecinde kullanılır.
+                          </p>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-slate-700 mb-1">Yakınlık</label>
+                          <select
+                            value={guardianRelation}
+                            onChange={(e) => setGuardianRelation(e.target.value)}
+                            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition cursor-pointer"
+                          >
+                            <option value="Anne">Anne</option>
+                            <option value="Baba">Baba</option>
+                            <option value="Vasi">Vasi</option>
+                            <option value="Diğer">Diğer</option>
+                          </select>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="flex items-start gap-2.5 bg-slate-50/70 border border-slate-100 rounded-xl p-3">
                       <input
