@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
@@ -38,8 +39,8 @@ interface JobRow {
 interface IncomingAppRow {
   id: string;
   status: AppStatus;
-  guardian_status: string | null;
-  birth_year: number | null;
+  guardian_status?: string | null;
+  birth_year?: number | null;
   phone: string | null;
   message: string | null;
   created_at: string;
@@ -63,6 +64,7 @@ const STATUS_BADGE: Record<AppStatus, string> = {
 };
 
 export default function IsverenPanelPage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [authState, setAuthState] = useState<'guest' | 'employer' | 'student'>('guest');
   const [fullName, setFullName] = useState('');
@@ -88,10 +90,7 @@ export default function IsverenPanelPage() {
   const [actionMsg, setActionMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
 
   useEffect(() => {
-    load();
-  }, []);
-
-  async function load() {
+    async function load() {
     const {
       data: { session },
     } = await supabase.auth.getSession();
@@ -139,7 +138,9 @@ export default function IsverenPanelPage() {
       if (jobList) setJobs(jobList as JobRow[]);
 
       // VELI_ONAY_ENTEGRASYON — veli kolonlarıyla çek; SQL çalıştırılmadıysa klasik sorguya geri dön
-      let { data: appList, error: appErr } = await supabase
+      let appList: IncomingAppRow[] | null = null;
+      let appErrMsg = '';
+      const primary = await supabase
         .from('applications')
         .select(
           `
@@ -154,7 +155,7 @@ export default function IsverenPanelPage() {
         .eq('job_posts.company_id', co.id)
         .order('created_at', { ascending: false });
 
-      if (appErr && /birth_year|guardian_status/.test(appErr.message)) {
+      if (primary.error && /birth_year|guardian_status/.test(primary.error.message)) {
         const fallback = await supabase
           .from('applications')
           .select(
@@ -169,16 +170,22 @@ export default function IsverenPanelPage() {
           )
           .eq('job_posts.company_id', co.id)
           .order('created_at', { ascending: false });
-        appList = (fallback.data ?? null) as unknown as typeof appList;
-        appErr = fallback.error;
+        appErrMsg = fallback.error?.message ?? '';
+        appList = (fallback.data ?? null) as unknown as IncomingAppRow[] | null;
+      } else {
+        appErrMsg = primary.error?.message ?? '';
+        appList = (primary.data ?? null) as unknown as IncomingAppRow[] | null;
       }
 
-      if (appList) setApps(appList as unknown as IncomingAppRow[]);
-      if (appErr) console.error('Başvuru listesi hatası:', appErr.message);
+      if (appList) setApps(appList);
+      if (appErrMsg) console.error('Başvuru listesi hatası:', appErrMsg);
     }
 
-    setLoading(false);
-  }
+      setLoading(false);
+    }
+
+    load();
+  }, []);
 
   const toggleJob = async (job: JobRow) => {
     setBusyJob(job.id);
@@ -192,8 +199,8 @@ export default function IsverenPanelPage() {
       setJobs((prev) =>
         prev.map((j) => (j.id === job.id ? { ...j, is_active: !j.is_active } : j))
       );
-    } catch (err: any) {
-      setActionMsg({ type: 'err', text: err.message || 'İlan güncellenemedi.' });
+    } catch (err: unknown) {
+      setActionMsg({ type: 'err', text: err instanceof Error && err.message ? err.message : 'İlan güncellenemedi.' });
     } finally {
       setBusyJob(null);
     }
@@ -210,8 +217,8 @@ export default function IsverenPanelPage() {
       if (error) throw error;
       setApps((prev) => prev.map((a) => (a.id === appId ? { ...a, status } : a)));
       setActionMsg({ type: 'ok', text: 'Başvuru durumu güncellendi.' });
-    } catch (err: any) {
-      setActionMsg({ type: 'err', text: err.message || 'Durum güncellenemedi.' });
+    } catch (err: unknown) {
+      setActionMsg({ type: 'err', text: err instanceof Error && err.message ? err.message : 'Durum güncellenemedi.' });
     } finally {
       setBusyApp(null);
     }
@@ -219,7 +226,7 @@ export default function IsverenPanelPage() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    window.location.href = '/';
+    router.push('/');
   };
 
   const counts = {

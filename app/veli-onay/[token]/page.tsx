@@ -36,10 +36,11 @@ export default function VeliOnayPage() {
   const token = params?.token as string;
 
   const [info, setInfo] = useState<ConsentInfo | null>(null);
-  const [loading, setLoading] = useState(true);
+  // token yoksa yükleme hiç başlamaz — effect içinde senkron setState gerekmez
+  const [loading, setLoading] = useState(!!token);
   const [acting, setActing] = useState(false);
   const [result, setResult] = useState<'approved' | 'rejected' | null>(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(token ? '' : 'Onay bağlantısı geçersiz.');
   const [expired, setExpired] = useState(false);
 
   useEffect(() => {
@@ -63,10 +64,6 @@ export default function VeliOnayPage() {
       }
     }
     if (token) load();
-    else {
-      setError('Onay bağlantısı geçersiz.');
-      setLoading(false);
-    }
   }, [token]);
 
   async function decide(decision: 'approve' | 'reject') {
@@ -226,7 +223,46 @@ export default function VeliOnayPage() {
           </dl>
         </div>
 
-        {/* __VELI_B3__ */}
+        {/* __VELI_B3__ — onay/ret karar bloğu */}
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+          <h2 className="text-sm font-black text-[#0A1931] mb-2 text-center">Veli Onayınız Bekleniyor</h2>
+          <p className="text-[11px] text-slate-500 leading-relaxed text-center mb-5">
+            Öğrencinizin bu işletmede işyeri eğitimi (staj) almasına{' '}
+            <b className="text-[#0A1931]">onay veriyor</b> musunuz? Onayınız, 3308 sayılı Meslekî Eğitim Kanunu
+            kapsamında veli muvafakati olarak tarih ve IP bilgisiyle kayıt altına alınır.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              type="button"
+              onClick={() => decide('approve')}
+              disabled={acting}
+              className="flex-1 py-3.5 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-60 text-white font-black rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 cursor-pointer"
+            >
+              {acting ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
+              Onaylıyorum
+            </button>
+            <button
+              type="button"
+              onClick={() => decide('reject')}
+              disabled={acting}
+              className="flex-1 py-3.5 bg-white hover:bg-red-50 disabled:opacity-60 text-red-600 font-black rounded-xl text-xs transition flex items-center justify-center gap-2 border border-red-200 cursor-pointer"
+            >
+              <XCircle className="w-4 h-4" /> Onaylamıyorum
+            </button>
+          </div>
+          <p className="text-[10px] text-slate-400 mt-4 text-center leading-relaxed">
+            Kararınız daha sonra değiştirilemez. Onay verdiğinizde başvuru işletmeye açılır; reddederseniz
+            başvuru iptal edilir ve öğrenci bilgilendirilir. Sorularınız için okulunuzun koordinatörüne
+            başvurabilirsiniz.
+          </p>
+        </div>
+
+        {error && (
+          <div className="mt-4 bg-red-50 border border-red-200 rounded-2xl p-4 flex items-start gap-2.5">
+            <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+            <p className="text-[11px] text-red-700 font-bold leading-relaxed">{error}</p>
+          </div>
+        )}
       </main>
     </div>
   );

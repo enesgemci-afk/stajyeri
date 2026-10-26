@@ -7,13 +7,11 @@ import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import {
   Building2,
-  ClipboardList,
   LogIn,
   AlertCircle,
   ChevronRight,
   Clock,
   CheckCircle2,
-  XCircle,
   FileText,
   ShieldAlert,
   MessageCircle,
@@ -24,7 +22,7 @@ type AppStatus = 'pending' | 'approved' | 'rejected';
 interface ApplicationRow {
   id: string;
   status: AppStatus;
-  guardian_status: string | null;
+  guardian_status?: string | null;
   phone: string | null;
   message: string | null;
   created_at: string;
@@ -100,7 +98,9 @@ export default function BasvurularimPage() {
       }
 
       // Başvuruları ilan ve işletme bilgisiyle çek (veli kolonu yoksa klasik sorguya geri dön)
-      let { data: apps, error } = await supabase
+      let apps: ApplicationRow[] | null = null;
+      let appErr = '';
+      const primary = await supabase
         .from('applications')
         .select(
           `
@@ -114,7 +114,7 @@ export default function BasvurularimPage() {
         .eq('student_id', sp.id)
         .order('created_at', { ascending: false });
 
-      if (error && /guardian_status/.test(error.message)) {
+      if (primary.error && /guardian_status/.test(primary.error.message)) {
         const fallback = await supabase
           .from('applications')
           .select(
@@ -128,14 +128,17 @@ export default function BasvurularimPage() {
           )
           .eq('student_id', sp.id)
           .order('created_at', { ascending: false });
-        apps = (fallback.data ?? null) as unknown as typeof apps;
-        error = fallback.error;
+        appErr = fallback.error?.message ?? '';
+        apps = (fallback.data ?? null) as unknown as ApplicationRow[] | null;
+      } else {
+        appErr = primary.error?.message ?? '';
+        apps = (primary.data ?? null) as unknown as ApplicationRow[] | null;
       }
 
-      if (error) {
+      if (appErr) {
         setErrorMsg('Başvurular yüklenirken bir hata oluştu.');
       } else if (apps) {
-        setApplications(apps as unknown as ApplicationRow[]);
+        setApplications(apps);
       }
 
       // VELI_ONAY_ENTEGRASYON — bekleyen veli onay bağlantılarını çek (tekrar gönderme için)

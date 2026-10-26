@@ -367,8 +367,8 @@ export default function IlanDetayPage() {
       }
 
       setApplied(true);
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Beklenmeyen bir hata oluştu.');
+    } catch (err: unknown) {
+      setErrorMsg(err instanceof Error && err.message ? err.message : 'Beklenmeyen bir hata oluştu.');
     } finally {
       setApplying(false);
     }
@@ -637,7 +637,7 @@ export default function IlanDetayPage() {
                           rel="noopener noreferrer"
                           className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30"
                         >
-                          <MessageCircle className="w-4 h-4" /> WhatsApp'tan Veliye Gönder
+                          <MessageCircle className="w-4 h-4" /> WhatsApp’tan Veliye Gönder
                         </a>
                         <button
                           type="button"
@@ -799,7 +799,7 @@ export default function IlanDetayPage() {
                         <p className="text-[11px] text-amber-800 font-bold leading-relaxed flex items-start gap-1.5">
                           <ShieldCheck className="w-4 h-4 flex-shrink-0 mt-0.5" />
                           18 yaş altı olduğunuz için 3308 sayılı Kanun gereği veli muvafakati gerekli.
-                          Başvurunuz, veliniz bağlantıyı onaylayana kadar işletmeye "onay bekliyor" olarak iletilir.
+                          Başvurunuz, veliniz bağlantıyı onaylayana kadar işletmeye onay bekliyor olarak iletilir.
                         </p>
                         <div>
                           <label className="block text-xs font-bold text-slate-700 mb-1">
@@ -828,7 +828,7 @@ export default function IlanDetayPage() {
                             />
                           </div>
                           <p className="text-[10px] text-slate-500 mt-1">
-                            Onay bağlantısını WhatsApp'tan velinize ileteceksiniz; numara yalnızca onay sürecinde kullanılır.
+                            Onay bağlantısını WhatsApp’tan velinize ileteceksiniz; numara yalnızca onay sürecinde kullanılır.
                           </p>
                         </div>
                         <div>
@@ -859,7 +859,7 @@ export default function IlanDetayPage() {
                         <Link href="/kvkk" target="_blank" className="font-extrabold text-[#00A8B5] hover:underline">
                           KVKK Aydınlatma Metni
                         </Link>
-                        'ni okudum; ad, telefon, meslek alanı ve ön yazı bilgilerimin başvurduğum işletmeyle
+                        ’ni okudum; ad, telefon, meslek alanı ve ön yazı bilgilerimin başvurduğum işletmeyle
                         paylaşılmasına açık rıza veriyorum. <span className="text-red-500 font-bold">*</span>
                       </label>
                     </div>
