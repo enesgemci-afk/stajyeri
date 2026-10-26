@@ -269,3 +269,4 @@ console.log('\nSONUC: tum patchler uygulandi, dosya yazildi: ' + FILE);
 
 
 
+
