@@ -48,6 +48,18 @@ const makeConsentToken = () =>
     ? crypto.randomUUID()
     : `gc-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
 
+// GUVEN_KATMANI — Güvenli İşyeri rozeti stilleri (company_trust_scores.badge)
+const TRUST_BADGE_STYLE: Record<string, string> = {
+  gold: 'bg-amber-50 text-amber-700 border-amber-300',
+  silver: 'bg-slate-100 text-slate-600 border-slate-300',
+  bronze: 'bg-orange-50 text-orange-700 border-orange-300',
+};
+const TRUST_BADGE_LABEL: Record<string, string> = {
+  gold: 'Altın',
+  silver: 'Gümüş',
+  bronze: 'Bronz',
+};
+
 interface JobDetail {
   id: string;
   title: string;
@@ -112,6 +124,8 @@ export default function IlanDetayPage() {
   // Benzer ilanlar (Paket 2) ve paylaşım
   const [similarJobs, setSimilarJobs] = useState<SimilarJob[]>([]);
   const [copied, setCopied] = useState(false);
+  // GUVEN_KATMANI — işletmenin toplu güven skoru (Güvenli İşyeri rozeti)
+  const [trust, setTrust] = useState<{ trust_score: number; rating_count: number; badge: string } | null>(null);
 
   const programLabel =
     PROGRAM_TYPES.find((p) => p.value === job?.program_type)?.label ?? job?.program_type;
@@ -137,6 +151,17 @@ export default function IlanDetayPage() {
 
       if (!error && data) {
         setJob(data);
+
+        // GUVEN_KATMANI — işletmenin toplu güven skoru (view yoksa sessizce atla)
+        const companyId = (data as { company_id?: string } | null)?.company_id;
+        if (companyId) {
+          const { data: trustRow } = await supabase
+            .from('company_trust_scores')
+            .select('trust_score, rating_count, badge')
+            .eq('company_id', companyId)
+            .maybeSingle();
+          if (trustRow) setTrust(trustRow as { trust_score: number; rating_count: number; badge: string });
+        }
 
         // Benzer ilanlar (Paket 2): önce aynı meslek alanı, yetmezse aynı şehir
         const similarSelect =
@@ -430,6 +455,17 @@ export default function IlanDetayPage() {
                         <Building2 className="w-4 h-4 text-[#00A8B5]" />
                         {job.company_details?.company_name || 'İşletme adı belirtilmemiş'}
                       </div>
+                      {trust && trust.badge !== 'none' && (
+                        <div
+                          className={`mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black border ${
+                            TRUST_BADGE_STYLE[trust.badge] ?? 'bg-slate-50 text-slate-600 border-slate-200'
+                          }`}
+                        >
+                          <ShieldCheck className="w-3 h-3" />
+                          Güvenli İşyeri — {TRUST_BADGE_LABEL[trust.badge] ?? trust.badge} · {trust.trust_score}/5 (
+                          {trust.rating_count} değerlendirme)
+                        </div>
+                      )}
                     </div>
                   </div>
                   <span className="px-3 py-1.5 bg-[#00A8B5]/10 text-[#00A8B5] rounded-full text-[11px] font-black whitespace-nowrap">

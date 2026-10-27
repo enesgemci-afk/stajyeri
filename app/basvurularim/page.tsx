@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { PROGRAM_TYPES } from '@/lib/constants';
 import Link from 'next/link';
@@ -15,6 +15,8 @@ import {
   FileText,
   ShieldAlert,
   MessageCircle,
+  Star,
+  X,
 } from 'lucide-react';
 
 type AppStatus = 'pending' | 'approved' | 'rejected';
@@ -28,6 +30,7 @@ interface ApplicationRow {
   created_at: string;
   job_posts?: {
     id: string;
+    company_id?: string | null;
     title: string;
     city: string | null;
     district: string | null;
@@ -63,6 +66,53 @@ const consentLink = (token: string) =>
     ? `${window.location.origin}/veli-onay/${token}`
     : `https://stajyeri.vercel.app/veli-onay/${token}`;
 
+// GUVEN_KATMANI — puanlama kriterleri (trainer_ratings kolonlarıyla birebir)
+const RATING_CRITERIA: {
+  key: 'education_quality' | 'safety' | 'respect' | 'wage_order';
+  label: string;
+  hint: string;
+}[] = [
+  { key: 'education_quality', label: 'Eğitim Kalitesi', hint: 'Usta öğreticiden gerçekte öğrendin mi?' },
+  { key: 'safety', label: 'İş Güvenliği', hint: 'Ekipman, koruyucu malzeme, güvenli ortam' },
+  { key: 'respect', label: 'Saygı / İletişim', hint: 'Nazik, koruyucu ve saygılı bir ortam' },
+  { key: 'wage_order', label: 'Ücret Düzeni', hint: "3308'e uygun ve düzenli ödeme" },
+];
+
+// GUVEN_KATMANI — yıldız seçici satırı (1-5)
+function StarRow({
+  label,
+  hint,
+  value,
+  onChange,
+}: {
+  label: string;
+  hint: string;
+  value: number;
+  onChange: (n: number) => void;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <div className="min-w-0">
+        <p className="text-[11px] font-black text-slate-700">{label}</p>
+        <p className="text-[10px] text-slate-400">{hint}</p>
+      </div>
+      <div className="flex gap-0.5 flex-shrink-0">
+        {[1, 2, 3, 4, 5].map((n) => (
+          <button
+            key={n}
+            type="button"
+            onClick={() => onChange(n)}
+            aria-label={`${label} ${n} yıldız`}
+            className="cursor-pointer p-0.5"
+          >
+            <Star className={`w-5 h-5 ${n <= value ? 'text-amber-400 fill-amber-400' : 'text-slate-300'}`} />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function BasvurularimPage() {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -71,6 +121,16 @@ export default function BasvurularimPage() {
   const [errorMsg, setErrorMsg] = useState('');
   // VELI_ONAY_ENTEGRASYON — başvuruId -> bekleyen veli onay token'ı (tekrar gönderme için)
   const [consentMap, setConsentMap] = useState<Record<string, string>>({});
+  // GUVEN_KATMANI — usta öğretici/işyeri puanlama state'leri
+  const [studentId, setStudentId] = useState<string | null>(null);
+  const [ratedMap, setRatedMap] = useState<Record<string, boolean>>({});
+  const [ratingAppId, setRatingAppId] = useState<string | null>(null);
+  const [rateScores, setRateScores] = useState<Record<string, number>>({});
+  const [rateTrainer, setRateTrainer] = useState('');
+  const [rateComment, setRateComment] = useState('');
+  const [rateRecommend, setRateRecommend] = useState(true);
+  const [ratingBusy, setRatingBusy] = useState(false);
+  const [ratingError, setRatingError] = useState('');
 
   useEffect(() => {
     async function load() {
@@ -97,6 +157,9 @@ export default function BasvurularimPage() {
         return;
       }
 
+      // GUVEN_KATMANI — puanlama kaydı için öğrenci profil id'si
+      setStudentId(sp.id);
+
       // Başvuruları ilan ve işletme bilgisiyle çek (veli kolonu yoksa klasik sorguya geri dön)
       let apps: ApplicationRow[] | null = null;
       let appErr = '';
@@ -106,7 +169,7 @@ export default function BasvurularimPage() {
           `
           id, status, guardian_status, phone, message, created_at,
           job_posts (
-            id, title, city, district, program_type, field_name,
+            id, company_id, title, city, district, program_type, field_name,
             company_details ( company_name )
           )
         `
@@ -121,7 +184,7 @@ export default function BasvurularimPage() {
             `
             id, status, phone, message, created_at,
             job_posts (
-              id, title, city, district, program_type, field_name,
+              id, company_id, title, city, district, program_type, field_name,
               company_details ( company_name )
             )
           `
@@ -156,11 +219,84 @@ export default function BasvurularimPage() {
         setConsentMap(map);
       }
 
+      // GUVEN_KATMANI — puanlanmış başvuruları çek (tablo yoksa sessizce atla)
+      const { data: rated } = await supabase
+        .from('trainer_ratings')
+        .select('application_id')
+        .eq('student_id', sp.id)
+        .limit(200);
+      if (rated) {
+        const rm: Record<string, boolean> = {};
+        rated.forEach((r: { application_id: string }) => {
+          rm[r.application_id] = true;
+        });
+        setRatedMap(rm);
+      }
+
       setLoading(false);
     }
 
     load();
   }, []);
+
+  // GUVEN_KATMANI — puanlama formunu aç (alanları sıfırla)
+  const openRating = (appId: string) => {
+    setRatingAppId(appId);
+    setRateScores({});
+    setRateTrainer('');
+    setRateComment('');
+    setRateRecommend(true);
+    setRatingError('');
+  };
+
+  // GUVEN_KATMANI — anonim usta öğretici/işyeri değerlendirmesini kaydet
+  const submitRating = async (e: FormEvent, app: ApplicationRow) => {
+    e.preventDefault();
+    setRatingError('');
+    const companyId = app.job_posts?.company_id ?? null;
+    if (!studentId || !companyId) {
+      setRatingError('Değerlendirme şu anda kaydedilemiyor (işletme bilgisi eksik).');
+      return;
+    }
+    const incomplete = RATING_CRITERIA.some((c) => {
+      const v = rateScores[c.key];
+      return !(typeof v === 'number' && v >= 1 && v <= 5);
+    });
+    if (incomplete) {
+      setRatingError('Lütfen 4 kriterin tamamına yıldız verin.');
+      return;
+    }
+    setRatingBusy(true);
+    const { error } = await supabase.from('trainer_ratings').insert({
+      application_id: app.id,
+      student_id: studentId,
+      company_id: companyId,
+      trainer_name: rateTrainer.trim() || null,
+      education_quality: rateScores.education_quality,
+      safety: rateScores.safety,
+      respect: rateScores.respect,
+      wage_order: rateScores.wage_order,
+      comment: rateComment.trim() || null,
+      would_recommend: rateRecommend,
+    });
+    setRatingBusy(false);
+    if (error) {
+      // Aynı başvuruya ikinci puan (unique index) — kullanıcıya başarı gibi göster
+      if (/duplicate|unique/i.test(error.message)) {
+        setRatedMap((m) => ({ ...m, [app.id]: true }));
+        setRatingAppId(null);
+        return;
+      }
+      setRatingError(
+        /row-level security|does not exist|permission/i.test(error.message)
+          ? 'Puanlama kaydedilemedi (güvenlik katmanı güncellemesi gerekebilir).'
+          : 'Değerlendirme kaydedilemedi, lütfen tekrar deneyin.'
+      );
+      return;
+    }
+    setRatedMap((m) => ({ ...m, [app.id]: true }));
+    setRatingAppId(null);
+  };
 
   const counts = {
     all: applications.length,
@@ -285,8 +421,8 @@ export default function BasvurularimPage() {
                   {filtered.map((app) => {
                     const meta = STATUS_META[app.status] ?? STATUS_META.pending;
                     return (
+                      <div key={app.id} className="w-full">
                       <div
-                        key={app.id}
                         className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition p-5 flex flex-col sm:flex-row sm:items-center gap-4"
                       >
                         <div className="flex-1 min-w-0">
@@ -348,6 +484,20 @@ export default function BasvurularimPage() {
                             <span className={`w-1.5 h-1.5 rounded-full ${meta.dot}`} />
                             {meta.label}
                           </span>
+                          {app.status === 'approved' && !ratedMap[app.id] && (
+                            <button
+                              type="button"
+                              onClick={() => openRating(app.id)}
+                              className="px-3 py-1.5 rounded-full text-[11px] font-black bg-[#00A8B5] hover:bg-[#008e9a] text-white flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+                            >
+                              <Star className="w-3.5 h-3.5" /> Ustamı Puanla
+                            </button>
+                          )}
+                          {app.status === 'approved' && ratedMap[app.id] && (
+                            <span className="px-3 py-1.5 rounded-full text-[11px] font-black bg-slate-100 text-slate-500 border border-slate-200 flex items-center gap-1.5">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> Değerlendirildi
+                            </span>
+                          )}
                           {app.job_posts?.id && (
                             <Link
                               href={`/ilan/${app.job_posts.id}`}
@@ -357,6 +507,112 @@ export default function BasvurularimPage() {
                             </Link>
                           )}
                         </div>
+                      </div>
+
+                      {/* GUVEN_KATMANI — anonim usta öğretici/işyeri değerlendirme formu */}
+                      {ratingAppId === app.id && (
+                        <form
+                          onSubmit={(e) => submitRating(e, app)}
+                          className="mt-2 bg-white rounded-2xl border-2 border-[#00A8B5]/30 shadow-sm p-5 space-y-4"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0">
+                              <p className="text-xs font-black text-[#0A1931] flex items-center gap-1.5">
+                                <Star className="w-4 h-4 text-amber-400 fill-amber-400" /> Ustamı Puanla
+                              </p>
+                              <p className="text-[10px] text-slate-400 mt-0.5">
+                                {app.job_posts?.company_details?.company_name ?? 'İşletme'} · Değerlendirmen
+                                anonimdir; işletme bireysel puanını asla görmez, yalnızca genel skor birikir.
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setRatingAppId(null)}
+                              className="text-slate-400 hover:text-slate-600 transition cursor-pointer flex-shrink-0"
+                              aria-label="Puanlamayı kapat"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+
+                          <div className="space-y-3">
+                            {RATING_CRITERIA.map((c) => (
+                              <StarRow
+                                key={c.key}
+                                label={c.label}
+                                hint={c.hint}
+                                value={rateScores[c.key] ?? 0}
+                                onChange={(n) => setRateScores((s) => ({ ...s, [c.key]: n }))}
+                              />
+                            ))}
+                          </div>
+
+                          {/* GUVEN_KATMANI — form devam: usta adı, tavsiye, yorum, onay */}
+                          <div>
+                            <label className="block text-[11px] font-black text-slate-700 mb-1">
+                              Usta Öğreticinin Adı{' '}
+                              <span className="text-slate-400 font-medium">(opsiyonel — sadece bu staj için)</span>
+                            </label>
+                            <input
+                              type="text"
+                              value={rateTrainer}
+                              onChange={(e) => setRateTrainer(e.target.value)}
+                              placeholder="Örn: Mehmet Usta"
+                              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition"
+                            />
+                          </div>
+
+                          <label className="flex items-center gap-2.5 cursor-pointer select-none bg-slate-50 rounded-xl px-3.5 py-2.5 border border-slate-200">
+                            <input
+                              type="checkbox"
+                              checked={rateRecommend}
+                              onChange={(e) => setRateRecommend(e.target.checked)}
+                              className="w-4 h-4 accent-[#00A8B5] cursor-pointer flex-shrink-0"
+                            />
+                            <span className="text-[11px] font-bold text-slate-700">
+                              👍 Bu işyerunu diğer stajyerlere tavsiye ederim
+                            </span>
+                          </label>
+
+                          <div>
+                            <label className="block text-[11px] font-black text-slate-700 mb-1">
+                              Deneyimini Yaz{' '}
+                              <span className="text-slate-400 font-medium">(opsiyonel, tamamen anonim)</span>
+                            </label>
+                            <textarea
+                              value={rateComment}
+                              onChange={(e) => setRateComment(e.target.value)}
+                              rows={3}
+                              placeholder="Neler öğrendin? Ortam nasıldı? Adın-soyadın asla işletmeye gösterilmez."
+                              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition resize-none"
+                            />
+                          </div>
+
+                          {ratingError && (
+                            <p className="text-[11px] font-bold text-red-600 bg-red-50 border border-red-200 rounded-xl px-3.5 py-2.5">
+                              {ratingError}
+                            </p>
+                          )}
+
+                          <div className="flex items-center gap-2.5 pt-1">
+                            <button
+                              type="submit"
+                              disabled={ratingBusy}
+                              className="px-5 py-2.5 bg-[#00A8B5] hover:bg-[#008e9a] disabled:opacity-60 text-white text-xs font-black rounded-xl transition cursor-pointer flex items-center gap-2"
+                            >
+                              <Star className="w-4 h-4" /> {ratingBusy ? 'Gönderiliyor...' : 'Değerlendirmeyi Gönder'}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setRatingAppId(null)}
+                              disabled={ratingBusy}
+                              className="px-5 py-2.5 bg-white border border-slate-200 hover:border-slate-300 text-slate-600 text-xs font-bold rounded-xl transition cursor-pointer disabled:opacity-60"
+                            >
+                              Vazgeç
+                            </button>
+                          </div>
+                        </form>
+                      )}
                       </div>
                     );
                   })}

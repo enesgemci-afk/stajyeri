@@ -38,11 +38,19 @@ async function checkBucket(bucket) {
 }
 
 async function main() {
-  console.log('=== KOLON KONTROLU ===');
+  console.log('=== KOLON KONTROLU (vitrin SQL) ===');
   console.log('company_details.logo_url  :', await checkColumn('company_details', 'logo_url'));
   console.log('company_details.logo_color:', await checkColumn('company_details', 'logo_color'));
   console.log('job_posts.wage_info       :', await checkColumn('job_posts', 'wage_info'));
   console.log('student_cvs.photo_url     :', await checkColumn('student_cvs', 'photo_url'));
+
+  console.log('=== KOLON KONTROLU (guven katmani SQL) ===');
+  console.log('applications.guardian_status:', await checkColumn('applications', 'guardian_status'));
+  console.log('applications.birth_year     :', await checkColumn('applications', 'birth_year'));
+  console.log('guardian_consents.guardian_name:', await checkColumn('guardian_consents', 'guardian_name'));
+  console.log('trainer_ratings.education_quality:', await checkColumn('trainer_ratings', 'education_quality'));
+  console.log('simulator_leads.company_name  :', await checkColumn('simulator_leads', 'company_name'));
+  console.log('company_trust_scores (view)  :', await checkColumn('company_trust_scores', 'company_id'));
 
   console.log('=== BUCKET KONTROLU ===');
   console.log('company-logos :', await checkBucket('company-logos'));

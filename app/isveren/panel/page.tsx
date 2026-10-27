@@ -21,6 +21,7 @@ import {
   ChevronRight,
   GraduationCap,
   Lock,
+  ShieldCheck,
 } from 'lucide-react';
 
 type AppStatus = 'pending' | 'approved' | 'rejected';
@@ -88,6 +89,8 @@ export default function IsverenPanelPage() {
   const [busyJob, setBusyJob] = useState<string | null>(null);
   const [busyApp, setBusyApp] = useState<string | null>(null);
   const [actionMsg, setActionMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
+  // GUVEN_KATMANI — işletmenin güven skoru (işveren kendi rozetini görür)
+  const [trust, setTrust] = useState<{ trust_score: number; rating_count: number; badge: string } | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -179,6 +182,14 @@ export default function IsverenPanelPage() {
 
       if (appList) setApps(appList);
       if (appErrMsg) console.error('Başvuru listesi hatası:', appErrMsg);
+
+      // GUVEN_KATMANI — işletmenin toplu güven skoru (view yoksa sessizce atla)
+      const { data: trustRow } = await supabase
+        .from('company_trust_scores')
+        .select('trust_score, rating_count, badge')
+        .eq('company_id', co.id)
+        .maybeSingle();
+      if (trustRow) setTrust(trustRow as { trust_score: number; rating_count: number; badge: string });
     }
 
       setLoading(false);
@@ -347,6 +358,43 @@ export default function IsverenPanelPage() {
             </div>
           ))}
         </section>
+
+        {company && (
+          <section className="mt-6 bg-gradient-to-br from-emerald-50 to-white rounded-2xl border border-emerald-200/60 p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                <ShieldCheck className="w-7 h-7" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-black text-[#0A1931]">Güven Skorunuz — Güvenli İşyeri Rozeti</p>
+                {trust ? (
+                  <p className="text-[11px] text-slate-500 mt-0.5">
+                    {trust.trust_score}/5 puan · {trust.rating_count} anonim stajyer değerlendirmesi
+                    {trust.badge !== 'none' && ' · Rozetiniz ilanlarınızda öğrencilere görünür'}
+                  </p>
+                ) : (
+                  <p className="text-[11px] text-slate-500 mt-0.5">
+                    Henüz değerlendirme yok. Stajyerleriniz stajı tamamladığında usta öğreticisini ve işyerünü anonim
+                    olarak puanlar; 3 değerlendirme toplayınca rozetiniz ilanlarınızda otomatik görünür.
+                  </p>
+                )}
+              </div>
+              {trust && trust.badge !== 'none' && (
+                <span
+                  className={`px-3 py-1.5 rounded-full text-[11px] font-black border whitespace-nowrap ${
+                    trust.badge === 'gold'
+                      ? 'bg-amber-50 text-amber-700 border-amber-300'
+                      : trust.badge === 'silver'
+                        ? 'bg-slate-100 text-slate-600 border-slate-300'
+                        : 'bg-orange-50 text-orange-700 border-orange-300'
+                  }`}
+                >
+                  {trust.badge === 'gold' ? '🏆 Altın' : trust.badge === 'silver' ? '🥈 Gümüş' : '🥉 Bronz'} Rozet
+                </span>
+              )}
+            </div>
+          </section>
+        )}
 
         {company ? (
           <>
