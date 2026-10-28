@@ -493,15 +493,23 @@ create policy "admin basvurulari okur"
   using (public.is_admin());
 
 -- ============================================================
--- KENDİ HESABINIZI ADMİN YAPMAK İÇİN (yalnızca bir kez!)
--- Aşağıdaki e-postayı kendi e-postanızla değiştirin, satır
--- başlarındaki '--' işaretini kaldırın ve çalıştırın.
--- (Hesabınızın user_type'ı DEĞİŞMEZ — yalnızca yönetici bayrağı
---  açılır; işveren paneliniz ve menüleriniz aynen çalışır.)
+-- ADMİN HESABI: enesg / Enes5050
+-- 1) Supabase Dashboard → Authentication → Users → "Add user"
+--    E-posta: enesg@stajyeri.net    Şifre: Enes5050    Auto Confirm: ✅
+-- 2) Aşağıdaki update bloğu hesabı yönetici yapar. Kullanıcı henüz
+--    oluşturulmadıysa 0 satır etkiler; kullanıcıyı oluşturduktan
+--    sonra yalnızca bu bloğu tekrar çalıştırın.
 -- ============================================================
--- update public.profiles
---    set is_admin = true
---  where id = (select id from auth.users where email = 'SIZIN_EPOSTA@ornek.com');
+update public.profiles
+   set is_admin = true
+ where id = (select id from auth.users where email = 'enesg@stajyeri.net');
+
+-- Profil satırı hiç oluşmadıysa (girişte otomatik oluşmuyorsa) şunu da çalıştırın:
+-- insert into public.profiles (id, user_type, full_name)
+-- select u.id, 'employer', 'Yönetici'
+--   from auth.users u
+--  where u.email = 'enesg@stajyeri.net'
+--    and not exists (select 1 from public.profiles p where p.id = u.id);
 
 -- ============================================================
 -- DOĞRULAMA — Run sonrası bu sorgu 8 satır dönmeli:

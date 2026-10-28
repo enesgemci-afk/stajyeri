@@ -125,7 +125,9 @@ export default function AdminHavuzPage() {
     setBusy(true);
     setErrMsg('');
     setActionMsg(null);
-    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+    // Kısa kullanıcı adı desteği: 'enesg' -> 'enesg@stajyeri.net'
+    const identifier = email.includes('@') ? email.trim() : `${email.trim().toLowerCase()}@stajyeri.net`;
+    const { error } = await supabase.auth.signInWithPassword({ email: identifier, password });
     if (error) {
       setErrMsg(error.message);
       setBusy(false);
@@ -224,13 +226,13 @@ export default function AdminHavuzPage() {
           </p>
           <form onSubmit={handleLogin} className="space-y-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">E-posta</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Kullanıcı Adı veya E-posta</label>
               <input
-                type="email"
+                type="text"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@stajyeri.net"
+                placeholder="ör. enesg"
                 className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition"
               />
             </div>
