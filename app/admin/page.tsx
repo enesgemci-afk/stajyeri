@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { type FormEvent, useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
@@ -21,22 +21,58 @@ import {
   AlertCircle 
 } from 'lucide-react';
 
+// ---- Tip tanımları ----
+interface AdminJob {
+  id: string;
+  title: string | null;
+  field_name: string | null;
+  city: string | null;
+  district: string | null;
+  quota: number | null;
+  is_active: boolean | null;
+  company_details?: { company_name: string | null } | null;
+}
+
+interface AdminCompany {
+  id: string;
+  company_name: string | null;
+  city: string | null;
+  district: string | null;
+  created_at: string;
+}
+
+interface AdminStudent {
+  id: string;
+  field_name: string | null;
+  education_level: string | null;
+  created_at: string;
+  profiles?: { full_name: string | null } | null;
+}
+
+interface AdminApplication {
+  id: string;
+  status: string | null;
+  created_at: string;
+  job_posts?: { title: string | null } | null;
+  student_profiles?: { field_name: string | null; profiles?: { full_name: string | null } | null } | null;
+}
+
 export default function AdminDashboardPage() {
-  // Giriş Doğrulama State'leri
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isClient, setIsClient] = useState<boolean>(false);
-  const [usernameInput, setUsernameInput] = useState('');
-  const [passwordInput, setPasswordInput] = useState('');
+  // Oturum durumu: loading -> login | denied | ready
+  const [mode, setMode] = useState<'loading' | 'login' | 'denied' | 'ready'>('loading');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [busy, setBusy] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
 
   // Panel Veri State'leri
   const [activeTab, setActiveTab] = useState<'jobs' | 'companies' | 'students' | 'applications'>('jobs');
   const [loading, setLoading] = useState(false);
 
-  const [jobs, setJobs] = useState<any[]>([]);
-  const [companies, setCompanies] = useState<any[]>([]);
-  const [students, setStudents] = useState<any[]>([]);
-  const [applications, setApplications] = useState<any[]>([]);
+  const [jobs, setJobs] = useState<AdminJob[]>([]);
+  const [companies, setCompanies] = useState<AdminCompany[]>([]);
+  const [students, setStudents] = useState<AdminStudent[]>([]);
+  const [applications, setApplications] = useState<AdminApplication[]>([]);
 
   // İstatistikler
   const [stats, setStats] = useState({
@@ -49,48 +85,8 @@ export default function AdminDashboardPage() {
 
   const [searchTerm, setSearchTerm] = useState('');
 
-  // 1. İstemci yüklendiğinde oturumu kontrol et
-  useEffect(() => {
-    setIsClient(true);
-    try {
-      const isLogged = typeof window !== 'undefined' && sessionStorage.getItem('admin_auth') === 'true';
-      if (isLogged) {
-        setIsAuthenticated(true);
-        loadAdminData();
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }, []);
-
-  // Admin Giriş İşlemi
-  const handleAdminLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoginError(null);
-
-    if (usernameInput.trim() === 'enes' && passwordInput.trim() === 'admin') {
-      try {
-        sessionStorage.setItem('admin_auth', 'true');
-      } catch (e) {}
-      setIsAuthenticated(true);
-      loadAdminData();
-    } else {
-      setLoginError('Hatalı kullanıcı adı veya şifre girdiniz.');
-    }
-  };
-
-  // Admin Çıkış İşlemi
-  const handleAdminLogout = () => {
-    try {
-      sessionStorage.removeItem('admin_auth');
-    } catch (e) {}
-    setIsAuthenticated(false);
-    setUsernameInput('');
-    setPasswordInput('');
-  };
-
-  // Verileri Çek
-  const loadAdminData = async () => {
+  // Verileri Çek (useCallback: effect'ten ÖNCE tanımlanmalı)
+  const loadAdminData = useCallback(async () => {
     setLoading(true);
     try {
       // 1. İlanları Çek
@@ -117,10 +113,10 @@ export default function AdminDashboardPage() {
         .select('*, job_posts(title), student_profiles(field_name, profiles(full_name))')
         .order('created_at', { ascending: false });
 
-      const j = jobList || [];
-      const c = compList || [];
-      const s = stuList || [];
-      const a = appList || [];
+      const j = (jobList ?? []) as AdminJob[];
+      const c = (compList ?? []) as AdminCompany[];
+      const s = (stuList ?? []) as AdminStudent[];
+      const a = (appList ?? []) as AdminApplication[];
 
       setJobs(j);
       setCompanies(c);
@@ -139,6 +135,71 @@ export default function AdminDashboardPage() {
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  // Oturum + yönetici bayrağı (is_admin) kontrolü
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!alive) return;
+      if (!data.session) {
+        setMode('login');
+        return;
+      }
+      const { data: prof } = await supabase
+        .from('profiles')
+        .select('is_admin')
+        .eq('id', data.session.user.id)
+        .single();
+      if (!alive) return;
+      if (prof?.is_admin === true) {
+        setMode('ready');
+        void loadAdminData();
+      } else {
+        setMode('denied');
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [loadAdminData]);
+
+  // Yönetici Girişi — Supabase hesabı + is_admin bayrağı zorunlu
+  const handleAdminLogin = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoginError(null);
+    setBusy(true);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+      if (error) {
+        setLoginError('E-posta veya şifre hatalı.');
+        return;
+      }
+      const { data: { user } } = await supabase.auth.getUser();
+      const { data: prof } = await supabase
+        .from('profiles')
+        .select('is_admin')
+        .eq('id', user?.id ?? '')
+        .single();
+      if (!prof?.is_admin) {
+        setLoginError('Bu hesap yönetici yetkisine sahip değil.');
+        return;
+      }
+      setPassword('');
+      setMode('ready');
+      void loadAdminData();
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // Yönetici Çıkışı
+  const handleAdminLogout = async () => {
+    await supabase.auth.signOut();
+    setEmail('');
+    setPassword('');
+    setMode('login');
   };
 
   // İlan Durumu Güncelle (Aktif / Pasif)
@@ -174,13 +235,47 @@ export default function AdminDashboardPage() {
     j.city?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // İstemci yüklenene kadar boş dönmeyip doğrudan giriş formunu hazırla
-  if (!isClient) {
+  // Oturum kontrolü sürerken boş dön
+  if (mode === 'loading') {
     return null;
   }
 
+  // --- YÖNETİCİ YETKİSİ OLMAYAN HESAP ---
+  if (mode === 'denied') {
+    return (
+      <div className="min-h-screen bg-[#0A1931] flex flex-col justify-between font-sans px-4 py-8">
+        <div className="max-w-md w-full mx-auto flex items-center justify-between text-xs text-slate-400">
+          <Link href="/" className="hover:text-white flex items-center gap-1.5 transition">
+            <ArrowLeft className="w-4 h-4" /> Ana Sayfaya Dön
+          </Link>
+          <span className="font-bold text-[#00E5FF]">Stajyeri.net Security</span>
+        </div>
+
+        <div className="max-w-md w-full mx-auto my-auto bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border border-slate-100 text-center">
+          <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center mx-auto mb-3 shadow-md">
+            <AlertCircle className="w-6 h-6" />
+          </div>
+          <h1 className="text-xl font-black text-[#0A1931]">Erişim Yetkisi Yok</h1>
+          <p className="text-xs text-slate-500 mt-1 mb-6">
+            Bu hesap yönetici yetkisine sahip değil. Lütfen yönetici hesabınızla giriş yapın.
+          </p>
+          <button
+            onClick={handleAdminLogout}
+            className="w-full py-3 bg-[#0A1931] hover:bg-[#00A8B5] text-white font-extrabold rounded-xl text-xs transition flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <LogOut className="w-4 h-4" /> Farklı Hesapla Giriş Yap
+          </button>
+        </div>
+
+        <div className="text-center text-[11px] text-slate-500">
+          stajyeri.net &bull; Yetkisiz erişimler kayıt altına alınmaktadır.
+        </div>
+      </div>
+    );
+  }
+
   // --- GİRİŞ YAPILMAMIŞSA GÖSTERİLECEK GÜVENLİK GİRİŞ FORMU ---
-  if (!isAuthenticated) {
+  if (mode === 'login') {
     return (
       <div className="min-h-screen bg-[#0A1931] flex flex-col justify-between font-sans px-4 py-8">
         <div className="max-w-md w-full mx-auto flex items-center justify-between text-xs text-slate-400">
@@ -197,21 +292,21 @@ export default function AdminDashboardPage() {
             </div>
             <h1 className="text-xl font-black text-[#0A1931]">Yönetici Doğrulaması</h1>
             <p className="text-xs text-slate-500 mt-1">
-              Merkezi yönetim paneline erişmek için bilgilerinizi girin.
+              Merkezi yönetim paneline erişmek için yönetici hesabınızla giriş yapın.
             </p>
           </div>
 
           <form onSubmit={handleAdminLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Kullanıcı Adı</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">E-posta</label>
               <div className="relative">
                 <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
-                  type="text"
+                  type="email"
                   required
-                  value={usernameInput}
-                  onChange={(e) => setUsernameInput(e.target.value)}
-                  placeholder="Kullanıcı adınızı girin"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Yönetici e-postanız"
                   className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition"
                 />
               </div>
@@ -224,8 +319,8 @@ export default function AdminDashboardPage() {
                 <input
                   type="password"
                   required
-                  value={passwordInput}
-                  onChange={(e) => setPasswordInput(e.target.value)}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition"
                 />
@@ -241,9 +336,10 @@ export default function AdminDashboardPage() {
 
             <button
               type="submit"
-              className="w-full py-3 bg-[#0A1931] hover:bg-[#00A8B5] text-white font-extrabold rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-[#0A1931]/20 cursor-pointer"
+              disabled={busy}
+              className="w-full py-3 bg-[#0A1931] hover:bg-[#00A8B5] text-white font-extrabold rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-[#0A1931]/20 disabled:opacity-60 cursor-pointer"
             >
-              <LogIn className="w-4 h-4" /> Güvenli Giriş Yap
+              <LogIn className="w-4 h-4" /> {busy ? 'Doğrulanıyor...' : 'Güvenli Giriş Yap'}
             </button>
           </form>
         </div>
@@ -267,6 +363,12 @@ export default function AdminDashboardPage() {
             <span className="px-2.5 py-0.5 rounded-md bg-[#FF6B00] text-white text-[10px] font-black tracking-wider uppercase">
               YÖNETİCİ: ENES
             </span>
+            <Link
+              href="/admin/havuz"
+              className="text-xs font-bold text-white bg-[#0A1931] hover:bg-[#00A8B5] px-3 py-1.5 rounded-lg transition flex items-center gap-1 cursor-pointer"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" /> Havuz & Kontör
+            </Link>
             <button
               onClick={loadAdminData}
               className="text-xs font-bold text-slate-600 hover:text-[#00A8B5] bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition cursor-pointer"
@@ -448,7 +550,7 @@ export default function AdminDashboardPage() {
                           <td className="p-4 text-right">
                             <div className="flex items-center justify-end gap-2">
                               <button
-                                onClick={() => toggleJobStatus(job.id, job.is_active)}
+                                onClick={() => toggleJobStatus(job.id, job.is_active === true)}
                                 title={job.is_active ? 'İlanı Pasife Al' : 'İlanı Yayına Al'}
                                 className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
                                   job.is_active

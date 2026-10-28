@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import StudentPool from '@/components/StudentPool';
 
 import {
   Building2,
@@ -83,7 +84,7 @@ export default function IsverenPanelPage() {
   const [apps, setApps] = useState<IncomingAppRow[]>([]);
 
   // Sekme
-  const [tab, setTab] = useState<'jobs' | 'apps'>('jobs');
+  const [tab, setTab] = useState<'jobs' | 'apps' | 'pool'>('jobs');
 
   // Güncelleme geri bildirimi
   const [busyJob, setBusyJob] = useState<string | null>(null);
@@ -405,6 +406,9 @@ export default function IsverenPanelPage() {
               <button onClick={() => setTab('apps')} className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${tab === 'apps' ? 'bg-[#0A1931] text-white' : 'text-slate-500 hover:text-[#0A1931]'}`}>
                 Gelen Başvurular ({counts.totalApps})
               </button>
+              <button onClick={() => setTab('pool')} className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition cursor-pointer flex items-center gap-1.5 ${tab === 'pool' ? 'bg-[#0A1931] text-white' : 'text-slate-500 hover:text-[#0A1931]'}`}>
+                <Users className="w-3.5 h-3.5" /> Stajyer Havuzu
+              </button>
             </section>
 
             {tab === 'jobs' && (
@@ -452,7 +456,9 @@ export default function IsverenPanelPage() {
               </section>
             )}
 
-            {tab === 'apps' && (
+            {tab === 'pool' && <StudentPool />}
+
+        {tab === 'apps' && (
               <section className="mt-4 space-y-3">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-2 flex-wrap">
