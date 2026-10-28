@@ -184,13 +184,11 @@ export default function IsverenPanelPage() {
       if (appList) setApps(appList);
       if (appErrMsg) console.error('Başvuru listesi hatası:', appErrMsg);
 
-      // GUVEN_KATMANI — işletmenin toplu güven skoru (view yoksa sessizce atla)
-      const { data: trustRow } = await supabase
-        .from('company_trust_scores')
-        .select('trust_score, rating_count, badge')
-        .eq('company_id', co.id)
-        .maybeSingle();
-      if (trustRow) setTrust(trustRow as { trust_score: number; rating_count: number; badge: string });
+      // GUVEN_KATMANI v2 — işletmenin toplu güven skoru (RPC; hata olursa sessizce atla)
+      const { data: trustRows } = await supabase
+        .rpc('get_company_trust_scores', { p_company_id: co.id });
+      const trustRow = (trustRows as { trust_score: number; rating_count: number; badge: string }[] | null)?.[0];
+      if (trustRow) setTrust(trustRow);
     }
 
       setLoading(false);

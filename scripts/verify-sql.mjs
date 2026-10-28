@@ -37,6 +37,28 @@ async function checkBucket(bucket) {
   }
 }
 
+// Guven skorunu get_company_trust_scores RPC'si uzerinden kontrol eder (view kaldirildi)
+async function checkRpc(fn) {
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
+      method: 'POST',
+      headers: {
+        apikey: ANON_KEY,
+        Authorization: `Bearer ${ANON_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ p_company_id: null }),
+    });
+    if (r.ok) return 'VAR ✓ (200)';
+    const body = await r.json().catch(() => ({}));
+    if (r.status === 404 || /does not exist/i.test(body.message || ''))
+      return 'YOK ✗ (fonksiyon bulunamadi)';
+    return `SORGUSU: ${r.status} ${body.message || ''}`;
+  } catch (e) {
+    return `HATA: ${e.message}`;
+  }
+}
+
 async function main() {
   console.log('=== KOLON KONTROLU (vitrin SQL) ===');
   console.log('company_details.logo_url  :', await checkColumn('company_details', 'logo_url'));
@@ -50,7 +72,7 @@ async function main() {
   console.log('guardian_consents.guardian_name:', await checkColumn('guardian_consents', 'guardian_name'));
   console.log('trainer_ratings.education_quality:', await checkColumn('trainer_ratings', 'education_quality'));
   console.log('simulator_leads.company_name  :', await checkColumn('simulator_leads', 'company_name'));
-  console.log('company_trust_scores (view)  :', await checkColumn('company_trust_scores', 'company_id'));
+  console.log('get_company_trust_scores RPC :', await checkRpc('get_company_trust_scores'));
 
   console.log('=== BUCKET KONTROLU ===');
   console.log('company-logos :', await checkBucket('company-logos'));

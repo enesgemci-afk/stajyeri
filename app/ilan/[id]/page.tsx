@@ -155,12 +155,11 @@ export default function IlanDetayPage() {
         // GUVEN_KATMANI — işletmenin toplu güven skoru (view yoksa sessizce atla)
         const companyId = (data as { company_id?: string } | null)?.company_id;
         if (companyId) {
-          const { data: trustRow } = await supabase
-            .from('company_trust_scores')
-            .select('trust_score, rating_count, badge')
-            .eq('company_id', companyId)
-            .maybeSingle();
-          if (trustRow) setTrust(trustRow as { trust_score: number; rating_count: number; badge: string });
+          // GUVEN_KATMANI v2 — SECURITY DEFINER view yerine dar kapsamlı RPC (Supabase lint fix)
+          const { data: trustRows } = await supabase
+            .rpc('get_company_trust_scores', { p_company_id: companyId });
+          const trustRow = (trustRows as { trust_score: number; rating_count: number; badge: string }[] | null)?.[0];
+          if (trustRow) setTrust(trustRow);
         }
 
         // Benzer ilanlar (Paket 2): önce aynı meslek alanı, yetmezse aynı şehir

@@ -242,34 +242,51 @@ create policy "ogrenci onayli stajini puanlar"
   );
 
 -- ------------------------------------------------------------
--- MODÜL 2b: company_trust_scores — Güven Skoru görünümü
+-- MODÜL 2b: get_company_trust_scores — Güven Skoru fonksiyonu
+--   (Eski company_trust_scores VIEW'i, Supabase güvenlik tarayıcısının
+--    "Security Definer View" Critical uyarısı verdiği için KALDIRILDI.
+--    Aynı veri artık dar kapsamlı SECURITY DEFINER fonksiyondan döner;
+--    bireysel puanlar asla dışarı sızmaz — yalnızca toplu skor döner.)
 --   Ağırlıklar: %35 eğitim, %30 güvenlik, %25 saygı, %10 ücret düzeni
 --   Rozet: >=3 puan & >=4.5 GOLD | >=4.0 SILVER | >=3.5 BRONZE
 -- ------------------------------------------------------------
-create or replace view public.company_trust_scores as
-with agg as (
+drop view if exists public.company_trust_scores;
+
+create or replace function public.get_company_trust_scores(p_company_id uuid default null)
+returns table (company_id uuid, trust_score numeric, rating_count bigint, badge text)
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  return query
+  with agg as (
+    select
+      tr.company_id as cid,
+      count(*)      as rc,
+      avg(0.35 * tr.education_quality + 0.30 * tr.safety + 0.25 * tr.respect + 0.10 * tr.wage_order) as rs
+    from public.trainer_ratings tr
+    where (p_company_id is null or tr.company_id = p_company_id)
+    group by tr.company_id
+  )
   select
-    company_id,
-    count(*) as rating_count,
-    avg(0.35 * education_quality + 0.30 * safety + 0.25 * respect + 0.10 * wage_order) as raw_score
-  from public.trainer_ratings
-  group by company_id
-)
-select
-  cd.id as company_id,
-  round(coalesce(agg.raw_score, 0)::numeric, 2) as trust_score,
-  coalesce(agg.rating_count, 0) as rating_count,
-  case
-    when coalesce(agg.rating_count, 0) >= 3 and coalesce(agg.raw_score, 0) >= 4.5 then 'gold'
-    when coalesce(agg.rating_count, 0) >= 3 and coalesce(agg.raw_score, 0) >= 4.0 then 'silver'
-    when coalesce(agg.rating_count, 0) >= 3 and coalesce(agg.raw_score, 0) >= 3.5 then 'bronze'
-    else 'none'
-  end as badge
-from public.company_details cd
-left join agg on agg.company_id = cd.id;
+    cd.id,
+    round(coalesce(agg.rs, 0)::numeric, 2),
+    coalesce(agg.rc, 0),
+    case
+      when coalesce(agg.rc, 0) >= 3 and coalesce(agg.rs, 0) >= 4.5 then 'gold'
+      when coalesce(agg.rc, 0) >= 3 and coalesce(agg.rs, 0) >= 4.0 then 'silver'
+      when coalesce(agg.rc, 0) >= 3 and coalesce(agg.rs, 0) >= 3.5 then 'bronze'
+      else 'none'
+    end
+  from public.company_details cd
+  left join agg on agg.cid = cd.id
+  where (p_company_id is null or cd.id = p_company_id);
+end;
+$$;
 
 -- Toplu skor herkese açık (bireysel puanlar kapalı kalır)
-grant select on public.company_trust_scores to anon, authenticated;
+grant execute on function public.get_company_trust_scores(uuid) to anon, authenticated;
 
 -- ------------------------------------------------------------
 -- MODÜL 3: simulator_leads — teşvik simülatörü lead formu (girişsiz)
@@ -306,5 +323,12 @@ where table_schema = 'public' and table_name = 'applications'
 select
   to_regclass('public.guardian_consents')    as guardian_consents,
   to_regclass('public.trainer_ratings')      as trainer_ratings,
-  to_regclass('public.simulator_leads')      as simulator_leads,
-  to_regclass('public.company_trust_scores') as trust_scores_view;
+  to_regclass('public.simulator_leads')      as simulator_leads;
+
+select routine_name
+from information_schema.routines
+where routine_schema = 'public'
+  and routine_name in (
+    'get_guardian_consent', 'approve_guardian_consent', 'get_company_trust_scores'
+  )
+order by routine_name;
