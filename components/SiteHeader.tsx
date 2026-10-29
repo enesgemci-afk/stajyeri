@@ -59,6 +59,8 @@ function getMenu(role: HeaderRole): NavGroup[] {
       key: 'araclar',
       label: 'Kariyer Araçları',
       items: [
+        { href: '/meslek', label: 'Meslek Rehberi', desc: '41 MESEM alanı: ne iş yapar, nereye gider' },
+        { href: '/staj-ucretleri', label: 'Staj Ücretleri', desc: '3308 ücret hakları + hesaplayıcı' },
         { href: '/alan-secim', label: 'Alan Seçim Testi', desc: '9. sınıflar için 6 soruluk rehber' },
         { href: '/cv-olustur', label: 'CV Oluştur', desc: 'Ücretsiz CV oluştur, PDF indir' },
         { href: '/rehber/mulakat-sorulari', label: 'Mülakat Soruları', desc: 'Alanına göre sorular ve ipuçları' },

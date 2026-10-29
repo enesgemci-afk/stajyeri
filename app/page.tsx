@@ -26,6 +26,8 @@ import {
   MessageCircle,
   PenLine,
   ArrowRight,
+  BookOpen,
+  Wallet,
 } from 'lucide-react';
 
 interface JobPost {
@@ -615,8 +617,22 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {[
+            {
+              href: '/meslek',
+              Icon: BookOpen,
+              color: '#0EA5E9',
+              title: 'Meslek Rehberi',
+              desc: '41 MESEM alanı: ne iş yapar, çıraktan ustaya yol haritası, aktif ilanlar.',
+            },
+            {
+              href: '/staj-ucretleri',
+              Icon: Wallet,
+              color: '#F59E0B',
+              title: 'Staj Ücretleri',
+              desc: '3308 ücret hakları: çırak %30, kalfa %50 — anlık hesaplayıcıyla.',
+            },
             {
               href: '/alan-secim',
               Icon: Compass,
