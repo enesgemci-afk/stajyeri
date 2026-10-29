@@ -92,7 +92,7 @@ declare
 begin
   select
     gc.status, gc.expires_at, gc.guardian_name,
-    coalesce(sp.full_name, 'Öğrenci') as student_name,
+    coalesce(p.full_name, 'Öğrenci') as student_name,
     jp.title as job_title,
     cd.company_name,
     jp.city as job_city
@@ -100,6 +100,7 @@ begin
   from public.guardian_consents gc
   join public.applications a on a.id = gc.application_id
   join public.student_profiles sp on sp.id = gc.student_id
+  join public.profiles p on p.id = sp.profile_id
   join public.job_posts jp on jp.id = a.job_id
   join public.company_details cd on cd.id = jp.company_id
   where gc.consent_token = p_token;
