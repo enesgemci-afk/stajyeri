@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { ArrowLeft, ChevronDown, Menu, X } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
+import NotificationBell from '@/components/NotificationBell';
 
 type HeaderRole = 'guest' | 'student' | 'employer';
 
@@ -273,8 +274,9 @@ export default function SiteHeader({
           </nav>
         </div>
 
-        {/* Sağ: Geri linki + sayfaya özel aksiyonlar */}
+        {/* Sağ: Bildirim zili + geri linki + sayfaya özel aksiyonlar */}
         <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+          <NotificationBell />
           {/* Mobil menü düğmesi (lg altında görünür) */}
           <button
             type="button"

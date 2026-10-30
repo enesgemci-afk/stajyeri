@@ -24,8 +24,10 @@ export default function FieldJobs({ field }: { field: string }) {
         .order('created_at', { ascending: false })
         .limit(6);
       if (!alive) return;
-      const rows = ((data ?? []) as (JobCardData & { status?: string })[]).filter(
-        (j) => !j.status || j.status === 'active',
+      const rows = ((data ?? []) as (JobCardData & { status?: string; is_active?: boolean })[]).filter(
+        (j) =>
+          (j.is_active === undefined || j.is_active === true) &&
+          (!j.status || j.status === 'active'),
       );
       setJobs(rows);
     })();

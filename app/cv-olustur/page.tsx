@@ -68,6 +68,28 @@ export default function CVOlusturPage() {
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [photoUploading, setPhotoUploading] = useState(false);
   const [photoMsg, setPhotoMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
+  // İLERİ PAKET — Stajyeri+ premium: modern CV şablonu yalnızca premium hesaplara açık
+  const [premium, setPremium] = useState(false);
+  const [template, setTemplate] = useState<'klasik' | 'modern'>('klasik');
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!alive || !session?.user) return;
+      const { data: p } = await supabase
+        .from('profiles')
+        .select('premium_until')
+        .eq('id', session.user.id)
+        .maybeSingle();
+      if (!alive) return;
+      const until = (p as { premium_until: string | null } | null)?.premium_until;
+      if (until && new Date(until) > new Date()) setPremium(true);
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   function set<K extends keyof CVData>(key: K, value: CVData[K]) {
     setData((d) => ({ ...d, [key]: value }));
@@ -597,11 +619,35 @@ export default function CVOlusturPage() {
               <div className="no-print flex items-center gap-2 mb-3 text-[11px] font-bold text-slate-500">
                 <Sparkles className="w-3.5 h-3.5 text-[#00A8B5]" />
                 Canlı Önizleme — bilgileri doldurdukça CV{'\''}n burada oluşur
+                <span className="ml-auto flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setTemplate('klasik')}
+                    className={`px-2.5 py-1 rounded-full text-[10px] font-black border transition cursor-pointer ${template === 'klasik' ? 'bg-[#0A1931] text-white border-[#0A1931]' : 'bg-white text-slate-500 border-slate-200'}`}
+                  >
+                    Klasik
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => premium && setTemplate('modern')}
+                    disabled={!premium}
+                    title={premium ? 'Modern şablon' : 'Modern şablon Stajyeri+ premium üyelere açık'}
+                    className={`px-2.5 py-1 rounded-full text-[10px] font-black border transition cursor-pointer ${
+                      template === 'modern'
+                        ? 'bg-gradient-to-r from-[#00A8B5] to-[#0EA5E9] text-white border-transparent'
+                        : premium
+                          ? 'bg-white text-slate-500 border-slate-200 hover:border-[#00A8B5]'
+                          : 'bg-amber-50 text-amber-700 border-amber-200 cursor-not-allowed'
+                    }`}
+                  >
+                    ✨ Modern {premium ? '' : '(Premium)'}
+                  </button>
+                </span>
               </div>
 
               <div id="cv-print" className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-                {/* Üst bant */}
-                <div className="bg-[#0A1931] px-7 py-6 text-white">
+                {/* Üst bant — Klasik: lacivert, Modern (premium): teal gradyan */}
+                <div className={`px-7 py-6 text-white ${template === 'modern' && premium ? 'bg-gradient-to-r from-[#00A8B5] to-[#0EA5E9]' : 'bg-[#0A1931]'}`}>
                   <div className="flex items-center gap-4">
                     {photoUrl && (
                       <img

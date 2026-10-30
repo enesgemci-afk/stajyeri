@@ -72,6 +72,11 @@ export default function HomePage() {
   // Alan seçim asistanından gelen çoklu alan filtresi (/?alan=A&alan=B#ilanlar)
   const [paramFields, setParamFields] = useState<string[]>([]);
 
+  // İLERİ PAKET — footer e-bülten aboneliği
+  const [newsEmail, setNewsEmail] = useState('');
+  const [newsMsg, setNewsMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
+  const [newsBusy, setNewsBusy] = useState(false);
+
   // Favoriler (kalp) durumu
   const [favIds, setFavIds] = useState<Set<string>>(new Set());
   const [favBusyId, setFavBusyId] = useState<string | null>(null);
@@ -692,16 +697,73 @@ export default function HomePage() {
 
       {/* 6. Footer */}
       <footer className="bg-white border-t border-slate-200 py-8 text-center text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <Link href="/">
-            <img 
-              src="/logo.png" 
-              alt="Stajyeri.net" 
-              style={{ height: '32px', width: 'auto', display: 'block' }}
-              className="mx-auto sm:mx-0 opacity-90 hover:opacity-100 transition cursor-pointer" 
-            />
-          </Link>
-          <p className="text-slate-400">&copy; 2026 Tüm Hakları Saklıdır.</p>
+        <div className="max-w-7xl mx-auto px-4">
+          {/* İLERİ PAKET — e-bülten aboneliği */}
+          <div className="max-w-md mx-auto mb-6 p-5 rounded-3xl bg-[#F8FAFC] border border-slate-200">
+            <p className="text-xs font-black text-[#0A1931]">📬 Haftalık staj bülteni</p>
+            <p className="text-[11px] text-slate-500 mt-1">
+              Alanına uygun yeni ilanlar ve rehberler e-postana gelsin.
+            </p>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const email = newsEmail.trim().toLowerCase();
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                  setNewsMsg({ type: 'err', text: 'Geçerli bir e-posta gir.' });
+                  return;
+                }
+                setNewsBusy(true);
+                setNewsMsg(null);
+                const { error } = await supabase
+                  .from('newsletter_subscribers')
+                  .insert({ email });
+                setNewsBusy(false);
+                if (error && /duplicate|unique/i.test(error.message)) {
+                  setNewsMsg({ type: 'ok', text: 'Zaten abonisin — teşekkürler! ✓' });
+                } else if (error && /row-level security|does not exist/i.test(error.message)) {
+                  setNewsMsg({ type: 'err', text: 'Şu an abonelik alınamıyor (veritabanı güncellemesi gerekli).' });
+                } else if (error) {
+                  setNewsMsg({ type: 'err', text: 'Abonelik alınamadı, tekrar deneyin.' });
+                } else {
+                  setNewsMsg({ type: 'ok', text: 'Abone oldun! Yeni ilanları kaçırma. ✓' });
+                  setNewsEmail('');
+                }
+              }}
+              className="mt-3 flex gap-2"
+            >
+              <input
+                type="email"
+                value={newsEmail}
+                onChange={(e) => setNewsEmail(e.target.value)}
+                placeholder="e-posta adresin"
+                className="flex-1 min-w-0 px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:border-[#00A8B5] focus:ring-2 focus:ring-[#00A8B5]/20 outline-none"
+              />
+              <button
+                type="submit"
+                disabled={newsBusy}
+                className="px-4 py-2.5 rounded-xl bg-[#00A8B5] hover:bg-[#008f9a] disabled:opacity-50 text-white text-xs font-black transition cursor-pointer whitespace-nowrap"
+              >
+                {newsBusy ? '...' : 'Abone Ol'}
+              </button>
+            </form>
+            {newsMsg && (
+              <p className={`mt-2 text-[11px] font-bold ${newsMsg.type === 'ok' ? 'text-emerald-600' : 'text-red-500'}`}>
+                {newsMsg.text}
+              </p>
+            )}
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <Link href="/">
+              <img
+                src="/logo.png"
+                alt="Stajyeri.net"
+                style={{ height: '32px', width: 'auto', display: 'block' }}
+                className="mx-auto sm:mx-0 opacity-90 hover:opacity-100 transition cursor-pointer"
+              />
+            </Link>
+            <p className="text-slate-400">&copy; 2026 Tüm Hakları Saklıdır.</p>
+          </div>
         </div>
       </footer>
 

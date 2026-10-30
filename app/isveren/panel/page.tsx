@@ -46,11 +46,20 @@ interface IncomingAppRow {
   phone: string | null;
   message: string | null;
   created_at: string;
-  job_posts?: { id: string; title: string } | null;
+  job_posts?: { id: string; title: string; field_name?: string | null; city?: string | null } | null;
   student_profiles?: {
+    profile_id?: string | null;
     field_name: string | null;
     profiles?: { full_name: string } | null;
   } | null;
+}
+
+/** Eşleşme skoru: alan uyumu (60) + CV şehir uyumu (40) */
+function matchPct(a: IncomingAppRow, cityMap: Record<string, string | undefined>): number {
+  const fieldOk = !!a.student_profiles?.field_name && a.student_profiles.field_name === a.job_posts?.field_name;
+  const city = a.student_profiles?.profile_id ? cityMap[a.student_profiles.profile_id] : undefined;
+  const cityOk = !!city && !!a.job_posts?.city && city === a.job_posts.city;
+  return (fieldOk ? 60 : 25) + (cityOk ? 40 : 15);
 }
 
 const STATUS_OPTIONS: { value: AppStatus; label: string }[] = [
@@ -92,6 +101,9 @@ export default function IsverenPanelPage() {
   const [actionMsg, setActionMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
   // GUVEN_KATMANI — işletmenin güven skoru (işveren kendi rozetini görür)
   const [trust, setTrust] = useState<{ trust_score: number; rating_count: number; badge: string } | null>(null);
+  // İLERİ PAKET — yanıt hızı + eşleşme için CV şehir haritası
+  const [respTime, setRespTime] = useState<{ avg_hours: number; sample_count: number } | null>(null);
+  const [cityMap, setCityMap] = useState<Record<string, string | undefined>>({});
 
   useEffect(() => {
     async function load() {
@@ -149,8 +161,9 @@ export default function IsverenPanelPage() {
         .select(
           `
           id, status, birth_year, guardian_status, phone, message, created_at,
-          job_posts!inner ( id, title, company_id ),
+          job_posts!inner ( id, title, company_id, field_name, city ),
           student_profiles!inner (
+            profile_id,
             field_name,
             profiles ( full_name )
           )
@@ -165,8 +178,9 @@ export default function IsverenPanelPage() {
           .select(
             `
             id, status, phone, message, created_at,
-            job_posts!inner ( id, title, company_id ),
+            job_posts!inner ( id, title, company_id, field_name, city ),
             student_profiles!inner (
+              profile_id,
               field_name,
               profiles ( full_name )
             )
@@ -189,6 +203,29 @@ export default function IsverenPanelPage() {
         .rpc('get_company_trust_scores', { p_company_id: co.id });
       const trustRow = (trustRows as { trust_score: number; rating_count: number; badge: string }[] | null)?.[0];
       if (trustRow) setTrust(trustRow);
+
+      // İLERİ PAKET — ortalama yanıt süresi (SQL çalıştırılmadıysa sessizce atlanır)
+      try {
+        const { data: rt } = await supabase.rpc('get_company_response_time', { p_company_id: co.id });
+        const row = (rt as { avg_hours: number; sample_count: number }[] | null)?.[0];
+        if (row && row.sample_count > 0) setRespTime(row);
+      } catch {
+        /* kolon/fonksiyon yoksa kritik değil */
+      }
+
+      // İLERİ PAKET — eşleşme skoru için öğrenci CV şehirleri
+      try {
+        const { data: cvs } = await supabase.from('student_cvs').select('profile_id, city').limit(500);
+        if (cvs) {
+          const m: Record<string, string | undefined> = {};
+          for (const c of cvs as { profile_id: string; city: string | null }[]) {
+            if (c.profile_id && c.city) m[c.profile_id] = c.city;
+          }
+          setCityMap(m);
+        }
+      } catch {
+        /* tablo yoksa kritik değil */
+      }
     }
 
       setLoading(false);
@@ -440,14 +477,22 @@ export default function IsverenPanelPage() {
                           <span>{formatDate(j.created_at)}</span>
                         </p>
                       </div>
-                      <button
-                        onClick={() => toggleJob(j)}
-                        disabled={busyJob === j.id}
-                        className={`px-4 py-2 rounded-xl text-[11px] font-extrabold transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50 whitespace-nowrap ${j.is_active ? 'bg-slate-100 text-slate-600 hover:bg-slate-200' : 'bg-emerald-500 text-white hover:bg-emerald-600'}`}
-                      >
-                        <Power className="w-3.5 h-3.5" />
-                        {busyJob === j.id ? 'Güncelleniyor...' : j.is_active ? 'Pasife Al' : 'Aktifleştir'}
-                      </button>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <Link
+                          href={`/ilan-ver?edit=${j.id}`}
+                          className="px-4 py-2 rounded-xl text-[11px] font-extrabold transition flex items-center gap-1.5 bg-white border border-slate-200 text-slate-600 hover:border-[#00A8B5] hover:text-[#00A8B5] whitespace-nowrap"
+                        >
+                          ✏️ Düzenle
+                        </Link>
+                        <button
+                          onClick={() => toggleJob(j)}
+                          disabled={busyJob === j.id}
+                          className={`px-4 py-2 rounded-xl text-[11px] font-extrabold transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50 whitespace-nowrap ${j.is_active ? 'bg-slate-100 text-slate-600 hover:bg-slate-200' : 'bg-emerald-500 text-white hover:bg-emerald-600'}`}
+                        >
+                          <Power className="w-3.5 h-3.5" />
+                          {busyJob === j.id ? 'Güncelleniyor...' : j.is_active ? 'Pasife Al' : 'Aktifleştir'}
+                        </button>
+                      </div>
                     </div>
                   ))
                 )}
@@ -464,6 +509,16 @@ export default function IsverenPanelPage() {
                     <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full text-[10px] font-extrabold">
                       <CheckCircle2 className="w-3 h-3" /> KVKK uyumlu açık rızayla gelir ✅
                     </span>
+                    {respTime && (
+                      <span
+                        className="inline-flex items-center gap-1 px-2.5 py-1 bg-sky-50 border border-sky-200 text-sky-700 rounded-full text-[10px] font-extrabold"
+                        title={`${respTime.sample_count} sonuçlandırılmış başvurunun ortalaması`}
+                      >
+                        ⚡ Ort. {respTime.avg_hours >= 24
+                          ? `${Math.round(respTime.avg_hours / 24)} günde dönüyorsunuz`
+                          : `${respTime.avg_hours} saatte dönüyorsunuz`}
+                      </span>
+                    )}
                   </div>
                   <Link href="/isveren/basvurular" className="text-[11px] font-extrabold text-[#FF6B00] hover:underline flex items-center gap-1 whitespace-nowrap">
                     Başvuru Değerlendirme Ekranı <ChevronRight className="w-3.5 h-3.5" />
@@ -492,6 +547,18 @@ export default function IsverenPanelPage() {
                           <p className="text-xs font-black text-[#0A1931] flex items-center gap-1.5">
                             <GraduationCap className="w-3.5 h-3.5 text-[#00A8B5]" />
                             {a.student_profiles?.profiles?.full_name ?? 'Öğrenci'}
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-black border ${
+                                matchPct(a, cityMap) >= 85
+                                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                  : matchPct(a, cityMap) >= 60
+                                    ? 'bg-amber-50 text-amber-700 border-amber-200'
+                                    : 'bg-slate-50 text-slate-500 border-slate-200'
+                              }`}
+                              title="Alan ve şehir uyumuna göre hesaplanan eşleşme skoru"
+                            >
+                              Eşleşme %{matchPct(a, cityMap)}
+                            </span>
                           </p>
                           <p className="text-[11px] text-slate-500 mt-1">
                             {a.student_profiles?.field_name ?? '—'} • <span className="font-bold">{a.job_posts?.title ?? 'İlan'}</span> • {formatDate(a.created_at)}

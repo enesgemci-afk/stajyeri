@@ -367,6 +367,13 @@ export default function IlanDetayPage() {
         throw new Error(appError.message || 'Başvuru gönderilirken bir hata oluştu.');
       }
 
+      // İLERİ PAKET — işverene "yeni başvuru" bildirimi (RPC yoksa sessizce atlanır)
+      try {
+        await supabase.rpc('notify_employer_new_application', { p_job_id: jobId });
+      } catch {
+        /* bildirim altyapısı henüz kurulmadıysa kritik değil */
+      }
+
       // VELI_ONAY_ENTEGRASYON — 18 yaş altı: muvafakatname kaydı oluştur + onay bağlantısı üret
       if (minor && newApp?.id) {
         const token = makeConsentToken();

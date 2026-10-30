@@ -17,6 +17,7 @@ import {
   MessageCircle,
   Star,
   X,
+  BookOpen,
 } from 'lucide-react';
 
 type AppStatus = 'pending' | 'approved' | 'rejected';
@@ -131,6 +132,13 @@ export default function BasvurularimPage() {
   const [rateRecommend, setRateRecommend] = useState(true);
   const [ratingBusy, setRatingBusy] = useState(false);
   const [ratingError, setRatingError] = useState('');
+  // İLERİ PAKET — Staj Defteri (onaylı stajda günlük eğitim kaydı)
+  const [defterAppId, setDefterAppId] = useState<string | null>(null);
+  const [defterRows, setDefterRows] = useState<Record<string, { id: string; entry_date: string; work_done: string }[]>>({});
+  const [defterDate, setDefterDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [defterText, setDefterText] = useState('');
+  const [defterBusy, setDefterBusy] = useState(false);
+  const [defterMsg, setDefterMsg] = useState('');
 
   useEffect(() => {
     async function load() {
@@ -247,6 +255,56 @@ export default function BasvurularimPage() {
     setRateComment('');
     setRateRecommend(true);
     setRatingError('');
+  };
+
+  // İLERİ PAKET — staj defterini aç/günlükleri çek
+  const openDefter = async (appId: string) => {
+    if (defterAppId === appId) {
+      setDefterAppId(null);
+      return;
+    }
+    setDefterAppId(appId);
+    setDefterMsg('');
+    if (defterRows[appId]) return;
+    const { data } = await supabase
+      .from('staj_entries')
+      .select('id, entry_date, work_done')
+      .eq('application_id', appId)
+      .order('entry_date', { ascending: false });
+    setDefterRows((prev) => ({ ...prev, [appId]: (data ?? []) as { id: string; entry_date: string; work_done: string }[] }));
+  };
+
+  // İLERİ PAKET — günlük ekle (tablo yoksa dostçe uyarır)
+  const submitDefter = async (e: FormEvent, appId: string) => {
+    e.preventDefault();
+    setDefterMsg('');
+    if (!defterText.trim() || !studentId) return;
+    setDefterBusy(true);
+    const { error } = await supabase.from('staj_entries').insert({
+      application_id: appId,
+      student_id: studentId,
+      entry_date: defterDate,
+      work_done: defterText.trim(),
+    });
+    setDefterBusy(false);
+    if (error) {
+      setDefterMsg(
+        /row-level security|does not exist/i.test(error.message)
+          ? 'Staj defteri kaydı yapılamadı (veritabanı güncellemesi gerekebilir — ileri_paket.sql).'
+          : /duplicate|unique/i.test(error.message)
+            ? 'Bu tarihe zaten kayıt girdiniz — tarihi değiştirin.'
+            : 'Kayıt eklenemedi, tekrar deneyin.'
+      );
+      return;
+    }
+    const { data: fresh } = await supabase
+      .from('staj_entries')
+      .select('id, entry_date, work_done')
+      .eq('application_id', appId)
+      .order('entry_date', { ascending: false });
+    setDefterRows((prev) => ({ ...prev, [appId]: (fresh ?? []) as { id: string; entry_date: string; work_done: string }[] }));
+    setDefterText('');
+    setDefterMsg('Günlük kaydedildi ✓');
   };
 
   // GUVEN_KATMANI — anonim usta öğretici/işyeri değerlendirmesini kaydet
@@ -508,6 +566,90 @@ export default function BasvurularimPage() {
                           )}
                         </div>
                       </div>
+
+                      {/* İLERİ PAKET — Staj Defteri + Eğitim Sözleşmesi (yalnızca onaylı staj) */}
+                      {app.status === 'approved' && (
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => openDefter(app.id)}
+                            className="px-3 py-1.5 rounded-full text-[11px] font-black bg-[#FF6B00]/10 text-[#c95400] border border-[#FF6B00]/30 hover:bg-[#FF6B00]/20 transition inline-flex items-center gap-1.5 cursor-pointer"
+                          >
+                            <BookOpen className="w-3.5 h-3.5" />
+                            Staj Defteri
+                            {(defterRows[app.id]?.length ?? 0) > 0 && (
+                              <span className="px-1.5 py-0.5 rounded-full bg-[#FF6B00] text-white text-[10px]">
+                                {defterRows[app.id].length}
+                              </span>
+                            )}
+                          </button>
+                          <Link
+                            href={`/sozlesme/${app.id}`}
+                            className="px-3 py-1.5 rounded-full text-[11px] font-black bg-slate-100 text-slate-600 border border-slate-200 hover:border-[#00A8B5] hover:text-[#00A8B5] transition inline-flex items-center gap-1.5"
+                          >
+                            📄 Eğitim Sözleşmesi
+                          </Link>
+                        </div>
+                      )}
+
+                      {/* İLERİ PAKET — staj defteri paneli */}
+                      {defterAppId === app.id && (
+                        <div className="mt-2 bg-white rounded-2xl border-2 border-[#FF6B00]/30 shadow-sm p-5 space-y-4">
+                          <div>
+                            <p className="text-xs font-black text-[#0A1931] flex items-center gap-1.5">
+                              <BookOpen className="w-4 h-4 text-[#FF6B00]" /> Staj Defteri — Günlük Eğitim Kaydı
+                            </p>
+                            <p className="text-[10px] text-slate-400 mt-0.5">
+                              Her gün işletmede yaptığın işleri kısaca yaz. Usta öğreticin ve okulun görebilir.
+                            </p>
+                          </div>
+
+                          <form onSubmit={(e) => submitDefter(e, app.id)} className="grid sm:grid-cols-[140px_1fr_auto] gap-2 items-end">
+                            <div>
+                              <label className="block text-[10px] font-black text-slate-500 mb-1">Tarih</label>
+                              <input
+                                type="date"
+                                value={defterDate}
+                                onChange={(e) => setDefterDate(e.target.value)}
+                                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-[#FF6B00] outline-none"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[10px] font-black text-slate-500 mb-1">Bugün ne yaptın?</label>
+                              <input
+                                type="text"
+                                value={defterText}
+                                onChange={(e) => setDefterText(e.target.value)}
+                                placeholder="Örn: Sigorta kutusu montajına yardım ettim, kablo ölçümü öğrendim"
+                                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-[#FF6B00] outline-none"
+                              />
+                            </div>
+                            <button
+                              type="submit"
+                              disabled={defterBusy || !defterText.trim()}
+                              className="px-4 py-2 rounded-xl bg-[#FF6B00] hover:bg-[#e05f00] disabled:opacity-50 text-white text-xs font-black transition cursor-pointer whitespace-nowrap"
+                            >
+                              {defterBusy ? '...' : 'Ekle'}
+                            </button>
+                          </form>
+                          {defterMsg && <p className="text-[11px] font-bold text-slate-500">{defterMsg}</p>}
+
+                          {(defterRows[app.id]?.length ?? 0) > 0 ? (
+                            <div className="space-y-1.5 max-h-56 overflow-y-auto">
+                              {defterRows[app.id].map((r) => (
+                                <div key={r.id} className="flex items-start gap-2 bg-slate-50 rounded-xl px-3 py-2">
+                                  <span className="text-[10px] font-black text-slate-400 whitespace-nowrap mt-0.5">
+                                    {new Date(r.entry_date).toLocaleDateString('tr-TR')}
+                                  </span>
+                                  <span className="text-[11px] text-slate-600">{r.work_done}</span>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-[11px] text-slate-400">Henüz kayıt yok — ilk gününü ekle.</p>
+                          )}
+                        </div>
+                      )}
 
                       {/* GUVEN_KATMANI — anonim usta öğretici/işyeri değerlendirme formu */}
                       {ratingAppId === app.id && (

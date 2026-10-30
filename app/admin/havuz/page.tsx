@@ -16,6 +16,7 @@ import {
   Users,
   AlertTriangle,
   Check,
+  Mail,
 } from 'lucide-react';
 
 // ============================================================
@@ -33,6 +34,13 @@ interface EmployerRow {
   city: string | null;
   balance: number;
   pool_granted: boolean;
+}
+
+// İLERİ PAKET — premium yönetimi + bülten listesi
+interface NewsletterRow {
+  id: string;
+  email: string;
+  created_at: string;
 }
 
 interface TxRow {
@@ -67,6 +75,9 @@ export default function AdminHavuzPage() {
   const [txs, setTxs] = useState<TxRow[]>([]);
   const [search, setSearch] = useState('');
   const [listLoading, setListLoading] = useState(false);
+  // İLERİ PAKET — premium haritası + bülten listesi
+  const [premiumMap, setPremiumMap] = useState<Record<string, string | undefined>>({});
+  const [newsletter, setNewsletter] = useState<NewsletterRow[]>([]);
 
   // Aksiyon durumu
   const [actionMsg, setActionMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
@@ -90,6 +101,26 @@ export default function AdminHavuzPage() {
     }
     if (!tRes.error) setTxs((tRes.data ?? []) as TxRow[]);
     setListLoading(false);
+
+    // İLERİ PAKET — premium listesi + bülten aboneleri (tablo/RPC yoksa sessizce atla)
+    try {
+      const pRes = await supabase.rpc('admin_list_premium');
+      if (!pRes.error && pRes.data) {
+        const m: Record<string, string | undefined> = {};
+        for (const r of pRes.data as { profile_id: string; premium_until: string | null }[]) {
+          if (r.profile_id && r.premium_until) m[r.profile_id] = r.premium_until;
+        }
+        setPremiumMap(m);
+      }
+    } catch { /* kritik değil */ }
+    try {
+      const nRes = await supabase
+        .from('newsletter_subscribers')
+        .select('id, email, created_at')
+        .order('created_at', { ascending: false })
+        .limit(50);
+      if (!nRes.error) setNewsletter((nRes.data ?? []) as NewsletterRow[]);
+    } catch { /* kritik değil */ }
   }, []);
 
   // Oturum + admin (is_admin bayrağı) kontrolü
@@ -391,6 +422,41 @@ export default function AdminHavuzPage() {
                             <button onClick={() => toggleAccess(row)} disabled={busyId === row.profile_id} className={`px-3 py-1.5 rounded-lg text-[10px] font-black flex items-center gap-1 transition disabled:opacity-50 cursor-pointer ${row.pool_granted ? 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100' : 'bg-[#0A1931] text-white hover:bg-[#0D2244]'}`}>
                               {busyId === row.profile_id ? '...' : (row.pool_granted ? 'Yetkiyi Kaldır' : 'Havuz Yetkisi Ver')}
                             </button>
+                            <button
+                              onClick={async () => {
+                                setBusyId(row.profile_id);
+                                const active = premiumMap[row.profile_id] && new Date(premiumMap[row.profile_id]!) > new Date();
+                                const days = active
+                                  ? 0
+                                  : Number(prompt('Premium kaç gün verilsin? (ör. 30)', '30') ?? 0);
+                                if (!active && (!days || days <= 0)) {
+                                  setBusyId(null);
+                                  return;
+                                }
+                                const { error: pErr } = await supabase.rpc('admin_set_premium', {
+                                  p_profile: row.profile_id,
+                                  p_days: days,
+                                });
+                                setBusyId(null);
+                                if (pErr) {
+                                  setActionMsg({ type: 'err', text: 'Premium güncellenemedi: ' + pErr.message });
+                                } else {
+                                  setActionMsg({ type: 'ok', text: active ? 'Premium kaldırıldı.' : `Premium ${days} gün verildi.` });
+                                  loadLists(search);
+                                }
+                              }}
+                              disabled={busyId === row.profile_id}
+                              className={`px-3 py-1.5 rounded-lg text-[10px] font-black flex items-center gap-1 transition disabled:opacity-50 cursor-pointer ${
+                                premiumMap[row.profile_id] && new Date(premiumMap[row.profile_id]!) > new Date()
+                                  ? 'bg-amber-100 text-amber-700 border border-amber-300 hover:bg-amber-200'
+                                  : 'bg-white text-slate-600 border border-slate-200 hover:border-amber-400 hover:text-amber-700'
+                              }`}
+                              title="Stajyeri+ premium ver/kaldır"
+                            >
+                              {premiumMap[row.profile_id] && new Date(premiumMap[row.profile_id]!) > new Date()
+                                ? '✨ Premium Kaldır'
+                                : '✨ Premium Ver'}
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -467,6 +533,31 @@ export default function AdminHavuzPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+          )}
+        </div>
+
+        {/* İLERİ PAKET — E-bülten aboneleri (RLS: yalnızca admin okur) */}
+        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+          <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-2">
+            <Mail className="w-4 h-4 text-[#FF6B00]" />
+            <h2 className="text-sm font-black text-[#0A1931]">E-Bülten Aboneleri</h2>
+            <span className="text-[10px] font-bold text-slate-400">({newsletter.length})</span>
+          </div>
+          {newsletter.length === 0 ? (
+            <div className="p-8 text-center text-xs text-slate-400 font-medium">
+              Henüz bülten abonesi yok. Abonelik formu ana sayfa footer'ında.
+            </div>
+          ) : (
+            <div className="p-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              {newsletter.map((n) => (
+                <div key={n.id} className="flex items-center justify-between gap-2 bg-slate-50 rounded-xl px-3 py-2">
+                  <span className="text-[11px] font-bold text-slate-700 truncate">{n.email}</span>
+                  <span className="text-[10px] text-slate-400 whitespace-nowrap">
+                    {new Date(n.created_at).toLocaleDateString('tr-TR', { day: '2-digit', month: 'short' })}
+                  </span>
+                </div>
+              ))}
             </div>
           )}
         </div>

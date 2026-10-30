@@ -35,6 +35,10 @@ export default function IlanVerPage() {
   const [logoUploading, setLogoUploading] = useState(false);
   const [logoMsg, setLogoMsg] = useState<string | null>(null);
   const [statusMsg, setStatusMsg] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
+  // İLERİ PAKET — düzenleme modu: /ilan-ver?edit=<ilanId>
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editLoading, setEditLoading] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -42,6 +46,61 @@ export default function IlanVerPage() {
         setUserId(data.session.user.id);
       }
     });
+  }, []);
+
+  // Düzenleme modu: yalnızca kendi ilanımızı yükler
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const id = new URLSearchParams(window.location.search).get('edit');
+    if (!id) return;
+    let alive = true;
+    setEditLoading(true);
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      const uid = session?.user?.id;
+      if (!alive) return;
+      if (!uid) {
+        setEditError('İlanı düzenlemek için işveren hesabınızla giriş yapın.');
+        setEditLoading(false);
+        return;
+      }
+      const { data: co } = await supabase
+        .from('company_details')
+        .select('id')
+        .eq('profile_id', uid)
+        .maybeSingle();
+      const { data: job } = await supabase
+        .from('job_posts')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle();
+      if (!alive) return;
+      if (!job || (co && job.company_id !== co.id)) {
+        setEditError('Düzenlenecek ilan bulunamadı veya bu ilan size ait değil.');
+        setEditLoading(false);
+        return;
+      }
+      const j = job as {
+        title: string; field_name: string; program_type: string; city: string;
+        district: string | null; quota: number | null; has_shuttle: boolean | null;
+        has_lunch: boolean | null; description: string | null; wage_info: string | null;
+      };
+      setTitle(j.title ?? '');
+      setFieldName(j.field_name ?? MESEM_FIELDS[0]);
+      setProgramType(j.program_type ?? PROGRAM_TYPES[0].value);
+      setCity(j.city ?? 'İstanbul');
+      setDistrict(j.district ?? '');
+      setQuota(j.quota ?? 1);
+      setHasShuttle(!!j.has_shuttle);
+      setHasLunch(j.has_lunch !== false);
+      setDescription(j.description ?? '');
+      setWageInfo(j.wage_info ?? '');
+      setEditId(id);
+      setEditLoading(false);
+    })();
+    return () => {
+      alive = false;
+    };
   }, []);
 
   // İşletme logosunu Supabase Storage'a yükler (kendi klasörüne: uid/logo.xxx)
@@ -104,6 +163,37 @@ export default function IlanVerPage() {
     setStatusMsg(null);
 
     try {
+      // DÜZENLEME MODU: yalnızca ilan alanlarını güncelle
+      if (editId) {
+        const { error: updErr } = await supabase
+          .from('job_posts')
+          .update({
+            title,
+            field_name: fieldName,
+            program_type: programType,
+            city,
+            district,
+            quota: Number(quota),
+            has_shuttle: hasShuttle,
+            has_lunch: hasLunch,
+            description,
+          })
+          .eq('id', editId);
+        if (updErr) throw updErr;
+        if (wageInfo.trim()) {
+          try {
+            await supabase.from('job_posts').update({ wage_info: wageInfo.trim() }).eq('id', editId);
+          } catch {
+            /* wage_info kolonu yoksa kritik değil */
+          }
+        }
+        setStatusMsg({ type: 'success', text: 'İlan güncellendi! Panele yönlendiriliyorsunuz...' });
+        setTimeout(() => {
+          router.push('/isveren/panel');
+        }, 1400);
+        return;
+      }
+
       const { data: company } = await supabase
         .from('company_details')
         .select('id')
@@ -201,6 +291,16 @@ export default function IlanVerPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            {editError && (
+              <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-bold">
+                {editError}
+              </div>
+            )}
+            {editId && !editError && (
+              <div className="p-3 rounded-xl bg-[#00A8B5]/10 border border-[#00A8B5]/30 text-[#008f9a] text-xs font-bold">
+                ✏️ Düzenleme modundasınız — kaydettiğinizde ilanın yayınlanmış hali güncellenir.
+              </div>
+            )}
             <div>
               <label className="block text-xs font-bold text-slate-700">İşletme / Kurum Ünvanı</label>
               <input
