@@ -23,6 +23,7 @@ import {
   GraduationCap,
   Lock,
   ShieldCheck,
+  Coins,
 } from 'lucide-react';
 
 type AppStatus = 'pending' | 'approved' | 'rejected';
@@ -104,6 +105,8 @@ export default function IsverenPanelPage() {
   // İLERİ PAKET — yanıt hızı + eşleşme için CV şehir haritası
   const [respTime, setRespTime] = useState<{ avg_hours: number; sample_count: number } | null>(null);
   const [cityMap, setCityMap] = useState<Record<string, string | undefined>>({});
+  // HAVUZ_KREDI — havuz erişim izni + kontör bakiyesi
+  const [pool, setPool] = useState<{ granted: boolean; balance: number }>({ granted: false, balance: 0 });
 
   useEffect(() => {
     async function load() {
@@ -225,6 +228,20 @@ export default function IsverenPanelPage() {
         }
       } catch {
         /* tablo yoksa kritik değil */
+      }
+
+      // HAVUZ_KREDI — havuz erişim izni + kontör bakiyesi (tablolar yoksa varsayılan kalır)
+      try {
+        const [permRes, credRes] = await Promise.all([
+          supabase.from('pool_access_permissions').select('granted').maybeSingle(),
+          supabase.from('employer_credits').select('balance').maybeSingle(),
+        ]);
+        setPool({
+          granted: permRes.data?.granted === true,
+          balance: credRes.data?.balance ?? 0,
+        });
+      } catch {
+        /* tablolar yoksa kritik değil */
       }
     }
 
@@ -373,15 +390,22 @@ export default function IsverenPanelPage() {
                 <ClipboardList className="w-4 h-4" /> Gelen Başvurular ({counts.totalApps})
               </button>
             )}
+            {pool.granted && (
+              <button onClick={() => setTab('pool')} className="px-5 py-2.5 bg-[#00A8B5] hover:bg-[#00929e] text-white text-xs font-extrabold rounded-xl transition flex items-center gap-2 shadow-lg shadow-[#00A8B5]/25 cursor-pointer">
+                <Users className="w-4 h-4" /> Stajyer Havuzu ({pool.balance} kontör)
+              </button>
+            )}
           </div>
         </section>
 
-        <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+        <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-6">
           {[
             { icon: Power, label: 'Aktif İlan', value: counts.activeJobs, cls: 'bg-emerald-50 text-emerald-600' },
             { icon: Briefcase, label: 'Toplam İlan', value: counts.totalJobs, cls: 'bg-slate-100 text-[#0A1931]' },
             { icon: ClipboardList, label: 'Toplam Başvuru', value: counts.totalApps, cls: 'bg-slate-100 text-[#0A1931]' },
             { icon: Clock, label: 'Bekleyen Başvuru', value: counts.pendingApps, cls: 'bg-amber-50 text-amber-600' },
+            { icon: Coins, label: 'Kontör Bakiyesi', value: pool.balance, cls: pool.balance > 0 ? 'bg-orange-50 text-orange-600' : 'bg-slate-100 text-slate-400' },
+            { icon: Users, label: 'Havuz Erişimi', value: pool.granted ? 'Açık' : 'Kapalı', cls: pool.granted ? 'bg-teal-50 text-[#00A8B5]' : 'bg-slate-100 text-slate-400' },
           ].map((s) => (
             <div key={s.label} className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center gap-4">
               <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${s.cls}`}>
@@ -434,6 +458,33 @@ export default function IsverenPanelPage() {
 
         {company ? (
           <>
+            {/* HAVUZ_KREDI — erişim açıkken yönlendirme bandı */}
+            {pool.granted && tab !== 'pool' && (
+              <section className="mt-6 bg-gradient-to-r from-[#0A1931] to-[#0D3B4F] border border-[#00A8B5]/30 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#00A8B5]/15 text-[#00A8B5] flex items-center justify-center flex-shrink-0">
+                    <Users className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-black text-white">Stajyer Havuzuna erişiminiz aktif 🎓</p>
+                    <p className="text-[11px] text-slate-300 mt-0.5 leading-relaxed">
+                      Öğrenci CV&apos;leri maskeli listelenir — beğendiğiniz adayı{' '}
+                      <span className="font-black text-[#FF6B00]">1 kontörle</span> açıp iletişime geçersiniz.{' '}
+                      {pool.balance < 1
+                        ? 'Bakiyeniz tükendi: site yönetiminden kontör yükleyin.'
+                        : `Bakiyeniz: ${pool.balance} kontör.`}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setTab('pool')}
+                  className="px-5 py-2.5 bg-[#00A8B5] hover:bg-[#00929e] text-white text-xs font-extrabold rounded-xl transition flex items-center gap-1.5 flex-shrink-0 cursor-pointer"
+                >
+                  Havuzu Aç <ChevronRight className="w-4 h-4" />
+                </button>
+              </section>
+            )}
+
             <section className="flex gap-2 mt-6 bg-white border border-slate-200 rounded-2xl p-1.5 w-full sm:w-auto sm:inline-flex">
               <button onClick={() => setTab('jobs')} className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${tab === 'jobs' ? 'bg-[#0A1931] text-white' : 'text-slate-500 hover:text-[#0A1931]'}`}>
                 İlanlarım ({counts.totalJobs})
