@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
@@ -16,6 +16,21 @@ export default function OgrenciKayit() {
   const [educationLevel, setEducationLevel] = useState('MESEM (Çırak - 9, 10, 11. Sınıf)')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+
+  // OKUL_MODULU — öğrenci-okul eşleştirmesi
+  const [schoolName, setSchoolName] = useState('')
+  const [schools, setSchools] = useState<{ school_name: string; verified: boolean }[]>([])
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const { data: rows } = await supabase.rpc('public_school_list')
+        if (rows) setSchools(rows as { school_name: string; verified: boolean }[])
+      } catch {
+        /* modül kurulu değilse sessizce atla */
+      }
+    })()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -65,6 +80,7 @@ export default function OgrenciKayit() {
             profile_id: userId,
             field_name: field,
             education_level: educationLevel,
+            school_name: schoolName || null,
           })
       }
     }
@@ -154,6 +170,25 @@ export default function OgrenciKayit() {
               <option value="Meslek Lisesi (12. Sınıf Stajyeri)">Meslek Lisesi (12. Sınıf Stajyeri)</option>
               <option value="Üniversite / Ön Lisans Stajyeri">Üniversite / Ön Lisans Stajyeri</option>
             </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Okulunuz</label>
+            <select
+              value={schoolName}
+              onChange={(e) => setSchoolName(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white"
+            >
+              <option value="">Başka bir okul / belirtmek istemiyorum</option>
+              {schools.map((s) => (
+                <option key={s.school_name} value={s.school_name}>
+                  {s.school_name}{s.verified ? ' ✓' : ''}
+                </option>
+              ))}
+            </select>
+            <p className="text-[11px] text-slate-400 mt-1">
+              Okulunuzu seçerseniz koordinatörünüz başvurularınızı panelinden izleyebilir (yalnızca özet bilgiler).
+            </p>
           </div>
 
           <button

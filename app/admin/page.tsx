@@ -57,6 +57,15 @@ interface AdminApplication {
   student_profiles?: { field_name: string | null; profiles?: { full_name: string | null } | null } | null;
 }
 
+interface AdminSchool {
+  profile_id: string;
+  school_name: string;
+  city: string | null;
+  district: string | null;
+  verified: boolean;
+  student_count: number;
+}
+
 export default function AdminDashboardPage() {
   // Oturum durumu: loading -> login | denied | ready
   const [mode, setMode] = useState<'loading' | 'login' | 'denied' | 'ready'>('loading');
@@ -66,13 +75,14 @@ export default function AdminDashboardPage() {
   const [loginError, setLoginError] = useState<string | null>(null);
 
   // Panel Veri State'leri
-  const [activeTab, setActiveTab] = useState<'jobs' | 'companies' | 'students' | 'applications'>('jobs');
+  const [activeTab, setActiveTab] = useState<'jobs' | 'companies' | 'students' | 'applications' | 'schools'>('jobs');
   const [loading, setLoading] = useState(false);
 
   const [jobs, setJobs] = useState<AdminJob[]>([]);
   const [companies, setCompanies] = useState<AdminCompany[]>([]);
   const [students, setStudents] = useState<AdminStudent[]>([]);
   const [applications, setApplications] = useState<AdminApplication[]>([]);
+  const [schools, setSchools] = useState<AdminSchool[]>([]);
 
   // İstatistikler
   const [stats, setStats] = useState({
@@ -130,6 +140,13 @@ export default function AdminDashboardPage() {
         totalStudents: s.length,
         totalApplications: a.length,
       });
+      // OKUL_MODULU — okul koordinatör hesapları (RPC yoksa sessizce atla)
+      try {
+        const { data: schoolRows } = await supabase.rpc('admin_list_schools');
+        if (schoolRows) setSchools(schoolRows as AdminSchool[]);
+      } catch {
+        /* modül kurulu değilse kritik değil */
+      }
     } catch (error) {
       console.error('Admin veri yükleme hatası:', error);
     } finally {
@@ -227,6 +244,20 @@ export default function AdminDashboardPage() {
     const { error } = await supabase.from('job_posts').delete().eq('id', jobId);
     if (!error) {
       setJobs((prev) => prev.filter((item) => item.id !== jobId));
+    }
+  };
+
+  // OKUL_MODULU — okul doğrulama anahtarı (RPC json döner)
+  const toggleSchoolVerified = async (profileId: string, next: boolean) => {
+    const { data } = await supabase.rpc('admin_set_school_verified', {
+      p_profile: profileId,
+      p_verified: next,
+    });
+    const res = data as { ok?: boolean } | null;
+    if (res?.ok) {
+      setSchools((prev) =>
+        prev.map((s) => (s.profile_id === profileId ? { ...s, verified: next } : s))
+      );
     }
   };
 
@@ -481,7 +512,57 @@ export default function AdminDashboardPage() {
             >
               Başvurular ({applications.length})
             </button>
+
+            <button
+              onClick={() => setActiveTab('schools')}
+              className={`px-4 py-2 rounded-lg text-xs font-black transition cursor-pointer ${
+                activeTab === 'schools' ? 'bg-white text-[#0A1931] shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              Okullar ({schools.length})
+            </button>
           </div>
+
+          {/* OKUL_MODULU — okul doğrulama paneli */}
+          {activeTab === 'schools' && (
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 mb-6 w-full">
+              <h2 className="text-sm font-black text-[#0A1931] mb-4">Okul Koordinatör Hesapları</h2>
+              {schools.length === 0 ? (
+                <p className="text-xs text-slate-500">
+                  Kayıtlı okul hesabı yok. Okullar /okul/kayit üzerinden başvurur; burada doğrularsınız.
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {schools.map((s) => (
+                    <div
+                      key={s.profile_id}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-slate-100 rounded-xl p-4"
+                    >
+                      <div>
+                        <p className="text-xs font-black text-[#0A1931]">
+                          {s.school_name}
+                          {s.verified ? ' ✅' : ' ⏳'}
+                        </p>
+                        <p className="text-[11px] text-slate-500">
+                          {[s.district, s.city].filter(Boolean).join(', ') || 'Konum yok'} · {s.student_count} eşleşen öğrenci
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => void toggleSchoolVerified(s.profile_id, !s.verified)}
+                        className={`px-4 py-2 rounded-xl text-[11px] font-black transition cursor-pointer whitespace-nowrap ${
+                          s.verified
+                            ? 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+                            : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                        }`}
+                      >
+                        {s.verified ? 'Doğrulamayı Kaldır' : 'Doğrula'}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Arama Kutusu */}
           {activeTab === 'jobs' && (

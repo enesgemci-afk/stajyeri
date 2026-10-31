@@ -72,6 +72,12 @@ export default function OgrenciPanelPage() {
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
 
+  // OKUL_MODULU — öğrencinin okulu
+  const [mySchool, setMySchool] = useState('');
+  const [schoolOptions, setSchoolOptions] = useState<{ school_name: string; verified: boolean }[]>([]);
+  const [schoolSaving, setSchoolSaving] = useState(false);
+  const [schoolMsg, setSchoolMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
+
   useEffect(() => {
     load();
   }, []);
@@ -116,6 +122,21 @@ export default function OgrenciPanelPage() {
       setSpId(sp.id);
       setField(sp.field_name ?? '');
       setEducation(sp.education_level ?? '');
+
+      // OKUL_MODULU — öğrencinin okulu + okul listesi (kolon yoksa sessizce atla)
+      try {
+        const { data: spFull } = await supabase
+          .from('student_profiles')
+          .select('school_name')
+          .eq('id', sp.id)
+          .maybeSingle();
+        if (spFull?.school_name) setMySchool(spFull.school_name as string);
+
+        const { data: rows } = await supabase.rpc('public_school_list');
+        if (rows) setSchoolOptions(rows as { school_name: string; verified: boolean }[]);
+      } catch {
+        /* modül kurulu değilse kritik değil */
+      }
 
       const { data: appList } = await supabase
         .from('applications')
@@ -282,6 +303,60 @@ export default function OgrenciPanelPage() {
             </Link>
           </div>
         </section>
+
+        {/* OKUL_MODULU — öğrencinin okulu */}
+        {authState === 'student' && (
+          <section className="mt-6 bg-white rounded-2xl border border-slate-200 p-5">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div className="flex-1">
+                <label className="block text-xs font-black text-[#0A1931] mb-1">
+                  🎓 Okulum <span className="text-slate-400 font-bold">(koordinatörünüz sizi buradan takip eder)</span>
+                </label>
+                <select
+                  value={mySchool}
+                  onChange={(e) => setMySchool(e.target.value)}
+                  className="w-full sm:max-w-md px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:border-[#00A8B5] cursor-pointer"
+                >
+                  <option value="">Başka bir okul / belirtmek istemiyorum</option>
+                  {schoolOptions.map((s) => (
+                    <option key={s.school_name} value={s.school_name}>
+                      {s.school_name}{s.verified ? ' ✓' : ''}
+                    </option>
+                  ))}
+                </select>
+                {schoolMsg && (
+                  <p className={`text-[11px] font-bold mt-1.5 ${schoolMsg.type === 'ok' ? 'text-emerald-600' : 'text-red-600'}`}>
+                    {schoolMsg.text}
+                  </p>
+                )}
+              </div>
+              <button
+                onClick={async () => {
+                  if (!spId) return;
+                  setSchoolSaving(true);
+                  setSchoolMsg(null);
+                  try {
+                    const { error } = await supabase
+                      .from('student_profiles')
+                      .update({ school_name: mySchool || null })
+                      .eq('id', spId);
+                    setSchoolMsg(
+                      error
+                        ? { type: 'err', text: 'Kaydedilemedi — okul modülü henüz aktif edilmemiş olabilir.' }
+                        : { type: 'ok', text: 'Okulunuz kaydedildi.' }
+                    );
+                  } finally {
+                    setSchoolSaving(false);
+                  }
+                }}
+                disabled={schoolSaving || !spId}
+                className="px-5 py-2.5 bg-[#0A1931] hover:bg-[#00A8B5] text-white text-xs font-extrabold rounded-xl transition cursor-pointer disabled:opacity-60 self-start sm:self-end"
+              >
+                {schoolSaving ? 'Kaydediliyor…' : 'Kaydet'}
+              </button>
+            </div>
+          </section>
+        )}
 
         <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
           {[

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { MESEM_FIELDS, TURKEY_CITIES } from '@/lib/constants';
 import Link from 'next/link';
@@ -38,6 +38,21 @@ export default function KayitPage() {
   const [companyName, setCompanyName] = useState('');
   const [city, setCity] = useState('İstanbul');
   const [district, setDistrict] = useState('');
+
+  // OKUL_MODULU — öğrenci-okul eşleştirmesi
+  const [schoolName, setSchoolName] = useState('');
+  const [schools, setSchools] = useState<{ school_name: string; verified: boolean }[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data: rows } = await supabase.rpc('public_school_list');
+        if (rows) setSchools(rows as { school_name: string; verified: boolean }[]);
+      } catch {
+        /* modül kurulu değilse sessizce atla */
+      }
+    })();
+  }, []);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,6 +98,7 @@ export default function KayitPage() {
             profile_id: userId,
             field_name: studentField,
             education_level: educationLevel,
+            school_name: schoolName || null,
           });
 
         if (stError) throw stError;
@@ -245,6 +261,27 @@ export default function KayitPage() {
                     <option value="MTAL (Meslek Lisesi Stajyeri)">MTAL (Meslek Lisesi 12. Sınıf)</option>
                     <option value="Ön Lisans / Üniversite">Ön Lisans / Üniversite</option>
                   </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Okulunuz <span className="text-slate-400 font-medium">(okul paneli eşleştirmesi için)</span>
+                  </label>
+                  <select
+                    value={schoolName}
+                    onChange={(e) => setSchoolName(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:border-[#00A8B5] cursor-pointer"
+                  >
+                    <option value="">Başka bir okul / belirtmek istemiyorum</option>
+                    {schools.map((s) => (
+                      <option key={s.school_name} value={s.school_name}>
+                        {s.school_name}{s.verified ? ' ✓' : ''}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    Okulunuzu seçerseniz koordinatörünüz başvurularınızı panelinden izleyebilir (yalnızca özet bilgiler).
+                  </p>
                 </div>
               </>
             )}

@@ -81,6 +81,7 @@ function getMenu(role: HeaderRole): NavGroup[] {
         ? [
             { href: '/isveren/panel', label: 'İşveren Paneli', desc: 'İlanların ve başvuruların' },
             { href: '/ilan-ver', label: 'İlan Ver', desc: '1 dakikada stajyer ilanı yayınla' },
+      { href: '/okul', label: 'Okul Paneli', desc: 'Koordinatör: öğrenci başvurularını izle' },
           ]
         : role === 'student'
           ? [
@@ -90,6 +91,7 @@ function getMenu(role: HeaderRole): NavGroup[] {
             ]
           : [
               { href: '/ilan-ver', label: 'İlan Ver', desc: 'Stajyer aramaya başla' },
+      { href: '/okul', label: 'Okul Paneli', desc: 'Okul koordinatörü hesabı' },
               { href: '/isveren/giris', label: 'İşveren Girişi', desc: 'İşletme hesabına giriş yap' },
             ]),
       { href: '/imep', label: 'İMEP Programı', desc: 'İMEP stajyer desteği rehberi' },
