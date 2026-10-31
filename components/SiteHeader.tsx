@@ -42,6 +42,7 @@ function getMenu(role: HeaderRole): NavGroup[] {
       label: 'İlanlar',
       items: [
         { href: '/ilanlar', label: 'Tüm İlanlar', desc: 'Aktif staj ve çıraklık ilanları' },
+        { href: '/isletmeler', label: 'İşletmeler', desc: 'Stajyer alan işletmeleri keşfet' },
         ...(role === 'student'
           ? [
               {
