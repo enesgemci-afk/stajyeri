@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import SiteHeader from '@/components/SiteHeader';
 import { FIELD_GUIDES } from '@/lib/meslekRehberi';
-import { ArrowRight, BookOpen, GraduationCap } from 'lucide-react';
+import { ArrowRight, BookOpen, Compass, GraduationCap } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'MESEM Meslek Rehberi — 41 Alan | Stajyeri.net',
@@ -89,7 +89,19 @@ export default function MeslekRehberiPage() {
         </div>
 
         {/* Çapraz bağlantılar */}
-        <div className="grid sm:grid-cols-2 gap-4 mt-12 max-w-3xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-12 max-w-4xl mx-auto">
+          <Link
+            href="/meslek-rehberi"
+            className="bg-[#0A1931] text-white rounded-3xl p-6 flex items-center gap-4 hover:bg-[#10294d] transition"
+          >
+            <Compass className="w-8 h-8 text-[#00E5FF] flex-shrink-0" />
+            <span>
+              <span className="block text-sm font-black">Meslek Seçim Rehberi</span>
+              <span className="block text-[11px] text-slate-300 mt-0.5">
+                5 adımda bilinçli karar: ilgi grupları, günün akışı, ebeveyn köşesi.
+              </span>
+            </span>
+          </Link>
           <Link
             href="/alan-secim"
             className="bg-[#0A1931] text-white rounded-3xl p-6 flex items-center gap-4 hover:bg-[#10294d] transition"
