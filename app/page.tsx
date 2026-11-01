@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-import { MESEM_FIELDS, PROGRAM_TYPES, TURKEY_CITIES } from '@/lib/constants';
+import { MESEM_FIELDS, PROGRAM_TYPES, TURKEY_CITIES, programTypeLabel } from '@/lib/constants';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 
@@ -536,7 +536,7 @@ export default function HomePage() {
                   <div className="flex items-center justify-between gap-2 mb-3">
                     <div className="flex items-center gap-2">
                       <span className="px-3 py-1 bg-[#00A8B5]/10 text-[#00A8B5] text-[11px] font-extrabold rounded-full">
-                        {job.program_type === 'MESEM_4_1' ? 'MESEM (4 Gün İşletme)' : job.program_type}
+                        {programTypeLabel(job.program_type)}
                       </span>
                       {job.created_at &&
                         Date.now() - new Date(job.created_at).getTime() < 3 * 24 * 60 * 60 * 1000 && (

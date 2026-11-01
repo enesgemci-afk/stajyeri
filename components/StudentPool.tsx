@@ -7,18 +7,11 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-import { MESEM_FIELDS, TURKEY_CITIES } from '@/lib/constants';
+import { MESEM_FIELDS, TURKEY_CITIES, EDU_LEVELS } from '@/lib/constants';
 import {
   Search, Users, Lock, Phone, Mail, MessageCircle, X, ShieldCheck,
   Loader2, RefreshCw, Check, AlertCircle, Sparkles,
 } from 'lucide-react';
-
-const EDU_LEVELS = [
-  'MESEM (Çırak - 9, 10, 11. Sınıf)',
-  'MESEM (Kalfa - 12. Sınıf)',
-  'Meslek Lisesi (12. Sınıf Stajyeri)',
-  'Üniversite / Önlisans Stajyeri',
-];
 
 const PAGE_SIZE = 24;
 

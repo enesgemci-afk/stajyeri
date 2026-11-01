@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-import { MESEM_FIELDS } from '@/lib/constants';
+import { MESEM_FIELDS, EDU_LEVELS } from '@/lib/constants';
+import { APP_STATUS_META, type AppStatus } from '@/lib/appStatus';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 
@@ -25,8 +26,6 @@ import {
   Search,
 } from 'lucide-react';
 
-type AppStatus = 'pending' | 'approved' | 'rejected';
-
 interface AppRow {
   id: string;
   status: AppStatus;
@@ -39,18 +38,7 @@ interface AppRow {
   } | null;
 }
 
-const EDU_LEVELS = [
-  'MESEM (Çırak - 9, 10, 11. Sınıf)',
-  'MESEM (Kalfa - 12. Sınıf)',
-  'Meslek Lisesi (12. Sınıf Stajyeri)',
-  'Üniversite / Önlisans Stajyeri',
-];
-
-const STATUS_META: Record<AppStatus, { label: string; badge: string }> = {
-  pending: { label: 'İncelemede', badge: 'bg-amber-50 text-amber-700 border-amber-200' },
-  approved: { label: 'Olumlu', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-  rejected: { label: 'Olumsuz', badge: 'bg-red-50 text-red-700 border-red-200' },
-};
+const STATUS_META = APP_STATUS_META;
 
 export default function OgrenciPanelPage() {
   const [loading, setLoading] = useState(true);

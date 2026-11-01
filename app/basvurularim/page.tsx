@@ -19,8 +19,7 @@ import {
   X,
   BookOpen,
 } from 'lucide-react';
-
-type AppStatus = 'pending' | 'approved' | 'rejected';
+import { APP_STATUS_META, type AppStatus } from '@/lib/appStatus';
 
 interface ApplicationRow {
   id: string;
@@ -41,23 +40,7 @@ interface ApplicationRow {
   } | null;
 }
 
-const STATUS_META: Record<AppStatus, { label: string; badge: string; dot: string }> = {
-  pending: {
-    label: 'İncelemede',
-    badge: 'bg-amber-50 text-amber-700 border-amber-200',
-    dot: 'bg-amber-500',
-  },
-  approved: {
-    label: 'Olumlu',
-    badge: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    dot: 'bg-emerald-500',
-  },
-  rejected: {
-    label: 'Olumsuz',
-    badge: 'bg-red-50 text-red-700 border-red-200',
-    dot: 'bg-red-500',
-  },
-};
+const STATUS_META = APP_STATUS_META;
 
 type FilterKey = 'all' | AppStatus;
 

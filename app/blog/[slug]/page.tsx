@@ -97,6 +97,12 @@ export default async function BlogDetayPage({ params }: Props) {
               🗺️ Staj Patikamı Oluştur
             </Link>
             <Link
+              href="/meslek"
+              className="px-4 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-black rounded-full text-[11px] transition"
+            >
+              📚 Alan Rehberleri
+            </Link>
+            <Link
               href="/ilanlar"
               className="px-4 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-black rounded-full text-[11px] transition"
             >

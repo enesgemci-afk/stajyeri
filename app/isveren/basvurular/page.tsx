@@ -25,8 +25,7 @@ import {
   Clock,
   ExternalLink,
 } from 'lucide-react';
-
-type AppStatus = 'pending' | 'approved' | 'rejected';
+import { APP_STATUS_META, type AppStatus } from '@/lib/appStatus';
 
 interface AppRow {
   id: string;
@@ -50,21 +49,9 @@ interface AppRow {
 }
 
 const STATUS_META: Record<AppStatus, { label: string; badge: string; icon: typeof Clock }> = {
-  pending: {
-    label: 'İncelemede',
-    badge: 'bg-amber-50 text-amber-700 border-amber-200',
-    icon: Clock,
-  },
-  approved: {
-    label: 'Olumlu',
-    badge: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    icon: CheckCircle2,
-  },
-  rejected: {
-    label: 'Olumsuz',
-    badge: 'bg-red-50 text-red-700 border-red-200',
-    icon: XCircle,
-  },
+  pending: { ...APP_STATUS_META.pending, icon: Clock },
+  approved: { ...APP_STATUS_META.approved, icon: CheckCircle2 },
+  rejected: { ...APP_STATUS_META.rejected, icon: XCircle },
 };
 
 type StatusFilter = 'all' | AppStatus;

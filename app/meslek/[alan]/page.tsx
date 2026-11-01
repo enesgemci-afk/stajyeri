@@ -209,14 +209,18 @@ export default async function MeslekDetayPage({
       {/* Çapraz bağlantılar */}
       <section className="max-w-6xl w-full mx-auto px-4 pb-16">
         <h2 className="text-lg font-black text-[#0A1931] mb-4">Yolculuğuna Devam Et</h2>
-        <div className="grid sm:grid-cols-3 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link href="/alan-secim" className="bg-white rounded-3xl border border-slate-200 hover:border-[#00A8B5] transition p-5">
             <p className="text-xs font-black text-[#0A1931]">🧭 Alan Seçim Testi</p>
             <p className="text-[11px] text-slate-500 mt-1">Bu alan sana uygun mu? 6 soruda keşfet.</p>
           </Link>
-          <Link href="/cv-olustur" className="bg-white rounded-3xl border border-slate-200 hover:border-[#00A8B5] transition p-5">
-            <p className="text-xs font-black text-[#0A1931]">📄 CV Oluştur</p>
-            <p className="text-[11px] text-slate-500 mt-1">Bu alandaki becerileri CV’ne ekle, PDF indir.</p>
+          <Link href="/patika" className="bg-white rounded-3xl border border-slate-200 hover:border-[#00A8B5] transition p-5">
+            <p className="text-xs font-black text-[#0A1931]">🗺️ Staj Patikası</p>
+            <p className="text-[11px] text-slate-500 mt-1">Çıraktan ustaya kişisel yol haritanı oluştur.</p>
+          </Link>
+          <Link href="/cv-ornekleri" className="bg-white rounded-3xl border border-slate-200 hover:border-[#00A8B5] transition p-5">
+            <p className="text-xs font-black text-[#0A1931]">🖼️ CV Örnekleri</p>
+            <p className="text-[11px] text-slate-500 mt-1">Bu alana özel doldurulmuş örnek CV’lere göz at.</p>
           </Link>
           <Link href="/rehber/mulakat-sorulari" className="bg-white rounded-3xl border border-slate-200 hover:border-[#00A8B5] transition p-5">
             <p className="text-xs font-black text-[#0A1931]">💬 Mülakat Soruları</p>

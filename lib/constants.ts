@@ -63,3 +63,24 @@ export const TURKEY_CITIES: string[] = [
   'Van', 'Yozgat', 'Zonguldak', 'Aksaray', 'Bayburt', 'Karaman', 'Kırıkkale', 'Batman',
   'Şırnak', 'Bartın', 'Ardahan', 'Iğdır', 'Yalova', 'Karabük', 'Kilis', 'Osmaniye', 'Düzce'
 ];
+
+// Öğrenci eğitim seviyeleri — panel + havuz + formlar tek kaynak
+export const EDU_LEVELS: string[] = [
+  'MESEM (Çırak - 9, 10, 11. Sınıf)',
+  'MESEM (Kalfa - 12. Sınıf)',
+  'Meslek Lisesi (12. Sınıf Stajyeri)',
+  'Üniversite / Önlisans Stajyeri',
+];
+
+// Program tipi etiketleri — ilan kartları, formlar ve filtreler tek kaynak
+export const PROGRAM_TYPE_LABELS: Record<string, string> = {
+  MESEM_4_1: 'MESEM (4 Gün İşletme)',
+  MTAL_3_DAYS: 'MTAL 12. Sınıf (3 Gün Staj)',
+  SUMMER_INTERN: 'Yaz Stajı / Beceri Eğitimi',
+};
+
+/** Bilinmeyen/değer yoksa raw değeri veya nötr etiket döner */
+export function programTypeLabel(programType?: string | null): string {
+  if (!programType) return 'Bilinmiyor';
+  return PROGRAM_TYPE_LABELS[programType] ?? programType;
+}

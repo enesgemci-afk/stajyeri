@@ -25,8 +25,7 @@ import {
   ShieldCheck,
   Coins,
 } from 'lucide-react';
-
-type AppStatus = 'pending' | 'approved' | 'rejected';
+import { type AppStatus } from '@/lib/appStatus';
 
 interface JobRow {
   id: string;
