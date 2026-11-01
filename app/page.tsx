@@ -28,6 +28,7 @@ import {
   ArrowRight,
   BookOpen,
   Wallet,
+  Flag,
 } from 'lucide-react';
 
 interface JobPost {
@@ -646,6 +647,13 @@ export default function HomePage() {
               desc: '9. sınıfa geçenler için: 6 soruda sana en uygun MESEM alanlarını keşfet.',
             },
             {
+              href: '/patika',
+              Icon: Flag,
+              color: '#8B5CF6',
+              title: 'Staj Patikası',
+              desc: 'Durumunu ve hedefini seç; çıraktan ustaya kişisel yol haritanı oluştur.',
+            },
+            {
               href: '/cv-olustur',
               Icon: FileText,
               color: '#FF6B00',
@@ -665,6 +673,20 @@ export default function HomePage() {
               color: '#EC4899',
               title: 'Ön Yazı Örnekleri',
               desc: 'Başvurunu güçlendiren hazır ön yazı şablonları ve yazım rehberi.',
+            },
+            {
+              href: '/hesaplama-araclari',
+              Icon: Wallet,
+              color: '#0EA5E9',
+              title: 'Hesaplama Araçları',
+              desc: 'Brüt-net maaş, fazla mesai, yıllık izin ve tazminat hesaplayıcıları.',
+            },
+            {
+              href: '/blog',
+              Icon: BookOpen,
+              color: '#10B981',
+              title: 'Kariyer Blogu',
+              desc: 'İMEP maaşı, kalfalık belgesi ve staj taktikleri — sade dille.',
             },
           ].map(({ href, Icon, color, title, desc }) => (
             <Link

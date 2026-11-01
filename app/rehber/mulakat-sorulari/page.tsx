@@ -43,6 +43,25 @@ export default function MulakatSorulariPage() {
             </p>
           </div>
 
+          {/* PROVA CTA */}
+          <Link
+            href="/rehber/mulakat-provasi"
+            className="mb-8 bg-[#0A1931] text-white rounded-3xl p-5 flex items-center gap-4 hover:bg-[#10294d] transition group"
+          >
+            <span className="w-11 h-11 rounded-2xl bg-[#00A8B5]/15 flex items-center justify-center flex-shrink-0">
+              <Sparkles className="w-5 h-5 text-[#00E5FF]" />
+            </span>
+            <span className="flex-1">
+              <span className="block text-xs font-black">
+                Kronometreli Mülakat Provası yap
+              </span>
+              <span className="block text-[10px] text-slate-400 mt-0.5">
+                6 soru, soru başına 2 dakika; cevaplarını yaz, kendini puanla, hazır olup olmadığını gör.
+              </span>
+            </span>
+            <ChevronRight className="w-4 h-4 text-[#00E5FF] group-hover:translate-x-0.5 transition-transform flex-shrink-0" />
+          </Link>
+
           {/* Genel sorular */}
           <h2 className="text-sm font-black text-[#0A1931] mb-3 flex items-center gap-2">
             <MessageCircleQuestion className="w-4 h-4 text-[#00A8B5]" /> Her Mülakatta Sorulan 8 Soru

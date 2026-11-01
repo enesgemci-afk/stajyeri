@@ -62,11 +62,16 @@ function getMenu(role: HeaderRole): NavGroup[] {
       label: 'Kariyer Araçları',
       items: [
         { href: '/meslek', label: 'Meslek Rehberi', desc: '41 MESEM alanı: ne iş yapar, nereye gider' },
-        { href: '/staj-ucretleri', label: 'Staj Ücretleri', desc: '3308 ücret hakları + hesaplayıcı' },
+        { href: '/patika', label: 'Staj Patikası', desc: 'Çıraktan ustaya kişisel yol haritan' },
         { href: '/alan-secim', label: 'Alan Seçim Testi', desc: '9. sınıflar için 6 soruluk rehber' },
+        { href: '/staj-ucretleri', label: 'Staj Ücretleri', desc: '3308 ücret hakları + hesaplayıcı' },
+        { href: '/hesaplama-araclari', label: 'Hesaplama Araçları', desc: 'Brüt-net, mesai, izin, tazminat' },
         { href: '/cv-olustur', label: 'CV Oluştur', desc: 'Ücretsiz CV oluştur, PDF indir' },
+        { href: '/cv-ornekleri', label: 'CV Örnekleri', desc: 'Alanına göre hazır şablonlar' },
+        { href: '/rehber/mulakat-provasi', label: 'Mülakat Provası', desc: 'Kronometreli prova + öz puanlama' },
         { href: '/rehber/mulakat-sorulari', label: 'Mülakat Soruları', desc: 'Alanına göre sorular ve ipuçları' },
         { href: '/rehber/onyazi', label: 'Ön Yazı Örnekleri', desc: 'Hazır şablonlarla güçlü başvuru' },
+        { href: '/blog', label: 'Kariyer Blogu', desc: 'Ücret, belge ve kariyer rehberleri' },
       ],
     });
   }

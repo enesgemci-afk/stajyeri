@@ -248,6 +248,21 @@ export default function IlanVerPage() {
         }
       }
 
+      // İŞ ALARMI: kriteri eşleşen öğrencilere bildirim düşür
+      // (RPC henüz kurulmadıysa sessizce atlanır — ilan akışı etkilenmez)
+      if (newPost) {
+        try {
+          await supabase.rpc('notify_job_alerts', {
+            p_job_id: newPost.id,
+            p_field: fieldName,
+            p_city: city,
+            p_owner_profile: currentUserId,
+          });
+        } catch {
+          /* notify_job_alerts RPC yoksa kritik değil */
+        }
+      }
+
       // Logo / renk şablonu işletme kaydına yazılır (kolonlar yoksa sessizce atlanır)
       if (logoUrl || logoColor) {
         try {

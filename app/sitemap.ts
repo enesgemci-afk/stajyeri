@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { supabase } from '@/lib/supabaseClient';
 import { MESEM_FIELDS, TURKEY_CITIES } from '@/lib/constants';
 import { FIELD_GUIDES, slugifyTr } from '@/lib/meslekRehberi';
+import { BLOG_POSTS } from '@/lib/blogYazilari';
 
 const SITE_URL = 'https://stajyeri.vercel.app';
 
@@ -18,6 +19,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/meslek`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${SITE_URL}/staj-ucretleri`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${SITE_URL}/alan-secim`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${SITE_URL}/patika`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${SITE_URL}/cv-ornekleri`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${SITE_URL}/hesaplama-araclari`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${SITE_URL}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${SITE_URL}/rehber/mulakat-provasi`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE_URL}/cv-olustur`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE_URL}/okul/kayit`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${SITE_URL}/rehber/mulakat-sorulari`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
@@ -32,6 +38,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: now,
     changeFrequency: 'weekly' as const,
     priority: 0.8,
+  }));
+
+  const blogUrls: MetadataRoute.Sitemap = BLOG_POSTS.map((p) => ({
+    url: `${SITE_URL}/blog/${p.slug}`,
+    lastModified: p.date ? new Date(p.date) : now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
   }));
 
   try {
@@ -75,11 +88,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         };
       });
 
-      return [...staticUrls, ...fieldUrls, ...comboUrls, ...jobUrls];
+      return [...staticUrls, ...fieldUrls, ...blogUrls, ...comboUrls, ...jobUrls];
     }
   } catch {
     /* DB erişilemezse statik kısmla devam et */
   }
 
-  return [...staticUrls, ...fieldUrls];
+  return [...staticUrls, ...fieldUrls, ...blogUrls];
 }

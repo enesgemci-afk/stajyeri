@@ -78,6 +78,9 @@ export default function OgrenciPanelPage() {
   const [schoolSaving, setSchoolSaving] = useState(false);
   const [schoolMsg, setSchoolMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
 
+  // BECERILERIM — student_cvs.skills (CV'ye yazdığın yetkinlikler)
+  const [skills, setSkills] = useState<string[]>([]);
+
   useEffect(() => {
     load();
   }, []);
@@ -153,6 +156,20 @@ export default function OgrenciPanelPage() {
         .order('created_at', { ascending: false });
 
       if (appList) setApps(appList as unknown as AppRow[]);
+
+      // BECERILERIM — CV kaydından yetkinlikler (tablo/kolon yoksa sessizce atla)
+      try {
+        const { data: cvRow } = await supabase
+          .from('student_cvs')
+          .select('skills')
+          .eq('profile_id', userId)
+          .maybeSingle();
+        if (cvRow?.skills && Array.isArray(cvRow.skills)) {
+          setSkills(cvRow.skills as string[]);
+        }
+      } catch {
+        /* student_cvs kurulmadıysa kritik değil */
+      }
     }
 
     setLoading(false);
@@ -301,8 +318,49 @@ export default function OgrenciPanelPage() {
             <Link href="/basvurularim" className="px-5 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-extrabold rounded-xl transition flex items-center gap-2">
               <ClipboardList className="w-4 h-4" /> Tüm Başvurularım
             </Link>
+            <Link href="/patika" className="px-5 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-extrabold rounded-xl transition flex items-center gap-2">
+              <Sparkles className="w-4 h-4" /> Staj Patikamı Kur
+            </Link>
           </div>
         </section>
+
+        {/* BECERILERIM — CV'den gelen yetkinlikler */}
+        {authState === 'student' && (
+          <section className="mt-6 bg-white rounded-2xl border border-slate-200 p-5">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h2 className="text-xs font-black text-[#0A1931] flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-[#FF6B00]" /> Becerilerim
+                </h2>
+                <p className="text-[10px] text-slate-400 mt-0.5">
+                  CV’nde işaretlediğin yetkinlikler — işverenler havuzda seni bu etiketlerle bulur.
+                </p>
+              </div>
+              <Link
+                href="/cv-olustur"
+                className="text-[11px] font-extrabold text-[#00A8B5] hover:underline flex items-center gap-1 whitespace-nowrap flex-shrink-0"
+              >
+                {skills.length > 0 ? 'CV’ni Güncelle' : 'CV Oluştur'} <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+            {skills.length > 0 ? (
+              <div className="flex flex-wrap gap-1.5 mt-3">
+                {skills.map((s) => (
+                  <span
+                    key={s}
+                    className="px-2.5 py-1 rounded-full bg-[#00A8B5]/10 text-[#00A8B5] text-[10px] font-bold"
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-[11px] text-slate-400 mt-3">
+                Henüz beceri eklemedin — CV Oluşturucu, alanına özel beceri önerileri sunar.
+              </p>
+            )}
+          </section>
+        )}
 
         {/* OKUL_MODULU — öğrencinin okulu */}
         {authState === 'student' && (
