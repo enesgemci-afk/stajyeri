@@ -304,8 +304,9 @@ export default function IsverenPanelPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center font-sans">
-        <div className="w-8 h-8 border-4 border-[#FF6B00] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center gap-3 font-sans">
+        <div className="w-10 h-10 border-4 border-[#00A8B5] border-t-[#FF6B00] rounded-full animate-spin" />
+        <p className="text-[11px] font-bold text-slate-400">Panel yükleniyor...</p>
       </div>
     );
   }
@@ -320,10 +321,10 @@ export default function IsverenPanelPage() {
           <h1 className="text-xl font-black text-[#0A1931]">İşveren Paneli</h1>
           <p className="text-xs text-slate-500 mt-2">Panelinizi görmek için işveren girişi yapın.</p>
           <div className="mt-6 space-y-2">
-            <Link href="/isveren/giris" className="block w-full py-3 bg-[#0A1931] hover:bg-[#FF6B00] text-white font-extrabold rounded-xl text-xs transition">
+            <Link href="/isveren/giris" className="block w-full py-3 bg-[#0A1931] hover:bg-[#FF6B00] text-white font-extrabold rounded-xl text-xs transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2">
               İşveren Girişi
             </Link>
-            <Link href="/isveren/kayit" className="block w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold rounded-xl text-xs transition">
+            <Link href="/isveren/kayit" className="block w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold rounded-xl text-xs transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2">
               İşletme Kaydı Oluştur
             </Link>
           </div>
@@ -381,16 +382,16 @@ export default function IsverenPanelPage() {
             </p>
           )}
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/ilan-ver" className="px-5 py-2.5 bg-[#FF6B00] hover:bg-orange-600 text-white text-xs font-extrabold rounded-xl transition flex items-center gap-2 shadow-lg shadow-[#FF6B00]/25">
+            <Link href="/ilan-ver" className="px-5 py-2.5 bg-[#FF6B00] hover:bg-orange-600 text-white text-xs font-extrabold rounded-xl transition-all hover:shadow-lg hover:shadow-[#FF6B00]/30 active:scale-[0.98] flex items-center gap-2 shadow-lg shadow-[#FF6B00]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2">
               <PlusCircle className="w-4 h-4" /> Yeni İlan Ver
             </Link>
             {company && (
-              <button onClick={() => setTab('apps')} className="px-5 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-extrabold rounded-xl transition flex items-center gap-2 cursor-pointer">
+              <button onClick={() => setTab('apps')} className="px-5 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-extrabold rounded-xl transition-all active:scale-[0.98] flex items-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1931]">
                 <ClipboardList className="w-4 h-4" /> Gelen Başvurular ({counts.totalApps})
               </button>
             )}
             {pool.granted && (
-              <button onClick={() => setTab('pool')} className="px-5 py-2.5 bg-[#00A8B5] hover:bg-[#00929e] text-white text-xs font-extrabold rounded-xl transition flex items-center gap-2 shadow-lg shadow-[#00A8B5]/25 cursor-pointer">
+              <button onClick={() => setTab('pool')} className="px-5 py-2.5 bg-[#00A8B5] hover:bg-[#00929e] text-white text-xs font-extrabold rounded-xl transition-all active:scale-[0.98] flex items-center gap-2 shadow-lg shadow-[#00A8B5]/25 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00E5FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1931]">
                 <Users className="w-4 h-4" /> Stajyer Havuzu ({pool.balance} kontör)
               </button>
             )}
@@ -406,15 +407,34 @@ export default function IsverenPanelPage() {
             { icon: Coins, label: 'Kontör Bakiyesi', value: pool.balance, cls: pool.balance > 0 ? 'bg-orange-50 text-orange-600' : 'bg-slate-100 text-slate-400' },
             { icon: Users, label: 'Havuz Erişimi', value: pool.granted ? 'Açık' : 'Kapalı', cls: pool.granted ? 'bg-teal-50 text-[#00A8B5]' : 'bg-slate-100 text-slate-400' },
           ].map((s) => (
-            <div key={s.label} className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center gap-4">
+            <div key={s.label} className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center gap-4 hover:border-[#00A8B5]/40 hover:shadow-md transition-all duration-200">
               <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${s.cls}`}>
                 <s.icon className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xl font-black text-[#0A1931]">{s.value}</p>
+                <p className="text-xl font-black text-[#0A1931] leading-tight">{s.value}</p>
                 <p className="text-[11px] text-slate-500 font-bold">{s.label}</p>
               </div>
             </div>
+          ))}
+        </section>
+
+        {/* HIZLI ERİŞİM — işveren için MEB kaynak kısayolları */}
+        <section className="mt-4 flex flex-wrap items-center gap-2 text-[11px] font-bold">
+          <span className="text-slate-400">Hızlı erişim:</span>
+          {[
+            { href: '/tesvik-simulasyon', label: '🏛️ İMEP teşviki hesapla' },
+            { href: '/imep', label: '📚 İMEP nedir?' },
+            { href: '/staj-ucretleri', label: '💰 3308 ücret tabloları' },
+            { href: '/blog', label: '📰 Kariyer Blogu' },
+          ].map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="px-3 py-1.5 rounded-full bg-white border border-slate-200 hover:border-[#00A8B5] hover:text-[#00A8B5] text-slate-500 transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2"
+            >
+              {l.label}
+            </Link>
           ))}
         </section>
 
@@ -485,13 +505,13 @@ export default function IsverenPanelPage() {
             )}
 
             <section className="flex gap-2 mt-6 bg-white border border-slate-200 rounded-2xl p-1.5 w-full sm:w-auto sm:inline-flex">
-              <button onClick={() => setTab('jobs')} className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${tab === 'jobs' ? 'bg-[#0A1931] text-white' : 'text-slate-500 hover:text-[#0A1931]'}`}>
-                İlanlarım ({counts.totalJobs})
+              <button onClick={() => setTab('jobs')} className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2 ${tab === 'jobs' ? 'bg-[#0A1931] text-white shadow-md' : 'text-slate-500 hover:text-[#0A1931] hover:bg-slate-50'}`}>
+                <Briefcase className="w-3.5 h-3.5" /> İlanlarım ({counts.totalJobs})
               </button>
-              <button onClick={() => setTab('apps')} className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${tab === 'apps' ? 'bg-[#0A1931] text-white' : 'text-slate-500 hover:text-[#0A1931]'}`}>
-                Gelen Başvurular ({counts.totalApps})
+              <button onClick={() => setTab('apps')} className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2 ${tab === 'apps' ? 'bg-[#0A1931] text-white shadow-md' : 'text-slate-500 hover:text-[#0A1931] hover:bg-slate-50'}`}>
+                <ClipboardList className="w-3.5 h-3.5" /> Gelen Başvurular ({counts.totalApps})
               </button>
-              <button onClick={() => setTab('pool')} className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition cursor-pointer flex items-center gap-1.5 ${tab === 'pool' ? 'bg-[#0A1931] text-white' : 'text-slate-500 hover:text-[#0A1931]'}`}>
+              <button onClick={() => setTab('pool')} className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2 ${tab === 'pool' ? 'bg-[#0A1931] text-white shadow-md' : 'text-slate-500 hover:text-[#0A1931] hover:bg-slate-50'}`}>
                 <Users className="w-3.5 h-3.5" /> Stajyer Havuzu
               </button>
             </section>
@@ -510,7 +530,7 @@ export default function IsverenPanelPage() {
                   </div>
                 ) : (
                   jobs.map((j) => (
-                    <div key={j.id} className="bg-white rounded-2xl border border-slate-200 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div key={j.id} className="bg-white rounded-2xl border border-slate-200 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-[#00A8B5]/40 hover:shadow-sm transition-all duration-200">
                       <div className="min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                           <Link href={`/ilan/${j.id}`} className="text-xs font-black text-[#0A1931] hover:text-[#00A8B5] transition">
@@ -591,7 +611,7 @@ export default function IsverenPanelPage() {
                   </div>
                 ) : (
                   apps.map((a) => (
-                    <div key={a.id} className="bg-white rounded-2xl border border-slate-200 p-5">
+                    <div key={a.id} className="bg-white rounded-2xl border border-slate-200 p-5 hover:border-[#00A8B5]/40 hover:shadow-sm transition-all duration-200">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div className="min-w-0">
                           <p className="text-xs font-black text-[#0A1931] flex items-center gap-1.5">
@@ -638,7 +658,7 @@ export default function IsverenPanelPage() {
                             onChange={(e) => updateAppStatus(a.id, e.target.value as AppStatus)}
                             disabled={busyApp === a.id || a.guardian_status === 'pending'}
                             title={a.guardian_status === 'pending' ? 'Veli onayı verilene kadar başvuru kilitlidir' : undefined}
-                            className={`px-3 py-2 rounded-xl border text-[11px] font-extrabold focus:outline-none transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${STATUS_BADGE[a.status]}`}
+                            className={`px-3 py-2 rounded-xl border text-[11px] font-extrabold focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${STATUS_BADGE[a.status]}`}
                           >
                             {STATUS_OPTIONS.map((o) => (<option key={o.value} value={o.value}>{o.label}</option>))}
                           </select>
