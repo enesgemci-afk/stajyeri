@@ -26,6 +26,8 @@ import {
   Coins,
 } from 'lucide-react';
 import { type AppStatus } from '@/lib/appStatus';
+import IsverenSidebar from './Sidebar';
+import { PANEL_TOKENS } from '@/lib/panelTokens';
 
 interface JobRow {
   id: string;
@@ -297,6 +299,8 @@ export default function IsverenPanelPage() {
     totalJobs: jobs.length,
     totalApps: apps.length,
     pendingApps: apps.filter((a) => a.status === 'pending').length,
+    approvedApps: apps.filter((a) => a.status === 'approved').length,
+    rejectedApps: apps.filter((a) => a.status === 'rejected').length,
   };
 
   const formatDate = (iso: string) =>
@@ -364,79 +368,127 @@ export default function IsverenPanelPage() {
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8">
-        <section className="bg-gradient-to-br from-[#0A1931] via-[#0D2244] to-[#0A1931] text-white rounded-3xl p-8 sm:p-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FF6B00]/15 border border-[#FF6B00]/40 text-orange-300 text-[10px] font-bold mb-4">
-            <Building2 className="w-3 h-3" /> İŞVEREN PANELİ
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black">
-            {company ? company.company_name : `Hoş geldiniz${fullName ? `, ${fullName}` : ''}`}
-          </h1>
-          <p className="mt-2 text-slate-300 text-xs sm:text-sm max-w-xl">
-            {company
-              ? `${counts.activeJobs} aktif ilanınız var, ${counts.pendingApps} başvuru yanıt bekliyor.`
-              : 'Başlamak için ilk ilanınızı oluşturun — stajyer arayan binlerce öğrenciye ulaşın.'}
-          </p>
-          {company && (
-            <p className="mt-1.5 text-[11px] text-slate-400 flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5" /> {[company.district, company.city].filter(Boolean).join(', ') || 'Konum belirtilmedi'}
-            </p>
-          )}
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/ilan-ver" className="px-5 py-2.5 bg-[#FF6B00] hover:bg-orange-600 text-white text-xs font-extrabold rounded-xl transition-all hover:shadow-lg hover:shadow-[#FF6B00]/30 active:scale-[0.98] flex items-center gap-2 shadow-lg shadow-[#FF6B00]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2">
-              <PlusCircle className="w-4 h-4" /> Yeni İlan Ver
-            </Link>
-            {company && (
-              <button onClick={() => setTab('apps')} className="px-5 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-extrabold rounded-xl transition-all active:scale-[0.98] flex items-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1931]">
-                <ClipboardList className="w-4 h-4" /> Gelen Başvurular ({counts.totalApps})
-              </button>
-            )}
-            {pool.granted && (
-              <button onClick={() => setTab('pool')} className="px-5 py-2.5 bg-[#00A8B5] hover:bg-[#00929e] text-white text-xs font-extrabold rounded-xl transition-all active:scale-[0.98] flex items-center gap-2 shadow-lg shadow-[#00A8B5]/25 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00E5FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1931]">
-                <Users className="w-4 h-4" /> Stajyer Havuzu ({pool.balance} kontör)
-              </button>
-            )}
-          </div>
-        </section>
+        <div className="lg:grid lg:grid-cols-[264px_minmax(0,1fr)] lg:gap-8 lg:items-start">
+          {/* SOL SIDEBAR — skill reçetesi: SaaS dashboard navigasyonu (desktop) */}
+          <IsverenSidebar
+            tab={tab}
+            onTab={setTab}
+            counts={counts}
+            poolGranted={pool.granted}
+            balance={pool.balance}
+            companyName={company?.company_name ?? (fullName || 'İşletme')}
+            location={company ? [company.district, company.city].filter(Boolean).join(', ') : ''}
+            trustBadge={trust?.badge ?? null}
+            onLogout={handleLogout}
+          />
 
-        <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-6">
+          <div className="min-w-0 mt-6 lg:mt-0">
+            {/* FLAT HERO — skill reçetesi: light SaaS + gradient üst şerit */}
+            <section className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 relative overflow-hidden">
+              <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#0080FF] via-[#8B00FF] to-[#22C55E]" />
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0080FF]/10 border border-[#0080FF]/25 text-[#0080FF] text-[10px] font-bold mb-3">
+                    <Building2 className="w-3 h-3" /> İŞVEREN PANELİ
+                  </div>
+                  <h1 className={`text-2xl sm:text-3xl font-black text-[#0A1931] ${PANEL_TOKENS.fontDisplay}`}>
+                    {company ? company.company_name : `Hoş geldiniz${fullName ? `, ${fullName}` : ''}`}
+                  </h1>
+                  <p className="mt-2 text-slate-500 text-xs sm:text-sm max-w-xl">
+                    {company
+                      ? `${counts.activeJobs} aktif ilanınız var, ${counts.pendingApps} başvuru yanıt bekliyor.`
+                      : 'Başlamak için ilk ilanınızı oluşturun — stajyer arayan binlerce öğrenciye ulaşın.'}
+                  </p>
+                  {company && (
+                    <p className="mt-1.5 text-[11px] text-slate-400 flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5" /> {[company.district, company.city].filter(Boolean).join(', ') || 'Konum belirtilmedi'}
+                    </p>
+                  )}
+                </div>
+
+                {/* Yan rozetler: yanıt hızı + güven skoru */}
+                <div className="flex flex-col gap-2 flex-shrink-0">
+                  {respTime && (
+                    <span
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#0080FF]/10 border border-[#0080FF]/25 text-[#0080FF] rounded-full text-[10px] font-extrabold"
+                      title={`${respTime.sample_count} sonuçlandırılmış başvurunun ortalaması`}
+                    >
+                      ⚡ Ort. {respTime.avg_hours >= 24
+                        ? `${Math.round(respTime.avg_hours / 24)} günde dönüyorsunuz`
+                        : `${respTime.avg_hours} saatte dönüyorsunuz`}
+                    </span>
+                  )}
+                  {trust && (
+                    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full text-[10px] font-extrabold">
+                      <ShieldCheck className="w-3 h-3" /> Güven {trust.trust_score}/5 · {trust.rating_count} değerlendirme
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-3">
+                <Link href="/ilan-ver" className={PANEL_TOKENS.ctaBtn}>
+                  <PlusCircle className="w-4 h-4" /> Yeni İlan Ver
+                </Link>
+                {company && (
+                  <button onClick={() => setTab('apps')} className="px-5 py-2.5 bg-[#0080FF]/10 hover:bg-[#0080FF]/20 border border-[#0080FF]/25 text-[#0080FF] text-xs font-extrabold rounded-xl transition-all active:scale-[0.98] inline-flex items-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0080FF] focus-visible:ring-offset-2">
+                    <ClipboardList className="w-4 h-4" /> Gelen Başvurular ({counts.totalApps})
+                  </button>
+                )}
+                {pool.granted && (
+                  <button onClick={() => setTab('pool')} className="px-5 py-2.5 bg-[#8B00FF]/10 hover:bg-[#8B00FF]/20 border border-[#8B00FF]/25 text-[#8B00FF] text-xs font-extrabold rounded-xl transition-all active:scale-[0.98] inline-flex items-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8B00FF] focus-visible:ring-offset-2">
+                    <Users className="w-4 h-4" /> Stajyer Havuzu ({pool.balance} kontör)
+                  </button>
+                )}
+              </div>
+            </section>
+
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
           {[
-            { icon: Power, label: 'Aktif İlan', value: counts.activeJobs, cls: 'bg-emerald-50 text-emerald-600' },
-            { icon: Briefcase, label: 'Toplam İlan', value: counts.totalJobs, cls: 'bg-slate-100 text-[#0A1931]' },
-            { icon: ClipboardList, label: 'Toplam Başvuru', value: counts.totalApps, cls: 'bg-slate-100 text-[#0A1931]' },
-            { icon: Clock, label: 'Bekleyen Başvuru', value: counts.pendingApps, cls: 'bg-amber-50 text-amber-600' },
-            { icon: Coins, label: 'Kontör Bakiyesi', value: pool.balance, cls: pool.balance > 0 ? 'bg-orange-50 text-orange-600' : 'bg-slate-100 text-slate-400' },
-            { icon: Users, label: 'Havuz Erişimi', value: pool.granted ? 'Açık' : 'Kapalı', cls: pool.granted ? 'bg-teal-50 text-[#00A8B5]' : 'bg-slate-100 text-slate-400' },
+            { icon: Power, label: 'Aktif İlan', value: counts.activeJobs, tone: 'emerald' as const },
+            { icon: Clock, label: 'Bekleyen Başvuru', value: counts.pendingApps, tone: 'amber' as const },
+            { icon: ClipboardList, label: 'Toplam Başvuru', value: counts.totalApps, tone: 'blue' as const },
+            { icon: Coins, label: 'Kontör Bakiyesi', value: pool.balance, tone: pool.balance > 0 ? ('violet' as const) : ('slate' as const) },
           ].map((s) => (
-            <div key={s.label} className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center gap-4 hover:border-[#00A8B5]/40 hover:shadow-md transition-all duration-200">
-              <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${s.cls}`}>
+            <div key={s.label} className="bg-white rounded-2xl border border-slate-200 p-5 hover:border-[#0080FF]/40 hover:shadow-md transition-all duration-200">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${PANEL_TOKENS.kpiIcon(s.tone)}`}>
                 <s.icon className="w-5 h-5" />
               </div>
-              <div>
-                <p className="text-xl font-black text-[#0A1931] leading-tight">{s.value}</p>
-                <p className="text-[11px] text-slate-500 font-bold">{s.label}</p>
-              </div>
+              <p className={`mt-3 text-2xl font-black text-[#0A1931] leading-tight ${PANEL_TOKENS.fontDisplay}`}>{s.value}</p>
+              <p className="text-[11px] text-slate-500 font-bold">{s.label}</p>
             </div>
           ))}
         </section>
 
-        {/* HIZLI ERİŞİM — işveren için MEB kaynak kısayolları */}
-        <section className="mt-4 flex flex-wrap items-center gap-2 text-[11px] font-bold">
-          <span className="text-slate-400">Hızlı erişim:</span>
-          {[
-            { href: '/tesvik-simulasyon', label: '🏛️ İMEP teşviki hesapla' },
-            { href: '/imep', label: '📚 İMEP nedir?' },
-            { href: '/staj-ucretleri', label: '💰 3308 ücret tabloları' },
-            { href: '/blog', label: '📰 Kariyer Blogu' },
-          ].map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="px-3 py-1.5 rounded-full bg-white border border-slate-200 hover:border-[#00A8B5] hover:text-[#00A8B5] text-slate-500 transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2"
-            >
-              {l.label}
-            </Link>
-          ))}
-        </section>
+        {/* BAŞVURU DÖNÜŞÜMÜ — gerçek veriden oran barları (skill: chart domain) */}
+        {counts.totalApps > 0 && (
+          <section className="mt-4 bg-white rounded-2xl border border-slate-200 p-5">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <p className={`text-xs font-black text-[#0A1931] ${PANEL_TOKENS.fontDisplay}`}>Başvuru Dönüşümü</p>
+              <span className="text-[10px] text-slate-400 font-bold">{counts.totalApps} başvuru</span>
+            </div>
+            <div className="mt-4 space-y-3">
+              {[
+                { label: 'Olumlu', n: counts.approvedApps, bar: 'bg-[#22C55E]', text: 'text-emerald-600' },
+                { label: 'İncelemede', n: counts.pendingApps, bar: 'bg-[#0080FF]', text: 'text-[#0080FF]' },
+                { label: 'Olumsuz', n: counts.rejectedApps, bar: 'bg-red-400', text: 'text-red-500' },
+              ].map((row) => {
+                const pct = Math.round((row.n / counts.totalApps) * 100);
+                return (
+                  <div key={row.label}>
+                    <div className="flex items-center justify-between text-[10px] font-extrabold">
+                      <span className="text-slate-500">{row.label}</span>
+                      <span className={row.text}>{pct}% · {row.n}</span>
+                    </div>
+                    <div className="mt-1 h-2 rounded-full bg-slate-100 overflow-hidden">
+                      <div className={`h-2 rounded-full ${row.bar} transition-all duration-500`} style={{ width: `${pct}%` }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         {company && (
           <section className="mt-6 bg-gradient-to-br from-emerald-50 to-white rounded-2xl border border-emerald-200/60 p-6">
@@ -504,15 +556,15 @@ export default function IsverenPanelPage() {
               </section>
             )}
 
-            <section className="flex gap-2 mt-6 bg-white border border-slate-200 rounded-2xl p-1.5 w-full sm:w-auto sm:inline-flex">
-              <button onClick={() => setTab('jobs')} className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2 ${tab === 'jobs' ? 'bg-[#0A1931] text-white shadow-md' : 'text-slate-500 hover:text-[#0A1931] hover:bg-slate-50'}`}>
+            <section className="flex gap-2 mt-6 bg-white border border-slate-200 rounded-2xl p-1.5 w-full sm:w-auto sm:inline-flex lg:hidden">
+              <button onClick={() => setTab('jobs')} className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0080FF] focus-visible:ring-offset-2 ${tab === 'jobs' ? 'bg-[#0080FF] text-white shadow-md' : 'text-slate-500 hover:text-[#0A1931] hover:bg-slate-50'}`}>
                 <Briefcase className="w-3.5 h-3.5" /> İlanlarım ({counts.totalJobs})
               </button>
-              <button onClick={() => setTab('apps')} className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2 ${tab === 'apps' ? 'bg-[#0A1931] text-white shadow-md' : 'text-slate-500 hover:text-[#0A1931] hover:bg-slate-50'}`}>
+              <button onClick={() => setTab('apps')} className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0080FF] focus-visible:ring-offset-2 ${tab === 'apps' ? 'bg-[#0080FF] text-white shadow-md' : 'text-slate-500 hover:text-[#0A1931] hover:bg-slate-50'}`}>
                 <ClipboardList className="w-3.5 h-3.5" /> Gelen Başvurular ({counts.totalApps})
               </button>
-              <button onClick={() => setTab('pool')} className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2 ${tab === 'pool' ? 'bg-[#0A1931] text-white shadow-md' : 'text-slate-500 hover:text-[#0A1931] hover:bg-slate-50'}`}>
-                <Users className="w-3.5 h-3.5" /> Stajyer Havuzu
+              <button onClick={() => setTab('pool')} className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0080FF] focus-visible:ring-offset-2 ${tab === 'pool' ? 'bg-[#0080FF] text-white shadow-md' : 'text-slate-500 hover:text-[#0A1931] hover:bg-slate-50'}`}>
+                <Users className="w-3.5 h-3.5" /> Havuz
               </button>
             </section>
 
@@ -682,6 +734,8 @@ export default function IsverenPanelPage() {
             </Link>
           </section>
         )}
+          </div>
+        </div>
       </main>
 
       <footer className="bg-white border-t border-slate-200 py-6 text-center text-[11px] text-slate-400">
