@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { MESEM_FIELDS, PROGRAM_TYPES, TURKEY_CITIES, programTypeLabel } from '@/lib/constants';
+import { BLOG_POSTS, formatBlogDate } from '@/lib/blogYazilari';
+import { ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 
@@ -229,6 +231,25 @@ export default function HomePage() {
 
   const featuredJobs = sortedJobs.slice(0, 6);
 
+  // Öne çıkan işletmeler — aktif ilanlardan şirket bazlı gruplama (kariyer.net deseni)
+  const topCompanies = (() => {
+    const map = new Map<string, { name: string; count: number; city: string; master: boolean }>();
+    for (const j of jobs) {
+      const name = j.company_details?.company_name;
+      if (!name) continue;
+      const cur = map.get(name) ?? {
+        name,
+        count: 0,
+        city: j.city ?? '',
+        master: !!j.company_details?.has_master_trainer,
+      };
+      cur.count += 1;
+      if (!cur.city && j.city) cur.city = j.city;
+      map.set(name, cur);
+    }
+    return [...map.values()].sort((a, b) => b.count - a.count).slice(0, 6);
+  })();
+
   const handleResetFilters = () => {
     setSelectedField('');
     setSelectedProgram('');
@@ -276,8 +297,12 @@ export default function HomePage() {
         }
       />
 
-      {/* 2. Hero Bölümü */}
+      {/* 2. Hero Bölümü — UI UX Pro Max: Hero + Search + Social-proof (logo paleti: lacivert/turkuaz/turuncu) */}
       <section className="bg-[#0A1931] text-white pt-20 pb-28 px-4 text-center relative overflow-hidden">
+        {/* Logo paletinden ışık küreleri — turkuaz + turuncu derinlik */}
+        <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-[#00A8B5]/20 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -right-20 w-96 h-96 rounded-full bg-[#FF6B00]/15 blur-3xl pointer-events-none" />
+        <div className="absolute top-1/3 right-1/4 w-24 h-24 rounded-full bg-[#00A8B5]/10 blur-2xl pointer-events-none" />
         <div className="max-w-5xl mx-auto relative z-10">
 
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00A8B5]/15 border border-[#00A8B5]/30 text-[#00E5FF] text-[11px] font-bold mb-6">
@@ -440,6 +465,66 @@ export default function HomePage() {
               </div>
 
             </div>
+          </div>
+
+          {/* Popüler aramalar — kariyer.net deseni */}
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+            <span className="text-[10px] font-bold text-slate-400 mr-1">Popüler:</span>
+            {['İstanbul', 'Ankara', 'İzmir', 'Elektrik-Elektronik Teknolojisi', 'Bilişim Teknolojileri'].map((chip) => (
+              <button
+                key={chip}
+                type="button"
+                onClick={() => {
+                  if (TURKEY_CITIES.includes(chip)) {
+                    setSelectedCity(chip);
+                    setSelectedField('');
+                  } else {
+                    setSelectedField(chip);
+                    setSelectedCity('');
+                  }
+                  document.getElementById('ilanlar')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="px-3 py-1.5 rounded-full bg-white/5 hover:bg-[#00A8B5]/20 border border-white/10 hover:border-[#00A8B5]/50 text-slate-300 hover:text-white text-[10px] font-bold transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]"
+              >
+                {chip}
+              </button>
+            ))}
+          </div>
+
+          {/* İki hedef kitle — kariyer.net Aday/İşveren deseni */}
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto text-left">
+            <Link
+              href="/alan-secim"
+              className="group bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#00A8B5]/50 rounded-2xl p-5 transition-all active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]"
+            >
+              <div className="flex items-center gap-3">
+                <span className="w-10 h-10 rounded-xl bg-[#00A8B5]/15 text-[#00E5FF] flex items-center justify-center flex-shrink-0">
+                  <Compass className="w-5 h-5" />
+                </span>
+                <div>
+                  <p className="text-xs font-black text-white">Öğrenci misin?</p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">
+                    Alanını test et, CV'ni hazırla, maaşlı staj bul →
+                  </p>
+                </div>
+              </div>
+            </Link>
+            <Link
+              href="/isveren/kayit"
+              className="group bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#FF6B00]/50 rounded-2xl p-5 transition-all active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
+            >
+              <div className="flex items-center gap-3">
+                <span className="w-10 h-10 rounded-xl bg-[#FF6B00]/15 text-[#FF6B00] flex items-center justify-center flex-shrink-0">
+                  <Building2 className="w-5 h-5" />
+                </span>
+                <div>
+                  <p className="text-xs font-black text-white">İşletme misin?</p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">
+                    İMEP desteğiyle 0 maliyetli stajyer eğit →
+                  </p>
+                </div>
+              </div>
+            </Link>
           </div>
 
           {/* 4. İstatistik Sayaçları */}
@@ -609,6 +694,62 @@ export default function HomePage() {
             ))}
           </div>
         )}
+      {/* ÖNE ÇIKAN İŞLETMELER — kariyer.net "Önde Gelen Şirketler" deseni (gerçek ilan verisinden) */}
+      {topCompanies.length > 0 && (
+        <section className="max-w-6xl mx-auto px-4 pb-16 w-full">
+          <div className="flex items-center justify-between gap-4 mb-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00A8B5]/10 border border-[#00A8B5]/20 text-[#00A8B5] text-[10px] font-black mb-2">
+                <Building2 className="w-3 h-3" /> STAJYER ALAN İŞLETMELER
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-[#0A1931]">Öne Çıkan İşletmeler</h2>
+            </div>
+            <Link
+              href="/isletmeler"
+              className="text-xs font-extrabold text-white bg-[#0A1931] hover:bg-[#00A8B5] px-3 py-2 rounded-xl transition flex-shrink-0"
+            >
+              Tüm İşletmeler
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {topCompanies.map((c) => (
+              <Link
+                key={c.name}
+                href="/isletmeler"
+                className="group bg-white rounded-2xl border border-slate-200 hover:border-[#00A8B5] hover:shadow-lg hover:shadow-[#00A8B5]/10 transition-all p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-[#0A1931] text-white font-black text-sm flex items-center justify-center flex-shrink-0">
+                    {c.name.replace(/[iİ]/g, 'i').slice(0, 2).toLocaleUpperCase('tr-TR')}
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-[#FF6B00]/10 text-[#FF6B00] text-[10px] font-black whitespace-nowrap">
+                    {c.count} aktif ilan
+                  </span>
+                </div>
+                <h3 className="text-xs font-black text-[#0A1931] group-hover:text-[#00A8B5] transition mt-3 line-clamp-1">
+                  {c.name}
+                </h3>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-[10px] font-bold text-slate-500">
+                  {c.city && (
+                    <span className="flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-slate-400" /> {c.city}
+                    </span>
+                  )}
+                  {c.master && (
+                    <span className="flex items-center gap-1 text-emerald-600">
+                      <ShieldCheck className="w-3 h-3" /> Usta öğretici var
+                    </span>
+                  )}
+                </div>
+                <span className="mt-3 inline-flex items-center gap-1 text-[10px] font-black text-[#00A8B5] group-hover:gap-2 transition-all">
+                  Stajyer alıyor — ilanları gör <ChevronRight className="w-3 h-3" />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
       {/* Kariyer Araçları — giriş gerektirmez, herkes görebilir ve kullanabilir */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
         <div className="text-center mb-10">
@@ -715,6 +856,49 @@ export default function HomePage() {
           4904 sayılı kanun gereğince öğrencilerden iş bulma karşılığında ücret alınmaz — tüm araçlar ücretsizdir.
         </p>
       </section>
+
+      {/* KARİYER REHBERİ YAZILARI — kariyer.net blog deseni (SEO + güven içeriği) */}
+      {BLOG_POSTS.length > 0 && (
+        <section className="max-w-6xl mx-auto px-4 pb-16 w-full">
+          <div className="flex items-center justify-between gap-4 mb-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FF6B00]/10 border border-[#FF6B00]/20 text-[#FF6B00] text-[10px] font-black mb-2">
+                <BookOpen className="w-3 h-3" /> KARİYER REHBERİ
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-[#0A1931]">Bilmen Gerekenler</h2>
+            </div>
+            <Link
+              href="/blog"
+              className="text-xs font-extrabold text-white bg-[#0A1931] hover:bg-[#00A8B5] px-3 py-2 rounded-xl transition flex-shrink-0"
+            >
+              Tüm Yazılar
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {BLOG_POSTS.slice(0, 3).map((p) => (
+              <Link
+                key={p.slug}
+                href={`/blog/${p.slug}`}
+                className="group bg-white rounded-2xl border border-slate-200 hover:border-[#00A8B5] hover:shadow-lg hover:shadow-[#00A8B5]/10 transition-all p-5 flex flex-col gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-2xl">{p.emoji}</span>
+                  <span className="px-2 py-0.5 rounded-full bg-[#00A8B5]/10 text-[#00A8B5] text-[9px] font-black">
+                    {p.category}
+                  </span>
+                </div>
+                <h3 className="text-xs font-black text-[#0A1931] group-hover:text-[#00A8B5] transition leading-snug">
+                  {p.title}
+                </h3>
+                <span className="mt-auto text-[10px] font-bold text-slate-400">
+                  {formatBlogDate(p.date)} · {p.readMin} dk okuma
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
       </main>
 
       {/* 6. Footer */}
