@@ -297,36 +297,64 @@ export default function HomePage() {
         }
       />
 
-      {/* 2. Hero Bölümü — UI UX Pro Max: Hero + Search + Social-proof (logo paleti: lacivert/turkuaz/turuncu) */}
-      <section className="bg-[#0A1931] text-white pt-20 pb-28 px-4 text-center relative overflow-hidden">
-        {/* Logo paletinden ışık küreleri — turkuaz + turuncu derinlik */}
-        <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-[#00A8B5]/20 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-32 -right-20 w-96 h-96 rounded-full bg-[#FF6B00]/15 blur-3xl pointer-events-none" />
-        <div className="absolute top-1/3 right-1/4 w-24 h-24 rounded-full bg-[#00A8B5]/10 blur-2xl pointer-events-none" />
-        <div className="max-w-5xl mx-auto relative z-10">
+      {/* 2. HERO — Claymorphism + Bento Grid (UI UX Pro Max: Educational/Youth · logo paleti) */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#EBFAFC] via-[#F8FAFC] to-[#F8FAFC] px-4 pt-16 pb-20">
+        <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full bg-[#00A8B5]/20 blur-3xl pointer-events-none" />
+        <div className="absolute top-40 -right-24 w-80 h-80 rounded-full bg-[#FF6B00]/15 blur-3xl pointer-events-none" />
 
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00A8B5]/15 border border-[#00A8B5]/30 text-[#00E5FF] text-[11px] font-bold mb-6">
-            <Sparkles className="w-3.5 h-3.5" /> MESEM ve Meslek Lisesi Öğrencilerine Özel Platform
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Bento A — Lacivert imza blok */}
+            <div className="md:col-span-2 bg-[#0A1931] rounded-[2rem] p-8 sm:p-10 text-white relative overflow-hidden text-left">
+              <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-[#00A8B5]/25 blur-2xl pointer-events-none" />
+              <div className="absolute -bottom-20 -left-10 w-48 h-48 rounded-full bg-[#FF6B00]/20 blur-2xl pointer-events-none" />
+              <div className="relative">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00A8B5]/15 border border-[#00A8B5]/30 text-[#00E5FF] text-[11px] font-bold mb-6">
+                  <Sparkles className="w-3.5 h-3.5" /> MESEM ve Meslek Lisesi Öğrencilerine Özel
+                </div>
+
+                <h1 className="text-3xl sm:text-5xl font-black leading-[1.08] tracking-tight">
+                  Geleceğin Mesleğini <span className="text-[#00A8B5]">Sahada</span> Öğren,
+                  <br className="hidden sm:block" />
+                  <span className="bg-gradient-to-r from-[#00E5FF] via-[#7DE3EE] to-[#FF9E4D] bg-clip-text text-transparent">
+                    {' '}Doğru Stajı Keşfet
+                  </span>
+                </h1>
+
+                <p className="mt-5 text-slate-300 text-xs sm:text-sm max-w-xl leading-relaxed">
+                  3308 sayılı Meslekî Eğitim Kanunu güvencesiyle çıraklık ve meslek lisesi stajı
+                  arayan öğrencileri onaylı işletmelerle anında eşleştiriyoruz.
+                </p>
+
+                <Link
+                  href="/imep"
+                  className="inline-flex items-center gap-1 mt-4 text-[11px] font-bold text-[#00E5FF] hover:text-white transition"
+                >
+                  İMEP (İşletmelerde Mesleki Eğitim Programı) nedir? <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Bento B — İstatistik yığını (clay kartlar) */}
+            <div className="flex flex-col gap-4">
+              {[
+                { v: `${MESEM_FIELDS.length}`, l: 'Resmi Meslek Alanı', c: 'text-[#00A8B5]' },
+                { v: '544B+', l: 'MEB MESEM Öğrencisi', c: 'text-[#0A1931]' },
+                { v: '%30-%50', l: 'Garantili Öğrenci Ücreti', c: 'text-[#FF6B00]' },
+              ].map((s) => (
+                <div
+                  key={s.l}
+                  className="flex-1 bg-white rounded-[1.75rem] p-5 flex flex-col justify-center shadow-[0_10px_40px_rgba(10,25,49,0.07)] hover:-translate-y-0.5 transition-transform duration-200"
+                >
+                  <p className={`text-3xl font-black leading-tight ${s.c}`}>{s.v}</p>
+                  <p className="text-[11px] text-slate-500 font-bold mt-1">{s.l}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight">
-            Geleceğin Mesleğini Sahada Öğren, <br />
-            <span className="text-[#00A8B5]">Doğru Staj Yerini Keşfet</span>
-          </h1>
-
-          <p className="mt-5 text-slate-300 text-xs sm:text-sm max-w-2xl mx-auto font-normal leading-relaxed">
-            3308 sayılı Meslekî Eğitim Kanunu güvencesiyle MESEM çıraklığı ve meslek lisesi stajı arayan öğrencileri onaylı işletmelerle anında eşleştiriyoruz.
-          </p>
-
-          <Link
-            href="/imep"
-            className="inline-flex items-center gap-1 mt-4 text-[11px] font-bold text-[#00E5FF] hover:text-white transition"
-          >
-            İMEP (İşletmelerde Mesleki Eğitim Programı) nedir? <ChevronRight className="w-3.5 h-3.5" />
-          </Link>
-
           {/* 3. Standart Dropdown Arama Çubuğu (Paket 2: anahtar kelime araması eklendi) */}
-          <div className="mt-10 bg-white p-3 rounded-2xl sm:rounded-3xl shadow-2xl max-w-4xl mx-auto text-left">
+          <div className="mt-4 bg-white p-3 rounded-[1.75rem] shadow-[0_20px_60px_rgba(10,25,49,0.12)] border border-slate-100 max-w-6xl mx-auto text-left">
 
             {/* Anahtar Kelime Araması */}
             <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 mb-2">
@@ -468,8 +496,8 @@ export default function HomePage() {
           </div>
 
           {/* Popüler aramalar — kariyer.net deseni */}
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-            <span className="text-[10px] font-bold text-slate-400 mr-1">Popüler:</span>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+            <span className="text-[10px] font-bold text-slate-500 mr-1">Popüler:</span>
             {['İstanbul', 'Ankara', 'İzmir', 'Elektrik-Elektronik Teknolojisi', 'Bilişim Teknolojileri'].map((chip) => (
               <button
                 key={chip}
@@ -484,7 +512,7 @@ export default function HomePage() {
                   }
                   document.getElementById('ilanlar')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-3 py-1.5 rounded-full bg-white/5 hover:bg-[#00A8B5]/20 border border-white/10 hover:border-[#00A8B5]/50 text-slate-300 hover:text-white text-[10px] font-bold transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]"
+                className="px-3.5 py-2 rounded-full bg-white hover:bg-[#00A8B5]/10 border border-slate-200 hover:border-[#00A8B5] text-slate-600 hover:text-[#0A1931] text-[11px] font-bold shadow-sm transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]"
               >
                 {chip}
               </button>
@@ -495,15 +523,15 @@ export default function HomePage() {
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto text-left">
             <Link
               href="/alan-secim"
-              className="group bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#00A8B5]/50 rounded-2xl p-5 transition-all active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]"
+              className="group bg-white hover:bg-[#00A8B5]/5 border border-slate-200 hover:border-[#00A8B5] rounded-3xl p-5 shadow-[0_10px_40px_rgba(10,25,49,0.06)] hover:shadow-[0_16px_50px_rgba(0,168,181,0.16)] transition-all hover:-translate-y-0.5 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]"
             >
               <div className="flex items-center gap-3">
-                <span className="w-10 h-10 rounded-xl bg-[#00A8B5]/15 text-[#00E5FF] flex items-center justify-center flex-shrink-0">
+                <span className="w-10 h-10 rounded-xl bg-[#00A8B5]/10 text-[#00A8B5] flex items-center justify-center flex-shrink-0">
                   <Compass className="w-5 h-5" />
                 </span>
                 <div>
-                  <p className="text-xs font-black text-white">Öğrenci misin?</p>
-                  <p className="text-[10px] text-slate-400 mt-0.5">
+                  <p className="text-xs font-black text-[#0A1931]">Öğrenci misin?</p>
+                  <p className="text-[10px] text-slate-500 mt-0.5">
                     Alanını test et, CV'ni hazırla, maaşlı staj bul →
                   </p>
                 </div>
@@ -511,40 +539,20 @@ export default function HomePage() {
             </Link>
             <Link
               href="/isveren/kayit"
-              className="group bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#FF6B00]/50 rounded-2xl p-5 transition-all active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
+              className="group bg-white hover:bg-[#FF6B00]/5 border border-slate-200 hover:border-[#FF6B00] rounded-3xl p-5 shadow-[0_10px_40px_rgba(10,25,49,0.06)] hover:shadow-[0_16px_50px_rgba(255,107,0,0.16)] transition-all hover:-translate-y-0.5 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
             >
               <div className="flex items-center gap-3">
-                <span className="w-10 h-10 rounded-xl bg-[#FF6B00]/15 text-[#FF6B00] flex items-center justify-center flex-shrink-0">
+                <span className="w-10 h-10 rounded-xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center flex-shrink-0">
                   <Building2 className="w-5 h-5" />
                 </span>
                 <div>
-                  <p className="text-xs font-black text-white">İşletme misin?</p>
-                  <p className="text-[10px] text-slate-400 mt-0.5">
+                  <p className="text-xs font-black text-[#0A1931]">İşletme misin?</p>
+                  <p className="text-[10px] text-slate-500 mt-0.5">
                     İMEP desteğiyle 0 maliyetli stajyer eğit →
                   </p>
                 </div>
               </div>
             </Link>
-          </div>
-
-          {/* 4. İstatistik Sayaçları */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-14 max-w-4xl mx-auto pt-8 border-t border-white/10">
-            <div>
-              <p className="text-2xl sm:text-3xl font-black text-white">{MESEM_FIELDS.length}+</p>
-              <p className="text-[11px] text-slate-400 font-medium mt-0.5">Resmi Meslek Alanı</p>
-            </div>
-            <div>
-              <p className="text-2xl sm:text-3xl font-black text-[#00E5FF]">544B+</p>
-              <p className="text-[11px] text-slate-400 font-medium mt-0.5">MEB MESEM Öğrencisi</p>
-            </div>
-            <div>
-              <p className="text-2xl sm:text-3xl font-black text-[#FF6B00]">{TURKEY_CITIES.length}</p>
-              <p className="text-[11px] text-slate-400 font-medium mt-0.5">İlde Staj İmkânı</p>
-            </div>
-            <div>
-              <p className="text-2xl sm:text-3xl font-black text-white">%30-%50</p>
-              <p className="text-[11px] text-slate-400 font-medium mt-0.5">Garantili Öğrenci Ücreti</p>
-            </div>
           </div>
 
         </div>
@@ -554,6 +562,9 @@ export default function HomePage() {
       <main id="ilanlar" className="max-w-6xl mx-auto px-4 py-16 flex-1 w-full">
         <div className="flex items-center justify-between mb-8">
           <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00A8B5]/10 border border-[#00A8B5]/20 text-[#00A8B5] text-[10px] font-black mb-2">
+              <Sparkles className="w-3 h-3" /> CANLI İLAN AKIŞI
+            </div>
             <h2 className="text-xl sm:text-2xl font-black text-[#0A1931]">
               {selectedField || selectedCity || selectedProgram || selectedDistrict || dateRange !== 'all' || searchQuery || paramFields.length > 0 ? 'Filtrelenen İlanlar' : 'Öne Çıkan İlanlar'}
             </h2>
@@ -615,7 +626,7 @@ export default function HomePage() {
             {featuredJobs.map((job) => (
               <div
                 key={job.id}
-                className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:border-[#00A8B5] transition-all flex flex-col justify-between gap-5 group"
+                className="bg-white p-6 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] hover:shadow-[0_18px_50px_rgba(0,168,181,0.16)] hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between gap-5 group"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-3">
@@ -717,7 +728,7 @@ export default function HomePage() {
               <Link
                 key={c.name}
                 href="/isletmeler"
-                className="group bg-white rounded-2xl border border-slate-200 hover:border-[#00A8B5] hover:shadow-lg hover:shadow-[#00A8B5]/10 transition-all p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2"
+                className="group bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.06)] hover:shadow-[0_18px_50px_rgba(0,168,181,0.16)] hover:-translate-y-0.5 transition-all duration-200 p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="w-12 h-12 rounded-2xl bg-[#0A1931] text-white font-black text-sm flex items-center justify-center flex-shrink-0">
@@ -833,12 +844,10 @@ export default function HomePage() {
             <Link
               key={href}
               href={href}
-              className="group bg-white rounded-3xl border border-slate-200 hover:border-[#00A8B5] hover:shadow-lg hover:shadow-[#00A8B5]/10 transition-all p-6 flex flex-col gap-3"
+              className="group rounded-3xl border p-6 flex flex-col gap-3 transition-all duration-200 hover:-translate-y-1 hover:shadow-xl cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2"
+              style={{ backgroundColor: `${color}0F`, borderColor: `${color}30` }}
             >
-              <div
-                className="w-12 h-12 rounded-2xl flex items-center justify-center"
-                style={{ backgroundColor: `${color}15` }}
-              >
+              <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center">
                 <Icon className="w-6 h-6" style={{ color }} />
               </div>
               <h3 className="text-sm font-black text-[#0A1931] group-hover:text-[#00A8B5] transition">
@@ -880,7 +889,7 @@ export default function HomePage() {
               <Link
                 key={p.slug}
                 href={`/blog/${p.slug}`}
-                className="group bg-white rounded-2xl border border-slate-200 hover:border-[#00A8B5] hover:shadow-lg hover:shadow-[#00A8B5]/10 transition-all p-5 flex flex-col gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2"
+                className="group bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.06)] hover:shadow-[0_18px_50px_rgba(0,168,181,0.16)] hover:-translate-y-0.5 transition-all duration-200 p-5 flex flex-col gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-2xl">{p.emoji}</span>
