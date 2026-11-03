@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { MESEM_FIELDS } from '@/lib/constants';
 import {
   GENERAL_QUESTIONS,
@@ -152,8 +153,8 @@ export default function MulakatSorulariPage() {
         </div>
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-        &copy; 2026 Stajyeri.net &mdash; Tüm Hakları Saklıdır.
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

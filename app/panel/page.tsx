@@ -8,6 +8,7 @@ import StudentSidebar from './StudentSidebar';
 import { PANEL_TOKENS } from '@/lib/panelTokens';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 
 import {
   GraduationCap,
@@ -578,8 +579,8 @@ export default function OgrenciPanelPage() {
         </div>
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-[11px] text-slate-400">
-        &copy; 2026 Stajyeri.net &bull; Tüm Hakları Saklıdır.
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

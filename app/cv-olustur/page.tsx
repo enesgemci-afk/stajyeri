@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { MESEM_FIELDS } from '@/lib/constants';
 import { ABOUT_EXAMPLES } from '@/lib/cvContent';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import Link from 'next/link';
 import {
   FileText, Sparkles, User, Phone, Mail, GraduationCap, Wrench, Save,
@@ -766,8 +767,8 @@ export default function CVOlusturPage() {
         </div>
       </main>
 
-      <footer className="no-print bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-        &copy; 2026 Stajyeri.net &mdash; Tüm Hakları Saklıdır.
+      <footer className="no-print">
+        <SiteFooter />
       </footer>
     </div>
   );

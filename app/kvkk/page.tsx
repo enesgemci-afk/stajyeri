@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { ShieldCheck, Database, Share2, UserCheck, Clock, Scale } from 'lucide-react';
 
 const SECTIONS: { icon: typeof Database; title: string; body: React.ReactNode }[] = [
@@ -113,8 +114,8 @@ export default function KvkkPage() {
         </p>
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-        &copy; 2026 Stajyeri.net &mdash; Tüm Hakları Saklıdır.
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

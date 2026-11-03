@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabaseClient';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { GraduationCap, Mail, Lock, AlertCircle, LogIn } from 'lucide-react';
 
 export default function OgrenciGirisPage() {
@@ -113,8 +114,8 @@ export default function OgrenciGirisPage() {
         </div>
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
-        stajyeri.net &bull; Öğrenci & Çırak Portalı
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

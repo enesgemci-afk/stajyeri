@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { ONYAZI_EXAMPLES } from '@/lib/onyaziExamples';
 import {
   FileText,
@@ -135,8 +136,8 @@ export default function OnyaziRehberPage() {
         </div>
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-        &copy; 2026 Stajyeri.net &mdash; Tüm Hakları Saklıdır.
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

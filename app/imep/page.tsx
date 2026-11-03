@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import type { LucideIcon } from 'lucide-react';
 import {
   ShieldCheck,
@@ -132,9 +133,12 @@ export default function ImepPage() {
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between font-sans">
       <SiteHeader />
 
-      {/* Hero */}
-      <section className="bg-[#0A1931] text-white pt-14 pb-16 px-4 text-center">
-        <div className="max-w-4xl mx-auto">
+      {/* Hero — bento/clay dili (gradient şerit + logo renkli orb'lar) */}
+      <section className="bg-[#0A1931] text-white pt-14 pb-16 px-4 text-center relative overflow-hidden">
+        <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full bg-[#00A8B5]/20 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -right-20 w-80 h-80 rounded-full bg-[#FF6B00]/15 blur-3xl pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#00A8B5] via-[#00E5FF] to-[#FF6B00]" />
+        <div className="max-w-4xl mx-auto relative z-10">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00A8B5]/20 text-[#00E5FF] text-xs font-bold mb-4">
             <ShieldCheck className="w-4 h-4" /> 3308 Sayılı Meslekî Eğitim Kanunu Kapsamında
           </span>
@@ -285,8 +289,8 @@ export default function ImepPage() {
         </div>
       </section>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
-        stajyeri.net &bull; İMEP Bilgi Rehberi &bull; Kaynak: MEB / 3308 sayılı Meslekî Eğitim Kanunu
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { MESEM_FIELDS, TURKEY_CITIES } from '@/lib/constants';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { useRouter } from 'next/navigation';
 import { 
   UserPlus, 
@@ -366,8 +367,8 @@ export default function KayitPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
-        stajyeri.net &bull; 3308 Sayılı Kanun Uyumlu MESEM Platformu
+      <footer>
+        <SiteFooter />
       </footer>
 
     </div>

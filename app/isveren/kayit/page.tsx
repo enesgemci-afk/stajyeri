@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { TURKEY_CITIES } from '@/lib/constants';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { useRouter } from 'next/navigation';
 import { 
   Building2, 
@@ -216,8 +217,8 @@ export default function IsverenKayitPage() {
         </div>
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
-        stajyeri.net &bull; İşveren Yönetim Portalı
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

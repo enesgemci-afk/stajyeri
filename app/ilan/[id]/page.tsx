@@ -7,6 +7,7 @@ import { PROGRAM_TYPES } from '@/lib/constants';
 import { ONYAZI_EXAMPLES } from '@/lib/onyaziExamples';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { CompanyAvatar } from '@/components/JobCard';
 import {
   Briefcase,
@@ -933,8 +934,8 @@ export default function IlanDetayPage() {
         )}
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-        &copy; 2026 Stajyeri.net &mdash; Tüm Hakları Saklıdır.
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

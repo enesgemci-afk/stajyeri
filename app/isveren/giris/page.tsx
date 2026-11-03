@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabaseClient';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { Building2, Mail, Lock, AlertCircle, LogIn } from 'lucide-react';
 
 export default function IsverenGirisPage() {
@@ -108,8 +109,8 @@ export default function IsverenGirisPage() {
         </div>
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
-        stajyeri.net &bull; İşveren Portalı
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

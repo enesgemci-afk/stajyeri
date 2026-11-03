@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { FIELD_GROUPS } from '@/lib/fieldQuiz';
 import { slugifyTr } from '@/lib/meslekRehberi';
 import {
@@ -39,7 +40,10 @@ export default function MeslekSecimRehberiPage() {
       <SiteHeader />
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-[#0A1931] to-[#10294d] pt-14 pb-16 px-4 text-center">
+      <section className="bg-gradient-to-br from-[#0A1931] to-[#10294d] pt-14 pb-16 px-4 text-center relative overflow-hidden">
+        <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full bg-[#00A8B5]/20 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -right-20 w-80 h-80 rounded-full bg-[#FF6B00]/15 blur-3xl pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#00A8B5] via-[#00E5FF] to-[#FF6B00]" />
         <div className="max-w-4xl mx-auto">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00A8B5]/20 text-[#00E5FF] text-xs font-bold mb-4">
             <Compass className="w-4 h-4" /> 41 alan · 6 ilgi grubu · 5 adım
@@ -317,8 +321,8 @@ export default function MeslekSecimRehberiPage() {
         </p>
       </section>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-[11px] text-slate-400">
-        &copy; 2026 Stajyeri.net &mdash; Meslek Seçim Rehberi
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

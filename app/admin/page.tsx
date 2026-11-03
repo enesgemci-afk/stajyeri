@@ -4,6 +4,7 @@ import { type FormEvent, useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 
 import { 
   ShieldCheck, 
@@ -767,8 +768,8 @@ export default function AdminDashboardPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-        stajyeri.net &bull; Merkezi Yönetim ve Denetim Portalı
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

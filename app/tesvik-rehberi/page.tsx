@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { 
   Calculator, 
   ShieldCheck, 
@@ -211,11 +212,8 @@ export default function TesvikRehberiPage() {
         </div>
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
-        <Link href="/">
-          <img src="/logo.png" alt="Stajyeri.net" className="h-6 w-auto object-contain mx-auto mb-2 opacity-80" />
-        </Link>
-        stajyeri.net &bull; 3308 Sayılı Kanun Uyumlu MESEM Platformu
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

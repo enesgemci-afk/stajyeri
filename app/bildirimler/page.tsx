@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { Bell, CheckCheck, Loader2 } from 'lucide-react';
 
 interface NotifRow {
@@ -153,8 +154,8 @@ export default function BildirimlerPage() {
           </div>
         )}
       </main>
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
-        <p>© 2026 Stajyeri.net</p>
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

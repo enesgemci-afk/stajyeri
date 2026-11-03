@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { useRouter } from 'next/navigation';
 import { 
   LogIn, 
@@ -173,8 +174,8 @@ export default function GirisPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
-        stajyeri.net &bull; 3308 Sayılı Kanun Uyumlu MESEM Platformu
+      <footer>
+        <SiteFooter />
       </footer>
 
     </div>

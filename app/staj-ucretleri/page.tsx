@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import WageCalculator from '@/components/WageCalculator';
 import {
   Wallet,
@@ -101,7 +102,10 @@ export default function StajUcretleriPage() {
       <SiteHeader />
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-[#0A1931] to-[#10294d] pt-14 pb-16 px-4 text-center">
+      <section className="bg-gradient-to-br from-[#0A1931] to-[#10294d] pt-14 pb-16 px-4 text-center relative overflow-hidden">
+        <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full bg-[#00A8B5]/20 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -right-20 w-80 h-80 rounded-full bg-[#FF6B00]/15 blur-3xl pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#00A8B5] via-[#00E5FF] to-[#FF6B00]" />
         <div className="max-w-4xl mx-auto">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF6B00]/20 text-[#FFB380] text-xs font-bold mb-4">
             <Wallet className="w-4 h-4" /> 3308 Sayılı Kanun Garantisi
@@ -256,8 +260,8 @@ export default function StajUcretleriPage() {
         </div>
       </section>
 
-      <footer className="bg-white border-t border-slate-200 py-8 text-center text-xs text-slate-500">
-        <p>© 2026 Stajyeri.net — Staj ve Çıraklık Ücretleri Rehberi</p>
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

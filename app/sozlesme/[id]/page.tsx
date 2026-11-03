@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { Printer, Loader2, AlertCircle } from 'lucide-react';
 
 interface ContractData {
@@ -273,8 +274,8 @@ export default function SozlesmePage({ params }: { params: Promise<{ id: string 
           <p className="mt-6 text-center text-[9px] text-slate-400">Oluşturulma: {today} · stajyeri.net</p>
         </div>
       </main>
-      <footer className="no-print bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
-        <p>© 2026 Stajyeri.net</p>
+      <footer className="no-print">
+        <SiteFooter />
       </footer>
     </div>
   );
