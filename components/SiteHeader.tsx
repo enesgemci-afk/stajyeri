@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
-import { ArrowLeft, ChevronDown, Menu, X } from 'lucide-react';
+import { ArrowLeft, ChevronDown, Menu, X, PlusCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import NotificationBell from '@/components/NotificationBell';
 
@@ -201,6 +201,15 @@ export default function SiteHeader({
     return () => document.removeEventListener('mousedown', onDown);
   }, [openKey, setOpenKey]);
 
+  // Kaydırınca clay gölge — UI UX Pro Max: sticky header derinliği
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   const groups = getMenu(role);
 
   // Aktif link tespiti: tam eşleşme veya alt yol ('/ilanlar' grubu '/ilan/123'ü etkilemez)
@@ -213,7 +222,13 @@ export default function SiteHeader({
   const showBack = backHref !== '/' || backLabel !== 'Ana Sayfaya Dön';
 
   return (
-    <header className="bg-white/95 backdrop-blur border-b border-slate-200 sticky top-0 z-50">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-white/85 backdrop-blur-xl shadow-[0_12px_40px_rgba(10,25,49,0.08)] border-b border-slate-200/70'
+          : 'bg-white/95 backdrop-blur border-b border-slate-200/60'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
 
         {/* Sol: Logo (+ ekstra başlık) + Ana gezinti */}
@@ -228,8 +243,8 @@ export default function SiteHeader({
               href="/"
               className={
                 isItemActive('/')
-                  ? 'px-2.5 py-2 text-[#00A8B5] transition'
-                  : 'px-2.5 py-2 text-slate-600 hover:text-[#00A8B5] transition'
+                  ? 'px-4 py-2 rounded-full bg-[#00A8B5]/10 text-[#00A8B5] font-extrabold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]'
+                  : 'px-4 py-2 rounded-full text-slate-600 hover:text-[#00A8B5] hover:bg-[#00A8B5]/5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]'
               }
             >
               Ana Sayfa
@@ -244,8 +259,8 @@ export default function SiteHeader({
                     href={item.href}
                     className={
                       isItemActive(item.href)
-                        ? 'px-2.5 py-2 text-[#00A8B5] transition'
-                        : 'px-2.5 py-2 text-slate-600 hover:text-[#00A8B5] transition'
+                        ? 'px-4 py-2 rounded-full bg-[#00A8B5]/10 text-[#00A8B5] font-extrabold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]'
+                        : 'px-4 py-2 rounded-full text-slate-600 hover:text-[#00A8B5] hover:bg-[#00A8B5]/5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]'
                     }
                   >
                     {group.label}
@@ -259,22 +274,28 @@ export default function SiteHeader({
                   <button
                     type="button"
                     onClick={() => setOpenKey(open ? null : group.key)}
-                    className={`flex items-center gap-1 px-2.5 py-2 transition cursor-pointer ${
-                      open || groupActive ? 'text-[#00A8B5]' : 'text-slate-600 hover:text-[#00A8B5]'
+                    aria-expanded={open}
+                    className={`inline-flex items-center gap-1 px-4 py-2 rounded-full text-xs font-extrabold transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] ${
+                      open
+                        ? 'bg-[#00A8B5]/10 text-[#00A8B5] shadow-[inset_0_0_0_1px_rgba(0,168,181,0.25)]'
+                        : groupActive
+                          ? 'text-[#00A8B5] hover:bg-[#00A8B5]/5'
+                          : 'text-slate-600 hover:text-[#00A8B5] hover:bg-[#00A8B5]/5'
                     }`}
                   >
                     {group.label}
-                    <ChevronDown className={`w-3 h-3 transition-transform ${open ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
                   </button>
                   {open && (
-                    <div className="absolute left-0 top-full pt-2 z-50">
-                      <div className="w-64 bg-white rounded-2xl border border-slate-200 shadow-xl p-2">
+                    <div className="absolute left-0 top-full pt-2.5 z-50">
+                      <div className="w-72 bg-white rounded-[1.5rem] border border-slate-100 shadow-[0_24px_70px_rgba(10,25,49,0.14)] p-2.5 relative overflow-hidden">
+                        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#00A8B5] via-[#00E5FF] to-[#FF6B00]" />
                         {group.items.map((item) => (
                           <Link
                             key={item.href}
                             href={item.href}
                             onClick={() => setOpenKey(null)}
-                            className="block px-3 py-2.5 rounded-xl hover:bg-[#00A8B5]/10 transition"
+                            className="relative block px-3.5 py-3 rounded-2xl hover:bg-[#00A8B5]/8 focus-visible:bg-[#00A8B5]/10 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]"
                           >
                             <span className="block text-xs font-black text-[#0A1931]">{item.label}</span>
                             <span className="block text-[10px] font-medium text-slate-400 mt-0.5">{item.desc}</span>
@@ -289,8 +310,14 @@ export default function SiteHeader({
           </nav>
         </div>
 
-        {/* Sağ: Bildirim zili + geri linki + sayfaya özel aksiyonlar */}
+        {/* Sağ: İlan Ver CTA + Bildirim zili + geri linki + sayfaya özel aksiyonlar */}
         <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+          <Link
+            href="/ilan-ver"
+            className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-[#FF6B00] to-[#FF8F3F] text-white text-xs font-black shadow-lg shadow-[#FF6B00]/25 hover:-translate-y-0.5 hover:shadow-[#FF6B00]/40 transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+          >
+            <PlusCircle className="w-3.5 h-3.5" /> İlan Ver
+          </Link>
           <NotificationBell />
           {/* Mobil menü düğmesi (lg altında görünür) */}
           <button
@@ -314,19 +341,27 @@ export default function SiteHeader({
 
       </div>
 
-      {/* Mobil menü paneli: grup başlıklı düz liste (nested dropdown yerine) */}
+      {/* Mobil menü paneli — bento kartlar (Claymorphism) */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-slate-100 bg-white px-4 py-4 space-y-4 max-h-[70vh] overflow-y-auto">
+        <div className="lg:hidden border-t border-slate-100 bg-gradient-to-b from-[#F0FBFC] to-white px-4 py-5 max-h-[78vh] overflow-y-auto space-y-4">
           <Link
             href="/"
             onClick={() => setMobileOpen(false)}
-            className="block text-xs font-black text-[#0A1931]"
+            className="block text-center py-3 rounded-2xl bg-[#0A1931] text-white text-xs font-black shadow-[0_10px_30px_rgba(10,25,49,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]"
           >
             Ana Sayfa
           </Link>
-          {groups.map((group) => (
-            <div key={group.key}>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1.5">
+
+          {groups.map((group, gi) => (
+            <div
+              key={group.key}
+              className="bg-white rounded-3xl p-3 shadow-[0_10px_40px_rgba(10,25,49,0.06)] border border-slate-100"
+            >
+              <p
+                className={`inline-flex px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider mb-2 ${
+                  gi % 2 === 0 ? 'bg-[#00A8B5]/10 text-[#00A8B5]' : 'bg-[#FF6B00]/10 text-[#FF6B00]'
+                }`}
+              >
                 {group.label}
               </p>
               <div className="space-y-1">
@@ -335,7 +370,7 @@ export default function SiteHeader({
                     key={item.href}
                     href={item.href}
                     onClick={() => setMobileOpen(false)}
-                    className="block px-3 py-2.5 rounded-xl bg-slate-50 hover:bg-[#00A8B5]/10 transition"
+                    className="block px-3.5 py-3 rounded-2xl hover:bg-[#00A8B5]/10 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]"
                   >
                     <span className="block text-xs font-black text-[#0A1931]">{item.label}</span>
                     <span className="block text-[10px] font-medium text-slate-400 mt-0.5">{item.desc}</span>
@@ -344,6 +379,14 @@ export default function SiteHeader({
               </div>
             </div>
           ))}
+
+          <Link
+            href="/ilan-ver"
+            onClick={() => setMobileOpen(false)}
+            className="block text-center py-3.5 rounded-2xl bg-gradient-to-r from-[#FF6B00] to-[#FF8F3F] text-white text-xs font-black shadow-lg shadow-[#FF6B00]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+          >
+            + İlan Ver — Ücretsiz Başla
+          </Link>
         </div>
       )}
     </header>
