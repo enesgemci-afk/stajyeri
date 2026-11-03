@@ -312,12 +312,16 @@ export default function SiteHeader({
 
         {/* Sağ: İlan Ver CTA + Bildirim zili + geri linki + sayfaya özel aksiyonlar */}
         <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-          <Link
-            href="/ilan-ver"
-            className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-[#FF6B00] to-[#FF8F3F] text-white text-xs font-black shadow-lg shadow-[#FF6B00]/25 hover:-translate-y-0.5 hover:shadow-[#FF6B00]/40 transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
-          >
-            <PlusCircle className="w-3.5 h-3.5" /> İlan Ver
-          </Link>
+          {/* Kalıcı CTA — yalnızca sayfa kendi aksiyonlarını geçirmediyse ve öğrenci değilse
+              (öğrenci menüsünde İlan Ver yok; anasayfa/paneller kendi right'ını yönetir) */}
+          {!right && role !== 'student' && (
+            <Link
+              href="/ilan-ver"
+              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-[#FF6B00] to-[#FF8F3F] text-white text-xs font-black shadow-lg shadow-[#FF6B00]/25 hover:-translate-y-0.5 hover:shadow-[#FF6B00]/40 transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+            >
+              <PlusCircle className="w-3.5 h-3.5" /> İlan Ver
+            </Link>
+          )}
           <NotificationBell />
           {/* Mobil menü düğmesi (lg altında görünür) */}
           <button
@@ -380,13 +384,15 @@ export default function SiteHeader({
             </div>
           ))}
 
-          <Link
-            href="/ilan-ver"
-            onClick={() => setMobileOpen(false)}
-            className="block text-center py-3.5 rounded-2xl bg-gradient-to-r from-[#FF6B00] to-[#FF8F3F] text-white text-xs font-black shadow-lg shadow-[#FF6B00]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
-          >
-            + İlan Ver — Ücretsiz Başla
-          </Link>
+          {role !== 'student' && (
+            <Link
+              href="/ilan-ver"
+              onClick={() => setMobileOpen(false)}
+              className="block text-center py-3.5 rounded-2xl bg-gradient-to-r from-[#FF6B00] to-[#FF8F3F] text-white text-xs font-black shadow-lg shadow-[#FF6B00]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+            >
+              + İlan Ver — Ücretsiz Başla
+            </Link>
+          )}
         </div>
       )}
     </header>

@@ -269,31 +269,48 @@ export default function HomePage() {
       {/* 1. Header — tüm sayfalarda ortak tek stil (SiteHeader) */}
       <SiteHeader
         right={
-          <>
-            {/* Öğrenci Girişi */}
-            <Link
-              href="/ogrenci/giris"
-              className="text-xs font-bold text-slate-700 hover:text-[#00A8B5] px-3 py-2 rounded-lg hover:bg-slate-50 transition"
-            >
-              Öğrenci Girişi
-            </Link>
+          isLoggedIn ? (
+            // Girişli: role-bazlı panel butonu (öğrenci → Panelim, işletme → İşveren Panelim)
+            studentId ? (
+              <Link
+                href="/panel"
+                className="px-4 py-2 text-xs font-black text-white bg-[#0A1931] hover:bg-[#00A8B5] rounded-xl transition-all active:scale-[0.98] shadow-md shadow-[#0A1931]/20"
+              >
+                Panelim
+              </Link>
+            ) : (
+              <Link
+                href="/isveren/panel"
+                className="px-4 py-2 text-xs font-black text-white bg-[#00A8B5] hover:bg-[#00929e] rounded-xl transition-all active:scale-[0.98] shadow-md shadow-[#00A8B5]/20"
+              >
+                İşveren Panelim
+              </Link>
+            )
+          ) : (
+            <>
+              {/* Ziyaretçi: giriş + kayıt CTAs */}
+              <Link
+                href="/ogrenci/giris"
+                className="text-xs font-bold text-slate-700 hover:text-[#00A8B5] px-3 py-2 rounded-lg hover:bg-slate-50 transition"
+              >
+                Öğrenci Girişi
+              </Link>
 
-            {/* İşveren Girişi */}
-            <Link
-              href="/isveren/giris"
-              className="text-xs font-bold text-[#FF6B00] border border-[#FF6B00]/40 hover:bg-[#FF6B00]/5 px-3 py-2 rounded-xl transition"
-            >
-              İşveren Girişi
-            </Link>
+              <Link
+                href="/isveren/giris"
+                className="text-xs font-bold text-[#FF6B00] border border-[#FF6B00]/40 hover:bg-[#FF6B00]/5 px-3 py-2 rounded-xl transition"
+              >
+                İşveren Girişi
+              </Link>
 
-            {/* İlan Ver (İşveren Doğrudan Kayıt/İlan) */}
-            <Link
-              href="/isveren/kayit"
-              className="px-4 py-2 text-xs font-black text-white bg-[#FF6B00] hover:bg-orange-600 rounded-xl transition shadow-md shadow-[#FF6B00]/20 flex items-center gap-1.5"
-            >
-              <PlusCircle className="w-4 h-4" /> İlan Ver
-            </Link>
-          </>
+              <Link
+                href="/isveren/kayit"
+                className="px-4 py-2 text-xs font-black text-white bg-[#FF6B00] hover:bg-orange-600 rounded-xl transition shadow-md shadow-[#FF6B00]/20 flex items-center gap-1.5"
+              >
+                <PlusCircle className="w-4 h-4" /> İlan Ver
+              </Link>
+            </>
+          )
         }
       />
 
