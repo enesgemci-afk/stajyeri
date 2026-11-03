@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { BLOG_POSTS, getPostBySlug, formatBlogDate } from '@/lib/blogYazilari';
 import { ArrowRight, Check, Sparkles } from 'lucide-react';
 
@@ -137,8 +138,8 @@ export default async function BlogDetayPage({ params }: Props) {
         </section>
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-[11px] text-slate-400">
-        &copy; 2026 Stajyeri.net &mdash; Kariyer Blogu
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

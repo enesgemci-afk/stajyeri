@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import FieldJobs from '@/components/FieldJobs';
 import { FIELD_GUIDES, getFieldBySlug } from '@/lib/meslekRehberi';
 import {
@@ -241,8 +242,8 @@ export default async function MeslekDetayPage({
         </div>
       </section>
 
-      <footer className="bg-white border-t border-slate-200 py-8 text-center text-xs text-slate-500">
-        <p>© 2026 Stajyeri.net — {guide.name} Meslek Rehberi</p>
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

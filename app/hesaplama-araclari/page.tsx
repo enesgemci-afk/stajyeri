@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import {
   Calculator,
   Wallet,
@@ -315,9 +316,8 @@ export default function HesaplamaAraclariPage() {
         </div>
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-[11px] text-slate-400">
-        &copy; 2026 Stajyeri.net &mdash; Hesaplamalar bilgilendirme amaçlıdır; resmî tutarlar
-        için SGK / Gelir İdaresi duyurularını takip edin.
+      <footer>
+        <SiteFooter note="Hesaplamalar bilgilendirme amaçlıdır; resmî tutarlar için SGK / Gelir İdaresi duyurularını takip edin." />
       </footer>
     </div>
   );

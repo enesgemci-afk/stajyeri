@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import { MESEM_FIELDS, TURKEY_CITIES, PROGRAM_TYPES } from '@/lib/constants';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import JobCard from '@/components/JobCard';
 import {
   Search,
@@ -216,14 +217,17 @@ export default function IlanlarPage() {
       <main className="flex-1 max-w-6xl mx-auto px-4 py-10 w-full">
         {/* Başlık */}
         <div className="mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00A8B5]/10 border border-[#00A8B5]/20 text-[#00A8B5] text-[10px] font-black mb-2">
+            <Briefcase className="w-3 h-3" /> CANLI İLAN AKIŞI
+          </div>
           <h1 className="text-xl sm:text-2xl font-black text-[#0A1931]">Staj & Çıraklık İlanları</h1>
           <p className="text-xs text-slate-500 mt-1">
             {loading ? 'İlanlar yükleniyor...' : `${sortedJobs.length} aktif ilan listeleniyor.`}
           </p>
         </div>
 
-        {/* Filtre kartı */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-4 sm:p-5 mb-8">
+        {/* Filtre kartı — clay */}
+        <div className="bg-white rounded-[1.75rem] shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-4 sm:p-5 mb-8">
           {/* Anahtar kelime */}
           <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 mb-4">
             <Search className="w-4 h-4 text-[#00A8B5] flex-shrink-0" />
@@ -402,8 +406,8 @@ export default function IlanlarPage() {
         )}
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-        &copy; 2026 Stajyeri.net &mdash; Tüm Hakları Saklıdır.
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

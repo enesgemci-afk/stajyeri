@@ -127,7 +127,7 @@ export default function JobCard({
     !!job.created_at && PAGE_LOADED_AT - new Date(job.created_at).getTime() < 3 * 24 * 60 * 60 * 1000;
 
   return (
-    <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:border-[#00A8B5] transition-all flex flex-col justify-between gap-4 group">
+    <div className="bg-white p-5 sm:p-6 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] hover:shadow-[0_18px_50px_rgba(0,168,181,0.16)] hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between gap-4 group">
       <div>
         <div className="flex items-start justify-between gap-2 mb-3">
           <div className="flex items-center gap-2 flex-wrap">

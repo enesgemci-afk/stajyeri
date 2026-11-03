@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { FIELD_GUIDES, type FieldGuide } from '@/lib/meslekRehberi';
 import { ArrowRight, FileText, PenLine } from 'lucide-react';
 
@@ -165,8 +166,8 @@ export default function CvOrnekleriPage() {
         </p>
       </section>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-[11px] text-slate-400">
-        &copy; 2026 Stajyeri.net &mdash; CV Örnekleri
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

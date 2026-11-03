@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { BLOG_POSTS, formatBlogDate } from '@/lib/blogYazilari';
 import { ArrowRight, BookOpen, Clock } from 'lucide-react';
 
@@ -92,10 +93,8 @@ export default function BlogPage() {
         </div>
       </section>
 
-      <footer className="bg-white border-t border-slate-200 py-8 text-center text-xs text-slate-400">
-        <p className="inline-flex items-center gap-1.5">
-          <Clock className="w-3.5 h-3.5" /> © 2026 Stajyeri.net — Kariyer Blogu
-        </p>
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );

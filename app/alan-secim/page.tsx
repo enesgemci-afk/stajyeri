@@ -10,6 +10,7 @@ import {
 } from '@/lib/fieldQuiz';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import {
   Sparkles,
   ChevronRight,
@@ -321,8 +322,8 @@ export default function AlanSecimPage() {
         )}
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-        &copy; 2026 Stajyeri.net &mdash; Tüm Hakları Saklıdır.
+      <footer>
+        <SiteFooter note="Alan seçimi nihai kararı vermeden önce rehber öğretmenin ve ailenle birlikte değerlendir." />
       </footer>
     </div>
   );

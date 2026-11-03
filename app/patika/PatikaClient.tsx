@@ -13,6 +13,7 @@ import {
 } from '@/lib/stajPatikasi';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import {
   Sparkles,
   ChevronRight,
@@ -471,8 +472,8 @@ export default function PatikaClient() {
         )}
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-[11px] text-slate-400">
-        &copy; 2026 Stajyeri.net &mdash; Tüm Hakları Saklıdır.
+      <footer>
+        <SiteFooter note="Bu patika 3308 sayılı Meslekî Eğitim Kanunu ve MEB uygulamalarına göre hazırlanmıştır; nihai kararlarda okul müdürlüğü ve MEB mesleki eğitim biriminden teyit al." />
       </footer>
     </div>
   );

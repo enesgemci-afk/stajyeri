@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { FIELD_GUIDES } from '@/lib/meslekRehberi';
 import { ArrowRight, BookOpen, Compass, GraduationCap } from 'lucide-react';
 
@@ -125,8 +126,8 @@ export default function MeslekRehberiPage() {
         </div>
       </section>
 
-      <footer className="bg-white border-t border-slate-200 py-8 text-center text-xs text-slate-500">
-        <p>© 2026 Stajyeri.net — MESEM Meslek Rehberi</p>
+      <footer>
+        <SiteFooter />
       </footer>
     </div>
   );
