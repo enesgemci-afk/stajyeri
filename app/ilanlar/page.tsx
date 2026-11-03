@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
-import { MESEM_FIELDS, TURKEY_CITIES, PROGRAM_TYPES } from '@/lib/constants';
+import { MESEM_FIELDS, UNIVERSITY_FIELDS, TURKEY_CITIES, PROGRAM_TYPES } from '@/lib/constants';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import JobCard from '@/components/JobCard';
@@ -97,6 +97,8 @@ export default function IlanlarPage() {
   const [dateRange, setDateRange] = useState<DateRange>('all');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest'>('newest');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [fieldScope, setFieldScope] = useState<'mesem' | 'univ'>('mesem');
+  const scopeFields = fieldScope === 'mesem' ? MESEM_FIELDS : UNIVERSITY_FIELDS;
 
   useEffect(() => {
     load();
@@ -302,8 +304,28 @@ export default function IlanlarPage() {
                 <span className="text-[#00A8B5]">({selectedFields.length} seçili)</span>
               )}
             </p>
+            <div className="flex gap-1 mb-2.5 bg-slate-100 rounded-xl p-1">
+              <button
+                type="button"
+                onClick={() => setFieldScope('mesem')}
+                className={`flex-1 py-1.5 rounded-lg text-[10px] font-black transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] ${
+                  fieldScope === 'mesem' ? 'bg-white text-[#0A1931] shadow-sm' : 'text-slate-500 hover:text-[#0A1931]'
+                }`}
+              >
+                MESEM (41)
+              </button>
+              <button
+                type="button"
+                onClick={() => setFieldScope('univ')}
+                className={`flex-1 py-1.5 rounded-lg text-[10px] font-black transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] ${
+                  fieldScope === 'univ' ? 'bg-white text-[#0A1931] shadow-sm' : 'text-slate-500 hover:text-[#0A1931]'
+                }`}
+              >
+                Üniversite (24)
+              </button>
+            </div>
             <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto">
-              {MESEM_FIELDS.map((f) => {
+              {scopeFields.map((f) => {
                 const active = selectedFields.includes(f);
                 return (
                   <button
@@ -419,8 +441,28 @@ export default function IlanlarPage() {
             </FilterSection>
 
             <FilterSection title={`Meslek Alanı${selectedFields.length ? ` (${selectedFields.length})` : ''}`}>
+              <div className="flex gap-1 mb-2.5 bg-slate-100 rounded-xl p-1">
+                <button
+                  type="button"
+                  onClick={() => setFieldScope('mesem')}
+                  className={`flex-1 py-1.5 rounded-lg text-[10px] font-black transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] ${
+                    fieldScope === 'mesem' ? 'bg-white text-[#0A1931] shadow-sm' : 'text-slate-500 hover:text-[#0A1931]'
+                  }`}
+                >
+                  MESEM (41)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFieldScope('univ')}
+                  className={`flex-1 py-1.5 rounded-lg text-[10px] font-black transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] ${
+                    fieldScope === 'univ' ? 'bg-white text-[#0A1931] shadow-sm' : 'text-slate-500 hover:text-[#0A1931]'
+                  }`}
+                >
+                  Üniversite (24)
+                </button>
+              </div>
               <div className="flex flex-wrap gap-1.5 max-h-56 overflow-y-auto">
-                {MESEM_FIELDS.map((f) => {
+                {scopeFields.map((f) => {
                   const active = selectedFields.includes(f);
                   return (
                     <button

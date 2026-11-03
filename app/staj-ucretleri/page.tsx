@@ -171,6 +171,43 @@ export default function StajUcretleriPage() {
         <WageCalculator />
       </section>
 
+      {/* ÜNİVERSİTE STAJI — 3308 dışı kitle */}
+      <section className="max-w-4xl w-full mx-auto px-4 pb-14">
+        <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-6 sm:p-8 relative overflow-hidden">
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#8B00FF] to-[#0080FF]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B00FF]/10 border border-[#8B00FF]/20 text-[#8B00FF] text-[10px] font-black mb-3">
+            🎓 ÜNİVERSİTE STAJI
+          </div>
+          <h2 className="text-lg sm:text-xl font-black text-[#0A1931]">
+            Üniversite öğrencisiysen: ücret ve SGK
+          </h2>
+          <p className="text-[11px] text-slate-600 leading-relaxed mt-2 max-w-2xl">
+            Üniversite (MYO / Lisans) stajı 3308 kapsamı dışındadır — ücret kanunen zorunlu
+            değildir ve işletmeyle serbestçe belirlenir. Ancak SGK tarafında büyük avantaj vardır:
+          </p>
+          <div className="grid sm:grid-cols-3 gap-3 mt-5">
+            <div className="bg-[#F8FAFC] rounded-2xl p-4">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Ücret</p>
+              <p className="text-[11px] font-bold text-[#0A1931] mt-1">Serbest pazarlık</p>
+              <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">Zorunlu değil — birçok firma stajyere ödeme yapar; CV'nde "ücretli staj" tercihi güçlü sinyaldir.</p>
+            </div>
+            <div className="bg-[#F8FAFC] rounded-2xl p-4">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">SGK primi</p>
+              <p className="text-[11px] font-bold text-emerald-600 mt-1">Devlet karşılar</p>
+              <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">Öğrenci stajyerlerin sigorta primleri Genç İstihdam Paketi kapsamında Hazine tarafından ödenir.</p>
+            </div>
+            <div className="bg-[#F8FAFC] rounded-2xl p-4">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Belge</p>
+              <p className="text-[11px] font-bold text-[#0A1931] mt-1">Staj defteri</p>
+              <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">Fakültenin staj defteri formunu işletmeye önceden ilet; günlük imza disiplini meslek lisesindeki gibi şart.</p>
+            </div>
+          </div>
+          <p className="text-[10px] text-slate-400 mt-4">
+            İlan ararken "Üniversite Zorunlu Stajı" ve "Üniversite Gönüllü / Yaz Stajı" modellerini filtreleyebilirsin.
+          </p>
+        </div>
+      </section>
+
       {/* SSS */}
       <section className="max-w-3xl w-full mx-auto px-4 pb-14">
         <h2 className="text-xl sm:text-2xl font-black text-[#0A1931] text-center flex items-center justify-center gap-2">

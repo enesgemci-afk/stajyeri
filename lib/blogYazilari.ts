@@ -156,6 +156,36 @@ export const BLOG_POSTS: BlogPost[] = [
       { type: 'p', text: 'Alanına özel soruları Mülakat Soruları sayfamızdan çalış, sonra Mulakat Provası ile kronometreli pratik yap — kendi hızında, kimseye göstermeden.' },
     ],
   },
+  {
+    slug: 'universite-staji-nasil-bulunur',
+    title: 'Üniversitede staj nasıl bulunur? (Zorunlu + yaz stajı rehberi)',
+    description:
+      'MYO ve lisans öğrencileri için staj bulma rehberi: zorunlu staj günleri, SGK desteği, kariyer merkezi, üniversite CVsi farkları ve yaz stajı zamanlaması.',
+    date: '2026-03-18',
+    category: 'Başvuru & Mülakat',
+    emoji: '🎓',
+    readMin: 6,
+    blocks: [
+      { type: 'p', text: 'Üniversitede staj bulmak, mezuniyet sonrası ilk işi bulmak kadar önemlidir — çünkü ilk staj, ilk referanstır. MYO öğrencileri için 30 iş günü, lisans programlarında bölüme göre 40-60 iş günü zorunlu staj vardır ve bu günler diplomadan önce tamamlanmak zorundadır.' },
+      { type: 'h2', text: 'Zorunlu staj ne zaman yapılır?' },
+      { type: 'li', text: 'MYO: genellikle 2. sınıf bahar döneminden sonra, 30 iş günü.' },
+      { type: 'li', text: 'Lisans: fakülteye göre değişir — mühendislik fakültelerinde çoğunlukla 2. ve 3. sınıf yazlarında, toplam 40-60 iş günü.' },
+      { type: 'li', text: 'Bazı bölümlerde yaz stajı ders kaydına bağlanır; staj formunu danışmanına başlamadan önce onaylatmayı unutma.' },
+      { type: 'h2', text: 'Nereden aranır?' },
+      { type: 'li', text: 'Üniversitenin kariyer merkezi: firmalar doğrudan okulunuza staj ilanı gönderir — ilk adres burası olsun.' },
+      { type: 'li', text: 'İlan platformları: alan/bölüm bazlı filtreleyebildiğin platformlar + LinkedIn profili güncel tutmak.' },
+      { type: 'li', text: 'Hedef firma listesi yapıp sitelerindeki kariyer sayfalarından doğrudan başvurmak — en az beklenen ama en çok dönüş alınan yöntem.' },
+      { type: 'li', text: 'Akademisyen ve mezun ağı: hocanın sektör bağlantısı, mezun toplulukları ve staj yapan üst sınıflar.' },
+      { type: 'note', text: 'Üniversite öğrencisi stajyerlerin SGK primleri Genç İstihdam Paketi kapsamında devlet tarafından karşılanır — firmaya stajyer maliyeti neredeyse sıfırdır. Başvuru ön yazında bunu nazikçe hatırlatabilirsin.' },
+      { type: 'h2', text: 'Üniversite CVsi lise CVsinden farklıdır' },
+      { type: 'li', text: 'Projeler ve ders projeleri: yaptığın grup projelerini hedef rolle bağdaştırarak yaz.' },
+      { type: 'li', text: 'Topluluklar ve organizasyonlar: liderlik göstergesidir, tek satır bile fark yaratır.' },
+      { type: 'li', text: 'İngilizce seviyesi + sertifikalar (SQL, Excel, tasarım araçları vb.) ayrı satırda listelenir.' },
+      { type: 'h2', text: 'Yaz stajı zamanlaması' },
+      { type: 'p', text: 'Firmalar yaz stajı kontenjanlarını çoğunlukla Mart-Nisan aylarında açar; Nisan sonunda başvurmak geç sayılır. Şubat-Mart’ta CV’ni hazırla, Mart’ta toplu başvuruya çık.' },
+      { type: 'p', text: 'Stajyeri.net’te “Üniversite Zorunlu Stajı” ve “Üniversite Gönüllü / Yaz Stajı” filtreleriyle bölümüne uygun ilanları saniyeler içinde ayıklayabilirsin.' },
+    ],
+  },
 ];
 
 /** slug → yazı hızlı erişim */

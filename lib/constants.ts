@@ -43,11 +43,32 @@ export const MESEM_FIELDS: string[] = [
   'Yiyecek İçecek Hizmetleri',
 ];
 
+// ============================================================
+// ÜNİVERSİTE STAJI — 3308 dışı kitle (MYO / Lisans)
+// Zorunlu + gönüllü/yaz stajı; SGK primi Genç İstihdam Paketi
+// kapsamında devletçe karşılanır. Alanlar MESEM_FIELDS ile
+// kesişmez (filtrelerde ayrı sekmede listelenir).
+// ============================================================
+export const UNIVERSITY_FIELDS: string[] = [
+  'Bilgisayar Mühendisliği', 'Yazılım Mühendisliği', 'Elektrik-Elektronik Mühendisliği',
+  'Makine Mühendisliği', 'Endüstri Mühendisliği', 'İnşaat Mühendisliği',
+  'Mimarlık', 'İç Mimarlık', 'İşletme', 'İktisat', 'Pazarlama',
+  'İnsan Kaynakları Yönetimi', 'Uluslararası Ticaret ve Lojistik',
+  'Bankacılık ve Finans', 'Grafik Tasarım', 'İletişim ve Medya', 'Dijital Pazarlama',
+  'Psikoloji', 'Sosyal Hizmet', 'Turizm İşletmeciliği',
+  'Gastronomi ve Mutfak Sanatları', 'Hemşirelik', 'Fizyoterapi ve Rehabilitasyon', 'Veri Bilimi',
+];
+
+/** MESEM + Üniversite alanlarının birleşimi — ilan formu ve genel aramalar için */
+export const ALL_FIELDS: string[] = [...MESEM_FIELDS, ...UNIVERSITY_FIELDS];
+
 // Staj & Çıraklık Program Modelleri
 export const PROGRAM_TYPES = [
   { value: 'MESEM_4_1', label: 'MESEM (4 Gün İşletme + 1 Gün Okul)' },
   { value: 'MTAL_3_DAYS', label: 'MTAL 12. Sınıf (3 Gün Staj + 2 Gün Okul)' },
   { value: 'SUMMER_INTERN', label: 'Yaz Stajı / Beceri Eğitimi' },
+  { value: 'UNIV_MANDATORY', label: 'Üniversite Zorunlu Stajı (MYO / Lisans)' },
+  { value: 'UNIV_VOLUNTARY', label: 'Üniversite Gönüllü / Yaz Stajı' },
 ];
 
 // Türkiye 81 İl Listesi
@@ -77,6 +98,8 @@ export const PROGRAM_TYPE_LABELS: Record<string, string> = {
   MESEM_4_1: 'MESEM (4 Gün İşletme)',
   MTAL_3_DAYS: 'MTAL 12. Sınıf (3 Gün Staj)',
   SUMMER_INTERN: 'Yaz Stajı / Beceri Eğitimi',
+  UNIV_MANDATORY: 'Üniversite Zorunlu Stajı',
+  UNIV_VOLUNTARY: 'Üniversite Gönüllü / Yaz Stajı',
 };
 
 /** Bilinmeyen/değer yoksa raw değeri veya nötr etiket döner */

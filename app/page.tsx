@@ -327,7 +327,7 @@ export default function HomePage() {
               <div className="absolute -bottom-20 -left-10 w-48 h-48 rounded-full bg-[#FF6B00]/20 blur-2xl pointer-events-none" />
               <div className="relative">
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00A8B5]/15 border border-[#00A8B5]/30 text-[#00E5FF] text-[11px] font-bold mb-6">
-                  <Sparkles className="w-3.5 h-3.5" /> MESEM ve Meslek Lisesi Öğrencilerine Özel
+                  <Sparkles className="w-3.5 h-3.5" /> MESEM, Meslek Lisesi ve Üniversite Öğrencilerine Özel
                 </div>
 
                 <h1 className="text-3xl sm:text-5xl font-black leading-[1.08] tracking-tight">
@@ -549,7 +549,7 @@ export default function HomePage() {
                 <div>
                   <p className="text-xs font-black text-[#0A1931]">Öğrenci misin?</p>
                   <p className="text-[10px] text-slate-500 mt-0.5">
-                    Alanını test et, CV'ni hazırla, maaşlı staj bul →
+                    Lise ya da üniversite — alanını seç, CV'ni hazırla, maaşlı staj bul →
                   </p>
                 </div>
               </div>

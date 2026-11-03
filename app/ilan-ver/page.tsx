@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-import { MESEM_FIELDS, PROGRAM_TYPES, TURKEY_CITIES } from '@/lib/constants';
+import { MESEM_FIELDS, UNIVERSITY_FIELDS, PROGRAM_TYPES, TURKEY_CITIES } from '@/lib/constants';
 import { JOB_TEMPLATES, GENERIC_JOB_TEMPLATE } from '@/lib/jobTemplates';
 import SiteHeader from '@/components/SiteHeader';
 import { useRouter } from 'next/navigation';
@@ -439,15 +439,22 @@ export default function IlanVerPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700">Meslek Alanı (33 MESEM Alanı)</label>
+                <label className="block text-xs font-bold text-slate-700">Meslek Alanı / Üniversite Bölümü</label>
                 <select
                   value={fieldName}
                   onChange={(e) => setFieldName(e.target.value)}
                   className="mt-1 w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#00A8B5] cursor-pointer"
                 >
-                  {MESEM_FIELDS.map((field) => (
-                    <option key={field} value={field}>{field}</option>
-                  ))}
+                  <optgroup label="MESEM Alanları (3308)">
+                    {MESEM_FIELDS.map((field) => (
+                      <option key={field} value={field}>{field}</option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Üniversite Bölümleri">
+                    {UNIVERSITY_FIELDS.map((field) => (
+                      <option key={field} value={field}>{field}</option>
+                    ))}
+                  </optgroup>
                 </select>
               </div>
 
