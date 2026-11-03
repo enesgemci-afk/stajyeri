@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { MESEM_FIELDS, EDU_LEVELS } from '@/lib/constants';
 import { APP_STATUS_META, type AppStatus } from '@/lib/appStatus';
+import StudentSidebar from './StudentSidebar';
+import { PANEL_TOKENS } from '@/lib/panelTokens';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 
@@ -276,7 +278,7 @@ export default function OgrenciPanelPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans scroll-smooth">
       <SiteHeader
         right={
           <div className="flex items-center gap-3">
@@ -289,32 +291,84 @@ export default function OgrenciPanelPage() {
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8">
-        <section className="bg-gradient-to-br from-[#0A1931] via-[#0D2244] to-[#0A1931] text-white rounded-3xl p-8 sm:p-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00A8B5]/15 border border-[#00A8B5]/30 text-[#00E5FF] text-[10px] font-bold mb-4">
-            <Sparkles className="w-3 h-3" /> ÖĞRENCİ PANELİ
+        <div className="lg:grid lg:grid-cols-[264px_minmax(0,1fr)] lg:gap-8 lg:items-start">
+          {/* SOL SIDEBAR — SaaS dashboard navigasyonu */}
+          <StudentSidebar
+            fullName={fullName}
+            education={education}
+            field={field}
+            school={mySchool}
+            pendingCount={counts.pending}
+            skillsCount={skills.length}
+            onLogout={handleLogout}
+          />
+
+          <div className="min-w-0 mt-6 lg:mt-0">
+        <section id="ozet" className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-6 sm:p-8 relative overflow-hidden scroll-mt-24">
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#00A8B5] via-[#00E5FF] to-[#FF6B00]" />
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="min-w-0">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00A8B5]/10 border border-[#00A8B5]/25 text-[#00A8B5] text-[10px] font-bold mb-3">
+                <Sparkles className="w-3 h-3" /> ÖĞRENCİ PANELİ
+              </div>
+              <h1 className={`text-2xl sm:text-3xl font-black text-[#0A1931] ${PANEL_TOKENS.fontDisplay}`}>
+                Merhaba, {firstName} 👋
+              </h1>
+              <p className="mt-2 text-slate-500 text-xs sm:text-sm max-w-xl">
+                {counts.total > 0
+                  ? `${counts.total} başvurunuz takip ediliyor. Yeni fırsatları kaçırmayın!`
+                  : 'Henüz başvurunuz yok. Sana uygun staj fırsatlarını keşfetmeye başla!'}
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 flex-shrink-0">
+              {counts.pending > 0 && (
+                <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-50 border border-amber-200 text-amber-700 rounded-full text-[10px] font-extrabold">
+                  ⏳ {counts.pending} başvuru incelemede
+                </span>
+              )}
+              {skills.length > 0 && (
+                <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#00A8B5]/10 border border-[#00A8B5]/25 text-[#00A8B5] rounded-full text-[10px] font-extrabold">
+                  ✨ {skills.length} beceri CV'de
+                </span>
+              )}
+            </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black">Merhaba, {firstName} 👋</h1>
-          <p className="mt-2 text-slate-300 text-xs sm:text-sm max-w-xl">
-            {counts.total > 0
-              ? `${counts.total} başvurunuz takip ediliyor. Yeni fırsatları kaçırmayın!`
-              : 'Henüz başvurunuz yok. Sana uygun staj fırsatlarını keşfetmeye başla!'}
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/" className="px-5 py-2.5 bg-[#00A8B5] hover:bg-[#00929e] text-white text-xs font-extrabold rounded-xl transition flex items-center gap-2">
+
+          <div className="mt-5 flex flex-wrap gap-3">
+            <Link href="/" className="px-5 py-2.5 bg-[#00A8B5] hover:bg-[#00929e] text-white text-xs font-extrabold rounded-xl transition-all active:scale-[0.98] flex items-center gap-2 shadow-lg shadow-[#00A8B5]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2">
               <Search className="w-4 h-4" /> İlanları Keşfet
             </Link>
-            <Link href="/basvurularim" className="px-5 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-extrabold rounded-xl transition flex items-center gap-2">
+            <Link href="/basvurularim" className="px-5 py-2.5 bg-[#0080FF]/10 hover:bg-[#0080FF]/20 border border-[#0080FF]/25 text-[#0080FF] text-xs font-extrabold rounded-xl transition-all active:scale-[0.98] flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0080FF] focus-visible:ring-offset-2">
               <ClipboardList className="w-4 h-4" /> Tüm Başvurularım
             </Link>
-            <Link href="/patika" className="px-5 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-extrabold rounded-xl transition flex items-center gap-2">
+            <Link href="/patika" className="px-5 py-2.5 bg-[#8B00FF]/10 hover:bg-[#8B00FF]/20 border border-[#8B00FF]/25 text-[#8B00FF] text-xs font-extrabold rounded-xl transition-all active:scale-[0.98] flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8B00FF] focus-visible:ring-offset-2">
               <Sparkles className="w-4 h-4" /> Staj Patikamı Kur
             </Link>
           </div>
         </section>
 
+        {/* KPI KARTLARI — skill paleti */}
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+          {[
+            { icon: ClipboardList, label: 'Toplam Başvuru', value: counts.total, tone: 'blue' as const },
+            { icon: Clock, label: 'İncelemede', value: counts.pending, tone: 'amber' as const },
+            { icon: CheckCircle2, label: 'Olumlu', value: counts.approved, tone: 'emerald' as const },
+            { icon: Sparkles, label: 'CV Becerisi', value: skills.length, tone: 'violet' as const },
+          ].map((s) => (
+            <div key={s.label} className="bg-white rounded-2xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-5 hover:shadow-[0_18px_50px_rgba(0,168,181,0.16)] hover:-translate-y-0.5 transition-all duration-200">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${PANEL_TOKENS.kpiIcon(s.tone)}`}>
+                <s.icon className="w-5 h-5" />
+              </div>
+              <p className={`mt-3 text-2xl font-black text-[#0A1931] leading-tight ${PANEL_TOKENS.fontDisplay}`}>{s.value}</p>
+              <p className="text-[11px] text-slate-500 font-bold">{s.label}</p>
+            </div>
+          ))}
+        </section>
+
         {/* BECERILERIM — CV'den gelen yetkinlikler */}
         {authState === 'student' && (
-          <section className="mt-6 bg-white rounded-2xl border border-slate-200 p-5">
+          <section id="beceriler" className="mt-6 bg-white rounded-2xl border border-slate-200 p-5 scroll-mt-24">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <h2 className="text-xs font-black text-[#0A1931] flex items-center gap-1.5">
@@ -352,7 +406,7 @@ export default function OgrenciPanelPage() {
 
         {/* OKUL_MODULU — öğrencinin okulu */}
         {authState === 'student' && (
-          <section className="mt-6 bg-white rounded-2xl border border-slate-200 p-5">
+          <section id="okul" className="mt-6 bg-white rounded-2xl border border-slate-200 p-5 scroll-mt-24">
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               <div className="flex-1">
                 <label className="block text-xs font-black text-[#0A1931] mb-1">
@@ -404,26 +458,9 @@ export default function OgrenciPanelPage() {
           </section>
         )}
 
-        <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-          {[
-            { icon: ClipboardList, label: 'Toplam Başvuru', value: counts.total, cls: 'bg-slate-100 text-[#0A1931]' },
-            { icon: Clock, label: 'İncelemede', value: counts.pending, cls: 'bg-amber-50 text-amber-600' },
-            { icon: CheckCircle2, label: 'Olumlu', value: counts.approved, cls: 'bg-emerald-50 text-emerald-600' },
-            { icon: XCircle, label: 'Olumsuz', value: counts.rejected, cls: 'bg-red-50 text-red-500' },
-          ].map((s) => (
-            <div key={s.label} className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center gap-4">
-              <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${s.cls}`}>
-                <s.icon className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-xl font-black text-[#0A1931]">{s.value}</p>
-                <p className="text-[11px] text-slate-500 font-bold">{s.label}</p>
-              </div>
-            </div>
-          ))}
-        </section>
+        {/* Eski istatistik grid'i hero üstüne taşındı */}
 
-        <section className="grid lg:grid-cols-3 gap-6 mt-6">
+        <section id="basvurular" className="grid lg:grid-cols-3 gap-6 mt-6 scroll-mt-24">
           <div className="lg:col-span-2 bg-white rounded-3xl border border-slate-200 p-6 sm:p-7">
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-sm font-black text-[#0A1931] flex items-center gap-2">
@@ -468,7 +505,7 @@ export default function OgrenciPanelPage() {
             )}
           </div>
 
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-7">
+          <div id="profil" className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-7 scroll-mt-24">
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-sm font-black text-[#0A1931] flex items-center gap-2">
                 <GraduationCap className="w-4 h-4 text-[#00A8B5]" /> Profilim
@@ -537,6 +574,8 @@ export default function OgrenciPanelPage() {
             )}
           </div>
         </section>
+          </div>
+        </div>
       </main>
 
       <footer className="bg-white border-t border-slate-200 py-6 text-center text-[11px] text-slate-400">
