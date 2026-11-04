@@ -83,6 +83,11 @@ function Resolve-Command {
   $t = ($t -split '\s+')[0]
 
   if ($t -in @('help','yardim','komutlar','komut','komutlistesi')) { return 'help' }
+  if ($t -in @('blog','blogyaz','icerik','icerikuret'))             { return 'blog' }
+  if ($t -in @('pazarlama','sosyal','post','paket'))               { return 'pazarlama' }
+  if ($t -in @('seo','denetim','sitedenetimi','seorapor'))         { return 'seo' }
+  if ($t -in @('satis','davet','isverendavet'))                    { return 'satis' }
+  if ($t -in @('onayla','onay','approve'))                         { return 'onayla' }
   if ($t -in @('status','durum','durumu','sistem','rapor'))        { return 'status' }
   if ($t -in @('deploy','yayinla','gonder','push','yayinaal','yayinla ','yayin')) { return 'deploy' }
   if ($t -in @('build','derle','derleme','yapilandir'))            { return 'build' }
@@ -182,6 +187,26 @@ Sistem Durumu:
       }
       return 'Bekleyen gorev yok.'
     }
+    'blog' {
+      $s = Join-Path $root 'scripts\agents\blog-agent.ps1'
+      if (Test-Path $s) { return (& $s 2>&1 | Out-String) }
+      return 'blog-agent bulunamadi.'
+    }
+    'pazarlama' {
+      $s = Join-Path $root 'scripts\agents\pazarlama-agent.ps1'
+      if (Test-Path $s) { return (& $s 2>&1 | Out-String) }
+      return 'pazarlama-agent bulunamadi.'
+    }
+    'seo' {
+      $s = Join-Path $root 'scripts\agents\seo-agent.ps1'
+      if (Test-Path $s) { return (& $s 2>&1 | Out-String) }
+      return 'seo-agent bulunamadi.'
+    }
+    'satis' {
+      $s = Join-Path $root 'scripts\agents\satis-agent.ps1'
+      if (Test-Path $s) { return (& $s 2>&1 | Out-String) }
+      return 'satis-agent bulunamadi.'
+    }
   }
   return $null
 }
@@ -191,14 +216,19 @@ $ipucu = @"
 Komut anlasilmadi.
 
 Komutlar ("/" olsun olmasin):
-  durum    - sistem durumu
-  yayinla  - commit + push (yayin)
-  derle    - build testi
-  test     - site + veritabani saglik
-  log      - son commit'ler
-  ozet     - gunluk ozet
-  gorevler - bekleyen gorev listesi
-  yardim   - tum komutlar
+  durum     - sistem durumu
+  yayinla   - commit + push (yayin)
+  derle     - build testi
+  test      - site + veritabani saglik
+  log       - son commit'ler
+  ozet      - gunluk ozet
+  gorevler  - bekleyen gorev listesi
+  blog      - haftalik blog taslagi uret
+  pazarlama - sosyal medya post paketi (gercek veri)
+  seo       - site denetim raporu
+  satis     - pasif isveren davet taslaklari
+  onayla    - draft onayla ve yayinla (orn: /onayla blog)
+  yardim    - tum komutlar
 
 Gorev vermek icin: dogrudan cumle olarak yazin
 (3+ kelime otomatik gorev olarak kaydedilir).
@@ -225,7 +255,15 @@ while (((Get-Date) - $baslangic).TotalMinutes -lt 25) {
     if (-not $text) { continue }
 
     $komut = Resolve-Command -Text $text
-    if ($komut) {
+    if ($komut -eq 'onayla') {
+      $arg = ($text -split '\s+', 2)[1]
+      $s = Join-Path $PSScriptRoot 'agents\onayla.ps1'
+      if (Test-Path $s) {
+        $yanit = (& $s -Target $arg 2>&1 | Out-String)
+      } else {
+        $yanit = 'onayla.ps1 bulunamadi.'
+      }
+    } elseif ($komut) {
       $yanit = Invoke-AgentCommand -Name $komut
     } else {
       # Komut olmayan 3+ kelimelik mesajlar gorev olarak kuyruga alinir
