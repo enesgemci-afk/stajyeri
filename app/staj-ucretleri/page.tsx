@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import type { Metadata } from 'next';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
@@ -147,7 +147,7 @@ export default function StajUcretleriPage() {
 
         <div className="grid md:grid-cols-3 gap-5 mt-10">
           {MODELS.map((m) => (
-            <div key={m.title} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition">
+            <div key={m.title} className="bg-white p-6 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm hover:shadow-md transition">
               <div className="flex items-center justify-between gap-3 mb-4">
                 <div className={`w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center ${m.color}`}>
                   <m.icon className="w-5 h-5" />
@@ -219,7 +219,7 @@ export default function StajUcretleriPage() {
         </h2>
         <div className="mt-8 space-y-3">
           {FAQS.map((f) => (
-            <details key={f.q} className="group bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            <details key={f.q} className="group bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] overflow-hidden">
               <summary className="cursor-pointer list-none px-5 py-4 text-xs font-black text-[#0A1931] flex items-center justify-between gap-3">
                 {f.q}
                 <span className="text-[#00A8B5] group-open:rotate-45 transition-transform text-lg leading-none">+</span>

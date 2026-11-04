@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import { ShieldCheck, Database, Share2, UserCheck, Clock, Scale } from 'lucide-react';
@@ -69,7 +69,7 @@ export default function KvkkPage() {
       <SiteHeader />
 
       <main className="max-w-3xl w-full mx-auto px-4 py-12 flex-1">
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-10">
+        <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-6 sm:p-10">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-11 h-11 rounded-2xl bg-[#00A8B5]/10 text-[#00A8B5] flex items-center justify-center">
               <ShieldCheck className="w-6 h-6" />

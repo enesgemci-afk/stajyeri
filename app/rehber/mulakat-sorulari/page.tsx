@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -69,7 +69,7 @@ export default function MulakatSorulariPage() {
           </h2>
           <div className="space-y-3 mb-8">
             {GENERAL_QUESTIONS.map((item, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+              <div key={i} className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-5">
                 <h3 className="text-xs font-black text-[#0A1931] flex items-start gap-2">
                   <span className="w-5 h-5 rounded-full bg-[#00A8B5]/10 text-[#00A8B5] text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">
                     {i + 1}
@@ -85,7 +85,7 @@ export default function MulakatSorulariPage() {
           </div>
 
           {/* Alan bazlı sorular */}
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-7">
+          <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-6 sm:p-7">
             <h2 className="text-sm font-black text-[#0A1931] mb-1 flex items-center gap-2">
               <Wrench className="w-4 h-4 text-[#00A8B5]" /> Alanına Özel Sorular
             </h2>
@@ -129,7 +129,7 @@ export default function MulakatSorulariPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
             <Link
               href="/alan-secim"
-              className="bg-white rounded-2xl border border-slate-200 hover:border-[#00A8B5] shadow-sm p-5 transition group"
+              className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-5 transition group"
             >
               <h3 className="text-xs font-black text-[#0A1931] group-hover:text-[#00A8B5] transition flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-[#00A8B5]" /> Alanını seçemiyor musun?
@@ -140,7 +140,7 @@ export default function MulakatSorulariPage() {
             </Link>
             <Link
               href="/#ilanlar"
-              className="bg-white rounded-2xl border border-slate-200 hover:border-[#00A8B5] shadow-sm p-5 transition group"
+              className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-5 transition group"
             >
               <h3 className="text-xs font-black text-[#0A1931] group-hover:text-[#00A8B5] transition flex items-center gap-2">
                 Aktif ilanları gör <ChevronRight className="w-4 h-4 text-[#00A8B5]" />

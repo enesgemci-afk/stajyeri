@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
@@ -131,7 +131,7 @@ export default async function SehirAlanPage({ params }: Props) {
             ))}
           </div>
         ) : (
-          <div className="mt-4 bg-white rounded-3xl border border-slate-200 p-10 text-center">
+          <div className="mt-4 bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-10 text-center">
             <p className="text-sm font-black text-[#0A1931]">Bu kriterlerde henüz ilan yok</p>
             <p className="text-xs text-slate-500 mt-2">
               Yeni ilanlar eklendiğinde ilk sen gör — iş alarmı kur, eşleşen ilanlar anında haber verilsin.
@@ -155,7 +155,7 @@ export default async function SehirAlanPage({ params }: Props) {
 
         {/* Diğer alanlar + şehirler — iç linkleme */}
         <section className="mt-10 grid md:grid-cols-2 gap-4">
-          <div className="bg-white rounded-2xl border border-slate-200 p-5">
+          <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-5">
             <h2 className="text-xs font-black text-[#0A1931] mb-3">Diğer Alanlarda {city} İlanları</h2>
             <div className="flex flex-wrap gap-1.5">
               {otherFields.map((f) => (
@@ -169,7 +169,7 @@ export default async function SehirAlanPage({ params }: Props) {
               ))}
             </div>
           </div>
-          <div className="bg-white rounded-2xl border border-slate-200 p-5">
+          <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-5">
             <h2 className="text-xs font-black text-[#0A1931] mb-3">{field} İlanlarının Olduğu Diğer Şehirler</h2>
             <div className="flex flex-wrap gap-1.5">
               {otherCities.map((c) => (
@@ -190,7 +190,7 @@ export default async function SehirAlanPage({ params }: Props) {
           <h2 className="text-base font-black text-[#0A1931]">Sıkça Sorulan Sorular</h2>
           <div className="mt-4 space-y-2.5">
             {faq.map((f) => (
-              <details key={f.q} className="bg-white rounded-2xl border border-slate-200 p-4 group">
+              <details key={f.q} className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-4 group">
                 <summary className="text-xs font-black text-[#0A1931] cursor-pointer list-none flex items-center justify-between gap-3">
                   {f.q}
                   <span className="text-[#00A8B5] group-open:rotate-45 transition text-base leading-none">+</span>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
@@ -295,7 +295,7 @@ export default function IlanVerPage() {
       <SiteHeader />
       <div className="max-w-3xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
 
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-10">
+        <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-6 sm:p-10">
           <div className="border-b border-slate-100 pb-5 mb-6">
             <h1 className="text-xl sm:text-2xl font-black text-[#0A1931] flex items-center gap-2">
               <Sparkles className="w-6 h-6 text-[#FF6B00]" /> Yeni MESEM & Staj İlanı Yayınla
@@ -346,7 +346,7 @@ export default function IlanVerPage() {
                   <img
                     src={logoUrl}
                     alt="Logo önizleme"
-                    className="w-11 h-11 rounded-xl object-cover border border-slate-200 bg-white"
+                    className="w-11 h-11 rounded-3xl object-cover shadow-[0_10px_40px_rgba(10,25,49,0.07)] bg-white"
                   />
                 ) : (
                   <div
@@ -357,7 +357,7 @@ export default function IlanVerPage() {
                   </div>
                 )}
                 <div className="min-w-0">
-                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:border-[#00A8B5] rounded-xl text-[11px] font-bold text-slate-700 transition cursor-pointer">
+                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] rounded-3xl text-[11px] font-bold text-slate-700 transition cursor-pointer">
                     {logoUploading ? 'Yükleniyor...' : logoUrl ? 'Logoyu Değiştir' : 'Logo Yükle (JPG/PNG, maks 2MB)'}
                     <input
                       type="file"

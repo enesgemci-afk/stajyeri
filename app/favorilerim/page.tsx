@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
@@ -168,7 +168,7 @@ export default function FavorilerimPage() {
         {loading ? (
           <div className="py-20 text-center text-sm text-slate-500">Yükleniyor...</div>
         ) : !isLoggedIn ? (
-          <div className="max-w-md mx-auto mt-12 bg-white rounded-3xl border border-slate-200 shadow-lg p-10 text-center">
+          <div className="max-w-md mx-auto mt-12 bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-lg p-10 text-center">
             <div className="w-12 h-12 rounded-2xl bg-[#00A8B5]/10 text-[#00A8B5] flex items-center justify-center mx-auto mb-4">
               <LogIn className="w-6 h-6" />
             </div>
@@ -195,7 +195,7 @@ export default function FavorilerimPage() {
               </p>
 
               {favs.length === 0 ? (
-                <div className="bg-white p-10 rounded-2xl border border-slate-200 text-center">
+                <div className="bg-white p-10 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] text-center">
                   <Heart className="w-8 h-8 text-slate-200 mx-auto mb-2" />
                   <p className="text-sm font-bold text-slate-600">Henüz favori ilanınız yok.</p>
                   <Link href="/" className="text-xs font-bold text-[#00A8B5] hover:underline mt-1 inline-block">
@@ -207,7 +207,7 @@ export default function FavorilerimPage() {
                   {favs.map((job) => (
                     <div
                       key={job.id}
-                      className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-3"
+                      className="bg-white p-5 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm flex flex-col gap-3"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">

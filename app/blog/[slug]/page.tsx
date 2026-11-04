@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
@@ -51,7 +51,7 @@ export default async function BlogDetayPage({ params }: Props) {
         </div>
 
         {/* İçerik */}
-        <article className="mt-8 bg-white rounded-3xl border border-slate-200 p-6 sm:p-9 space-y-4">
+        <article className="mt-8 bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-6 sm:p-9 space-y-4">
           {post.blocks.map((b, i) => {
             if (b.type === 'h2')
               return (
@@ -120,7 +120,7 @@ export default async function BlogDetayPage({ params }: Props) {
               <Link
                 key={r.slug}
                 href={`/blog/${r.slug}`}
-                className="group bg-white rounded-2xl border border-slate-200 hover:border-[#00A8B5] transition-all p-5"
+                className="group bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] transition-all p-5"
               >
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">{r.emoji}</span>

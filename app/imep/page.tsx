@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import type { LucideIcon } from 'lucide-react';
@@ -180,7 +180,7 @@ export default function ImepPage() {
 
         <div className="grid md:grid-cols-2 gap-5 mt-10">
           {SCOPE_CARDS.map((card) => (
-            <div key={card.title} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition">
+            <div key={card.title} className="bg-white p-6 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm hover:shadow-md transition">
               <div className="flex items-center justify-between gap-3 mb-4">
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center ${card.iconColor}`}>

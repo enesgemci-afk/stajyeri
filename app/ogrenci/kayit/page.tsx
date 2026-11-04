@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
 import { MESEM_FIELDS } from '@/lib/constants'
 import SiteHeader from '@/components/SiteHeader'
+import SiteFooter from '@/components/SiteFooter'
 
 export default function OgrenciKayit() {
   const router = useRouter()
@@ -150,7 +151,7 @@ export default function OgrenciKayit() {
             <select
               value={field}
               onChange={(e) => setField(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white"
+              className="w-full px-4 py-3 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white"
             >
               {MESEM_FIELDS.map((f) => (
                 <option key={f} value={f}>{f}</option>
@@ -163,7 +164,7 @@ export default function OgrenciKayit() {
             <select
               value={educationLevel}
               onChange={(e) => setEducationLevel(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white"
+              className="w-full px-4 py-3 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white"
             >
               <option value="MESEM (Çırak - 9, 10, 11. Sınıf)">MESEM (Çırak - 9, 10, 11. Sınıf)</option>
               <option value="MESEM (Kalfa - 12. Sınıf)">MESEM (Kalfa - 12. Sınıf)</option>
@@ -177,7 +178,7 @@ export default function OgrenciKayit() {
             <select
               value={schoolName}
               onChange={(e) => setSchoolName(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white"
+              className="w-full px-4 py-3 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white"
             >
               <option value="">Başka bir okul / belirtmek istemiyorum</option>
               {schools.map((s) => (
@@ -208,6 +209,10 @@ export default function OgrenciKayit() {
         </p>
       </div>
       </main>
+
+      <footer>
+        <SiteFooter />
+      </footer>
     </div>
   )
 }

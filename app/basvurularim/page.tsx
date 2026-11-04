@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState, type FormEvent } from 'react';
 import { supabase } from '@/lib/supabaseClient';
@@ -376,7 +376,7 @@ export default function BasvurularimPage() {
           {loading ? (
             <div className="py-20 text-center text-sm text-slate-500">Başvurularınız yükleniyor...</div>
           ) : !isLoggedIn ? (
-            <div className="mt-10 bg-white rounded-3xl border border-slate-200 shadow-lg p-10 text-center max-w-md mx-auto">
+            <div className="mt-10 bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-lg p-10 text-center max-w-md mx-auto">
               <div className="w-12 h-12 rounded-2xl bg-[#00A8B5]/10 text-[#00A8B5] flex items-center justify-center mx-auto mb-4">
                 <LogIn className="w-6 h-6" />
               </div>
@@ -403,7 +403,7 @@ export default function BasvurularimPage() {
                 </div>
                 <Link
                   href="/"
-                  className="px-4 py-2 bg-white border border-slate-200 hover:border-[#00A8B5] text-slate-700 font-bold rounded-xl text-xs transition flex items-center gap-1.5"
+                  className="px-4 py-2 bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] text-slate-700 font-bold rounded-3xl text-xs transition flex items-center gap-1.5"
                 >
                   Yeni Başvuru Yap <ChevronRight className="w-3.5 h-3.5" />
                 </Link>
@@ -441,7 +441,7 @@ export default function BasvurularimPage() {
               )}
 
               {filtered.length === 0 ? (
-                <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-12 text-center">
+                <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-12 text-center">
                   <div className="w-12 h-12 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center mx-auto mb-4">
                     <FileText className="w-6 h-6" />
                   </div>
@@ -465,7 +465,7 @@ export default function BasvurularimPage() {
                     return (
                       <div key={app.id} className="w-full">
                       <div
-                        className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition p-5 flex flex-col sm:flex-row sm:items-center gap-4"
+                        className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm hover:shadow-md transition p-5 flex flex-col sm:flex-row sm:items-center gap-4"
                       >
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start gap-3">
@@ -732,7 +732,7 @@ export default function BasvurularimPage() {
                               type="button"
                               onClick={() => setRatingAppId(null)}
                               disabled={ratingBusy}
-                              className="px-5 py-2.5 bg-white border border-slate-200 hover:border-slate-300 text-slate-600 text-xs font-bold rounded-xl transition cursor-pointer disabled:opacity-60"
+                              className="px-5 py-2.5 bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] hover:border-slate-300 text-slate-600 text-xs font-bold rounded-3xl transition cursor-pointer disabled:opacity-60"
                             >
                               Vazgeç
                             </button>

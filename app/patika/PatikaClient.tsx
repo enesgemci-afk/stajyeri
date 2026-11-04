@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo, useState } from 'react';
 import { MESEM_FIELDS } from '@/lib/constants';
@@ -169,7 +169,7 @@ export default function PatikaClient() {
                     setDurum(d.id);
                     setTimeout(() => setStep(2), 250);
                   }}
-                  className="group bg-white rounded-2xl border border-slate-200 hover:border-[#00A8B5] hover:shadow-md transition-all p-4 flex items-center gap-4 text-left cursor-pointer"
+                  className="group bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] hover:shadow-md transition-all p-4 flex items-center gap-4 text-left cursor-pointer"
                 >
                   <span className="text-2xl flex-shrink-0">{d.emoji}</span>
                   <span className="flex-1 min-w-0">
@@ -224,14 +224,14 @@ export default function PatikaClient() {
               ))}
             </div>
 
-            <div className="mt-6 bg-white rounded-2xl border border-slate-200 p-4">
+            <div className="mt-6 bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-4">
               <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-1.5">
                 Meslek Alanın <span className="text-slate-300 font-medium normal-case">(opsiyonel)</span>
               </label>
               <select
                 value={alan}
                 onChange={(e) => setAlan(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-medium text-slate-800 bg-white focus:outline-none focus:border-[#00A8B5] focus:ring-2 focus:ring-[#00A8B5]/20"
+                className="w-full px-3.5 py-2.5 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] text-xs font-medium text-slate-800 bg-white focus:outline-none focus:border-[#00A8B5] focus:ring-2 focus:ring-[#00A8B5]/20"
               >
                 <option value="">Şimdilik belirsiz — genel patika çıkarılsın</option>
                 {MESEM_FIELDS.map((f) => (
@@ -291,10 +291,10 @@ export default function PatikaClient() {
               <div className="space-y-5">
                 {result.stages.map((s, i) => (
                   <div key={s.ord} className="relative pl-12">
-                    <span className="absolute left-0 top-0 w-10 h-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-lg shadow-sm">
+                    <span className="absolute left-0 top-0 w-10 h-10 rounded-3xl bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] flex items-center justify-center text-lg shadow-sm">
                       {s.emoji}
                     </span>
-                    <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5">
+                    <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-4 sm:p-5">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="text-xs font-black text-[#0A1931]">
                           {i + 1}. {s.title}
@@ -352,7 +352,7 @@ export default function PatikaClient() {
             </div>
 
             {/* Ücret hakları yol haritası */}
-            <div className="mt-8 bg-white rounded-3xl border border-slate-200 p-5 sm:p-6">
+            <div className="mt-8 bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-5 sm:p-6">
               <h3 className="text-sm font-black text-[#0A1931] flex items-center gap-2">
                 <Wallet className="w-4 h-4 text-[#FF6B00]" /> Yol boyunca ücret hakların
               </h3>
@@ -374,7 +374,7 @@ export default function PatikaClient() {
 
             {/* Seçilen alan bilgisi */}
             {alan && (
-              <div className="mt-5 bg-white rounded-3xl border border-slate-200 p-5 sm:p-6">
+              <div className="mt-5 bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-5 sm:p-6">
                 <h3 className="text-sm font-black text-[#0A1931] flex items-center gap-2">
                   <Compass className="w-4 h-4 text-[#00A8B5]" />
                   {fieldGuide ? fieldGuide.name : alan}

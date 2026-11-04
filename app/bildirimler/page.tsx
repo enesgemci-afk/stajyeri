@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -94,7 +94,7 @@ export default function BildirimlerPage() {
             <Loader2 className="w-4 h-4 animate-spin mr-2" /> Yükleniyor...
           </div>
         ) : unauth ? (
-          <div className="bg-white rounded-3xl border border-slate-200 p-10 text-center">
+          <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-10 text-center">
             <p className="text-sm font-bold text-slate-600">Bildirimlerini görmek için giriş yap.</p>
             <Link
               href="/giris"

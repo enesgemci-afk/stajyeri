@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { MESEM_FIELDS } from '@/lib/constants';
@@ -112,7 +112,7 @@ export default function AlanSecimPage() {
                 { icon: <Wrench className="w-5 h-5" />, title: 'Alan Bazlı Sonuç', text: `${MESEM_FIELDS.length} MESEM alanını ilgi gruplarına göre sıralarız.` },
                 { icon: <ArrowUpDown className="w-5 h-5" />, title: 'Paylaşabilirsin', text: 'Sonucunu arkadaşına, öğretmenine ya da ailenle paylaş.' },
               ].map((c, i) => (
-                <div key={i} className="bg-white rounded-2xl border border-slate-200 p-5 text-center">
+                <div key={i} className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-5 text-center">
                   <div className="w-10 h-10 rounded-xl bg-[#00A8B5]/10 text-[#00A8B5] flex items-center justify-center mx-auto mb-3">
                     {c.icon}
                   </div>
@@ -150,7 +150,7 @@ export default function AlanSecimPage() {
               />
             </div>
 
-            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
+            <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-6 sm:p-8">
               <h2 className="text-lg sm:text-xl font-black text-[#0A1931] leading-snug mb-6">
                 {currentQ.text}
               </h2>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
@@ -592,7 +592,7 @@ export default function HomePage() {
           </div>
           <div className="flex items-center gap-4 flex-shrink-0">
             {/* Sıralama (Paket 2: kariyer.net tarzı) */}
-            <div className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl px-3 py-2">
+            <div className="flex items-center gap-1.5 bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] rounded-3xl px-3 py-2">
               <ArrowUpDown className="w-3.5 h-3.5 text-[#00A8B5]" />
               <select
                 value={sortBy}
@@ -630,11 +630,11 @@ export default function HomePage() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {[1, 2].map((n) => (
-              <div key={n} className="bg-white p-6 rounded-2xl border border-slate-200 animate-pulse h-40"></div>
+              <div key={n} className="bg-white p-6 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] animate-pulse h-40"></div>
             ))}
           </div>
         ) : filteredJobs.length === 0 ? (
-          <div className="bg-white p-12 rounded-3xl border border-slate-200 text-center">
+          <div className="bg-white p-12 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] text-center">
             <Building2 className="w-10 h-10 text-slate-300 mx-auto mb-2" />
             <p className="text-slate-700 font-bold text-sm">Seçtiğiniz kriterlere uygun ilan bulunamadı.</p>
             <p className="text-xs text-slate-400 mt-1">Farklı bir meslek alanı veya şehir seçerek tekrar deneyebilirsiniz.</p>

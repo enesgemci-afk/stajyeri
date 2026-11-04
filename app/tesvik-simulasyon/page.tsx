@@ -1,8 +1,9 @@
-'use client';
+﻿'use client';
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { supabase } from '@/lib/supabaseClient';
 import {
   simulateIncentives,
@@ -96,7 +97,7 @@ export default function TesvikSimulasyonPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
             {/* SOL: Girdiler */}
-            <div className="lg:col-span-2 bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-6">
+            <div className="lg:col-span-2 bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-6 space-y-6">
               <div>
                 <h2 className="text-sm font-black text-[#0A1931]">1. Stajyer türünüzü seçin</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3">
@@ -233,28 +234,28 @@ export default function TesvikSimulasyonPage() {
 
               {/* Mini istatistikler */}
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-white rounded-2xl border border-slate-200 p-4">
+                <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-4">
                   <p className="flex items-center gap-1.5 text-[10px] font-black text-slate-400 uppercase">
                     <Users className="w-3 h-3" /> Kontenjanınız
                   </p>
                   <p className="text-lg font-black text-[#0A1931] mt-1">{result.quotaMin}–{result.quotaMax}</p>
                   <p className="text-[10px] text-slate-400">öğrenci alabilirsiniz</p>
                 </div>
-                <div className="bg-white rounded-2xl border border-slate-200 p-4">
+                <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-4">
                   <p className="flex items-center gap-1.5 text-[10px] font-black text-slate-400 uppercase">
                     <ShieldCheck className="w-3 h-3" /> SGK Priminiz
                   </p>
                   <p className="text-lg font-black text-emerald-600 mt-1">{result.sgkCovered ? '0 TL' : '—'}</p>
                   <p className="text-[10px] text-slate-400">devletçe karşılanıyor</p>
                 </div>
-                <div className="bg-white rounded-2xl border border-slate-200 p-4">
+                <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-4">
                   <p className="flex items-center gap-1.5 text-[10px] font-black text-slate-400 uppercase">
                     <Sparkles className="w-3 h-3" /> Aylık toplam destek
                   </p>
                   <p className="text-lg font-black text-[#00A8B5] mt-1">{fmt(result.monthlySupportMax)} TL</p>
                   <p className="text-[10px] text-slate-400">tüm kontenjan dolarsa</p>
                 </div>
-                <div className="bg-white rounded-2xl border border-slate-200 p-4">
+                <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-4">
                   <p className="flex items-center gap-1.5 text-[10px] font-black text-slate-400 uppercase">
                     <Calendar className="w-3 h-3" /> Yıllık toplam
                   </p>
@@ -264,7 +265,7 @@ export default function TesvikSimulasyonPage() {
               </div>
 
               {/* Ayrıntı notları */}
-              <div className="bg-white rounded-2xl border border-slate-200 p-5">
+              <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-5">
                 <h3 className="text-xs font-black text-[#0A1931] mb-3">Hesaplamanın ayrıntıları</h3>
                 <ul className="space-y-2">
                   {result.notes.map((n, i) => (
@@ -298,7 +299,7 @@ export default function TesvikSimulasyonPage() {
               </Link>
             </div>
 
-            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
+            <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-6 sm:p-8">
               <h3 className="text-sm font-black text-[#0A1931] flex items-center gap-2">
                 <Phone className="w-4 h-4 text-[#00A8B5]" /> Ücretsiz İMEP danışmanlığı isteyin
               </h3>
@@ -381,6 +382,10 @@ export default function TesvikSimulasyonPage() {
           </p>
         </div>
       </main>
+
+      <footer>
+        <SiteFooter />
+      </footer>
     </div>
   );
 }

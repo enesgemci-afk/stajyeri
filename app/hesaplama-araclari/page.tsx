@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -136,7 +136,7 @@ export default function HesaplamaAraclariPage() {
 
         {/* Ortak brüt ücret girdisi (brutnet, mesai, ayrilik kullanır) */}
         {tab !== 'izin' && (
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 mb-4">
+          <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-6 mb-4">
             <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-1.5">
               Aylık brüt ücretin (₺)
             </label>
@@ -151,7 +151,7 @@ export default function HesaplamaAraclariPage() {
 
         {/* 1) BRÜT-NET */}
         {tab === 'brutnet' && (
-          <div className="bg-white rounded-3xl border border-slate-200 p-6">
+          <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-6">
             <h2 className="text-sm font-black text-[#0A1931] mb-4">Brütten Nete</h2>
             <div className="space-y-2 text-xs">
               {[
@@ -184,7 +184,7 @@ export default function HesaplamaAraclariPage() {
 
         {/* 2) FAZLA MESAI */}
         {tab === 'mesai' && (
-          <div className="bg-white rounded-3xl border border-slate-200 p-6">
+          <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-6">
             <h2 className="text-sm font-black text-[#0A1931] mb-4">Fazla Mesai Ücreti</h2>
             <p className="text-[11px] text-slate-500 mb-4 leading-relaxed">
               Saat ücreti, aylık brütin 225’e bölünmesiyle bulunur (4857). Hafta içi mesai %50
@@ -225,7 +225,7 @@ export default function HesaplamaAraclariPage() {
 
         {/* 3) YILLIK IZIN */}
         {tab === 'izin' && (
-          <div className="bg-white rounded-3xl border border-slate-200 p-6">
+          <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-6">
             <h2 className="text-sm font-black text-[#0A1931] mb-4">
               Yıllık Ücretli İzin (4857 md. 53)
             </h2>
@@ -254,7 +254,7 @@ export default function HesaplamaAraclariPage() {
 
         {/* 4) KIDEM & IHBAR */}
         {tab === 'ayrilik' && (
-          <div className="bg-white rounded-3xl border border-slate-200 p-6">
+          <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-6">
             <h2 className="text-sm font-black text-[#0A1931] mb-1">
               İşten Ayrılık: Kıdem & İhbar
             </h2>

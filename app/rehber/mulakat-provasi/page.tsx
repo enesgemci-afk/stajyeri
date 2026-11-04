@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useMemo, useState } from 'react';
 import { MESEM_FIELDS } from '@/lib/constants';
@@ -165,7 +165,7 @@ export default function MulakatProvasiPage() {
               />
             </div>
 
-            <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8">
+            <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-6 sm:p-8">
               <h2 className="text-sm sm:text-base font-black text-[#0A1931] leading-snug">
                 {questions[step - 1]}
               </h2>
@@ -237,7 +237,7 @@ export default function MulakatProvasiPage() {
               {questions.map((q, i) => {
                 const a = answers[i + 1];
                 return (
-                  <div key={i} className="bg-white rounded-2xl border border-slate-200 p-4">
+                  <div key={i} className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-4">
                     <div className="flex items-start justify-between gap-3">
                       <p className="text-xs font-black text-[#0A1931]">{q}</p>
                       <span className="flex-shrink-0 inline-flex items-center gap-0.5 text-[#FF6B00]">

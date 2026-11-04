@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import SiteHeader from '@/components/SiteHeader';
@@ -112,7 +112,7 @@ export default async function MeslekDetayPage({
 
       {/* Ne iş yapar + Görevler */}
       <section className="max-w-6xl w-full mx-auto px-4 py-12 grid md:grid-cols-2 gap-5">
-        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+        <div className="bg-white p-6 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm">
           <h2 className="text-sm font-black text-[#0A1931] flex items-center gap-2 mb-3">
             <Target className="w-4 h-4 text-[#00A8B5]" /> Bu Meslek Ne İş Yapar?
           </h2>
@@ -131,7 +131,7 @@ export default async function MeslekDetayPage({
         </div>
 
         <div className="flex flex-col gap-5">
-          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+          <div className="bg-white p-6 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm">
             <h2 className="text-sm font-black text-[#0A1931] flex items-center gap-2 mb-3">
               <BookOpen className="w-4 h-4 text-[#00A8B5]" /> MESEM’de Görülen Dersler
             </h2>
@@ -147,7 +147,7 @@ export default async function MeslekDetayPage({
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+          <div className="bg-white p-6 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm">
             <h2 className="text-sm font-black text-[#0A1931] flex items-center gap-2 mb-3">
               <Tag className="w-4 h-4 text-[#FF6B00]" /> Kazandığın Beceriler
             </h2>
@@ -170,7 +170,7 @@ export default async function MeslekDetayPage({
         <p className="text-xs text-slate-500 mt-2">3308 Sayılı Kanun garantili ücret ve belge yolu — her adım resmîdir.</p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
           {YOL.map((s, i) => (
-            <div key={s.title} className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm relative">
+            <div key={s.title} className="bg-white p-5 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm relative">
               <span className="absolute -top-3 left-5 w-7 h-7 rounded-full bg-[#0A1931] text-white text-xs font-black flex items-center justify-center">
                 {i + 1}
               </span>
@@ -211,19 +211,19 @@ export default async function MeslekDetayPage({
       <section className="max-w-6xl w-full mx-auto px-4 pb-16">
         <h2 className="text-lg font-black text-[#0A1931] mb-4">Yolculuğuna Devam Et</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Link href="/alan-secim" className="bg-white rounded-3xl border border-slate-200 hover:border-[#00A8B5] transition p-5">
+          <Link href="/alan-secim" className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] transition p-5">
             <p className="text-xs font-black text-[#0A1931]">🧭 Alan Seçim Testi</p>
             <p className="text-[11px] text-slate-500 mt-1">Bu alan sana uygun mu? 6 soruda keşfet.</p>
           </Link>
-          <Link href="/patika" className="bg-white rounded-3xl border border-slate-200 hover:border-[#00A8B5] transition p-5">
+          <Link href="/patika" className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] transition p-5">
             <p className="text-xs font-black text-[#0A1931]">🗺️ Staj Patikası</p>
             <p className="text-[11px] text-slate-500 mt-1">Çıraktan ustaya kişisel yol haritanı oluştur.</p>
           </Link>
-          <Link href="/cv-ornekleri" className="bg-white rounded-3xl border border-slate-200 hover:border-[#00A8B5] transition p-5">
+          <Link href="/cv-ornekleri" className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] transition p-5">
             <p className="text-xs font-black text-[#0A1931]">🖼️ CV Örnekleri</p>
             <p className="text-[11px] text-slate-500 mt-1">Bu alana özel doldurulmuş örnek CV’lere göz at.</p>
           </Link>
-          <Link href="/rehber/mulakat-sorulari" className="bg-white rounded-3xl border border-slate-200 hover:border-[#00A8B5] transition p-5">
+          <Link href="/rehber/mulakat-sorulari" className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] transition p-5">
             <p className="text-xs font-black text-[#0A1931]">💬 Mülakat Soruları</p>
             <p className="text-[11px] text-slate-500 mt-1">Staj mülakatında ne sorulur, nasıl cevaplanır?</p>
           </Link>

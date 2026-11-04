@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
@@ -84,7 +84,7 @@ export default function MeslekSecimRehberiPage() {
 
         <div className="mt-8 space-y-5">
           {REHBER_STEPS.map((s) => (
-            <div key={s.n} className="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6">
+            <div key={s.n} className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-5 sm:p-6">
               <div className="flex items-start gap-4">
                 <span className="flex-shrink-0 w-9 h-9 rounded-2xl bg-[#00A8B5] text-white font-black text-sm flex items-center justify-center">
                   {s.n}
@@ -124,7 +124,7 @@ export default function MeslekSecimRehberiPage() {
             return (
               <div
                 key={g.id}
-                className="bg-white rounded-3xl border border-slate-200 overflow-hidden"
+                className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] overflow-hidden"
               >
                 {/* Grup başlığı */}
                 <div className="bg-[#0A1931] px-5 sm:px-6 py-4 flex flex-wrap items-center gap-3">
@@ -181,7 +181,7 @@ export default function MeslekSecimRehberiPage() {
                         <Link
                           key={t.name}
                           href={`/meslek/${slugifyTr(t.name)}`}
-                          className="block bg-white border border-slate-200 hover:border-[#00A8B5] rounded-2xl px-4 py-2.5 transition group"
+                          className="block bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] rounded-3xl px-4 py-2.5 transition group"
                         >
                           <span className="block text-[11px] font-black text-[#0A1931] group-hover:text-[#00A8B5] transition">
                             {t.name}
@@ -221,7 +221,7 @@ export default function MeslekSecimRehberiPage() {
 
       {/* KARAR MATRİSİ */}
       <section className="max-w-3xl w-full mx-auto px-4 pb-14">
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8">
+        <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-6 sm:p-8">
           <h2 className="text-lg font-black text-[#0A1931] text-center">
             İki Alan Arasında mı Kalıyorsun?
           </h2>

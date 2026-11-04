@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
@@ -68,7 +68,7 @@ export default function CvOrnekleriPage() {
           {examples.map((f) => (
             <div
               key={f.slug}
-              className="bg-white rounded-3xl border border-slate-200 hover:border-[#00A8B5] transition-all p-6 flex flex-col gap-3"
+              className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] transition-all p-6 flex flex-col gap-3"
             >
               <div className="flex items-center gap-3">
                 <span className="text-3xl">{f.emoji}</span>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -62,7 +62,7 @@ export default function TesvikRehberiPage() {
       <main className="max-w-5xl mx-auto px-4 -mt-8 mb-16 w-full flex-1">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
-          <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+          <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm space-y-6">
             <h2 className="text-base font-black text-[#0A1931] flex items-center gap-2">
               <Calculator className="w-5 h-5 text-[#00A8B5]" /> Hesaplama Parametreleri
             </h2>

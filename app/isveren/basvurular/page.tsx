@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
@@ -223,7 +223,7 @@ export default function IsverenBasvurularPage() {
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex-1">
         {authState === 'guest' && (
-          <div className="bg-white rounded-3xl border border-slate-200 p-10 text-center max-w-md mx-auto">
+          <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-10 text-center max-w-md mx-auto">
             <div className="w-12 h-12 rounded-2xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center mx-auto mb-3">
               <LogIn className="w-6 h-6" />
             </div>
@@ -246,7 +246,7 @@ export default function IsverenBasvurularPage() {
               <Link href="/panel" className="px-5 py-2.5 bg-[#0A1931] hover:bg-[#00A8B5] text-white text-xs font-extrabold rounded-xl transition">
                 Öğrenci Panelim
               </Link>
-              <Link href="/basvurularim" className="px-5 py-2.5 bg-white border border-slate-200 hover:border-[#00A8B5] text-slate-700 text-xs font-extrabold rounded-xl transition">
+              <Link href="/basvurularim" className="px-5 py-2.5 bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] text-slate-700 text-xs font-extrabold rounded-3xl transition">
                 Başvurularım
               </Link>
             </div>
@@ -254,7 +254,7 @@ export default function IsverenBasvurularPage() {
         )}
 
         {authState === 'employer' && !companyName && (
-          <div className="bg-white rounded-3xl border border-slate-200 p-10 text-center max-w-md mx-auto">
+          <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-10 text-center max-w-md mx-auto">
             <div className="w-12 h-12 rounded-2xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center mx-auto mb-3">
               <Building2 className="w-6 h-6" />
             </div>
@@ -282,7 +282,7 @@ export default function IsverenBasvurularPage() {
               </Link>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-200 p-4 mb-4 flex flex-col lg:flex-row gap-3 lg:items-center">
+            <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-4 mb-4 flex flex-col lg:flex-row gap-3 lg:items-center">
               <div className="flex flex-wrap gap-1.5">
                 {CHIPS.map((c) => (
                   <button
@@ -322,7 +322,7 @@ export default function IsverenBasvurularPage() {
             )}
 
             {filtered.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center">
+              <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-10 text-center">
                 <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
                   <Search className="w-6 h-6" />
                 </div>
@@ -340,7 +340,7 @@ export default function IsverenBasvurularPage() {
                   const StIcon = st.icon;
 
                   return (
-                    <div key={a.id} className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                    <div key={a.id} className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] overflow-hidden">
                       <button
                         onClick={() => setExpandedId(expanded ? null : a.id)}
                         className="w-full text-left p-5 flex items-center justify-between gap-3 hover:bg-slate-50/70 transition cursor-pointer"
@@ -405,7 +405,7 @@ export default function IsverenBasvurularPage() {
                                 <FileText className="w-3.5 h-3.5 text-[#00A8B5]" /> Ön Yazı
                               </h3>
                               {a.message ? (
-                                <p className="text-[11px] text-slate-700 bg-white border border-slate-200 rounded-xl p-3.5 leading-relaxed italic">
+                                <p className="text-[11px] text-slate-700 bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] rounded-3xl p-3.5 leading-relaxed italic">
                                   &ldquo;{a.message}&rdquo;
                                 </p>
                               ) : (
@@ -417,7 +417,7 @@ export default function IsverenBasvurularPage() {
                               <h3 className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
                                 <Briefcase className="w-3.5 h-3.5 text-[#FF6B00]" /> Başvurulan İlan
                               </h3>
-                              <div className="bg-white border border-slate-200 rounded-xl p-4 space-y-2 text-[11px]">
+                              <div className="bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] rounded-3xl p-4 space-y-2 text-[11px]">
                                 <p className="font-black text-[#0A1931] text-xs">{a.job_posts?.title ?? 'İlan'}</p>
                                 <div className="flex justify-between gap-3">
                                   <span className="text-slate-500 font-bold">Alan</span>
@@ -448,7 +448,7 @@ export default function IsverenBasvurularPage() {
                                     className={`flex-1 py-2.5 rounded-xl text-[11px] font-extrabold transition flex items-center justify-center gap-1.5 cursor-pointer disabled:cursor-default ${
                                       a.status === s
                                         ? STATUS_META[s].badge + ' border'
-                                        : 'bg-white border border-slate-200 text-slate-600 hover:border-[#0A1931]'
+                                        : 'bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] text-slate-600 hover:border-[#0A1931]'
                                     } ${busyApp === a.id ? 'opacity-50' : ''}`}
                                   >
                                     {s === 'pending' && <Clock className="w-3.5 h-3.5" />}

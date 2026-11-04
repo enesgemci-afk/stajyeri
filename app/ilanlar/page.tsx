@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -557,7 +557,7 @@ export default function IlanlarPage() {
         {/* SAĞ: sonuçlar — kariyer.net satır listesi */}
         <div className="min-w-0">
         <div className="flex items-center justify-between gap-3 mb-5 flex-wrap">
-          <div className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl px-3 py-2">
+          <div className="flex items-center gap-1.5 bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] rounded-3xl px-3 py-2">
             <ArrowUpDown className="w-3.5 h-3.5 text-[#00A8B5]" />
             <select
               value={sortBy}

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -59,7 +59,7 @@ export default function OnyaziRehberPage() {
           </div>
 
           {/* İpuçları */}
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-7 mb-6">
+          <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-6 sm:p-7 mb-6">
             <h2 className="text-sm font-black text-[#0A1931] mb-3 flex items-center gap-2">
               <Lightbulb className="w-4 h-4 text-[#FF6B00]" /> 5 Altın Kural
             </h2>
@@ -79,7 +79,7 @@ export default function OnyaziRehberPage() {
           </h2>
           <div className="space-y-4">
             {ONYAZI_EXAMPLES.map((ex) => (
-              <div key={ex.id} className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+              <div key={ex.id} className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-6">
                 <div className="flex items-start justify-between gap-3 flex-wrap mb-3">
                   <div>
                     <h3 className="text-sm font-black text-[#0A1931]">{ex.title}</h3>
@@ -112,7 +112,7 @@ export default function OnyaziRehberPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
             <Link
               href="/cv-olustur"
-              className="bg-white rounded-2xl border border-slate-200 hover:border-[#00A8B5] shadow-sm p-5 transition group"
+              className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-5 transition group"
             >
               <h3 className="text-xs font-black text-[#0A1931] group-hover:text-[#00A8B5] transition flex items-center gap-2">
                 <Wrench className="w-4 h-4 text-[#00A8B5]" /> CV'ni de hazırla
@@ -123,7 +123,7 @@ export default function OnyaziRehberPage() {
             </Link>
             <Link
               href="/#ilanlar"
-              className="bg-white rounded-2xl border border-slate-200 hover:border-[#00A8B5] shadow-sm p-5 transition group"
+              className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-5 transition group"
             >
               <h3 className="text-xs font-black text-[#0A1931] group-hover:text-[#00A8B5] transition flex items-center gap-2">
                 Aktif ilanları gör <ChevronRight className="w-4 h-4 text-[#00A8B5]" />

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
@@ -433,7 +433,7 @@ export default function IlanDetayPage() {
         {loading ? (
           <div className="max-w-6xl mx-auto py-20 text-center text-sm text-slate-500">İlan yükleniyor...</div>
         ) : !job ? (
-          <div className="max-w-md mx-auto mt-16 bg-white rounded-3xl border border-slate-200 shadow-lg p-10 text-center">
+          <div className="max-w-md mx-auto mt-16 bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-lg p-10 text-center">
             <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center mx-auto mb-4">
               <AlertCircle className="w-6 h-6" />
             </div>
@@ -452,7 +452,7 @@ export default function IlanDetayPage() {
           <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
             {/* SOL: İlan Detayları (kariyer.net ilan sayfası düzeni) */}
             <div className="lg:col-span-2 space-y-6">
-              <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
+              <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-6 sm:p-8">
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div className="flex items-start gap-4">
                     <CompanyAvatar job={job} size="lg" />
@@ -585,7 +585,7 @@ export default function IlanDetayPage() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
+              <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-6 sm:p-8">
                 <h2 className="text-sm font-black text-[#0A1931] mb-3 flex items-center gap-2">
                   <FileText className="w-4 h-4 text-[#00A8B5]" /> İşin Tanımı
                 </h2>
@@ -596,7 +596,7 @@ export default function IlanDetayPage() {
 
               {/* Benzer İlanlar (Paket 2) */}
               {similarJobs.length > 0 && (
-                <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
+                <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-6 sm:p-8">
                   <h2 className="text-sm font-black text-[#0A1931] mb-4 flex items-center gap-2">
                     <Briefcase className="w-4 h-4 text-[#00A8B5]" /> Benzer İlanlar
                   </h2>
@@ -630,7 +630,7 @@ export default function IlanDetayPage() {
 
             {/* SAĞ: Başvuru Paneli (yapışkan) */}
             <div className="lg:sticky lg:top-6">
-              <div className="bg-white rounded-3xl border border-slate-200 shadow-lg p-6 sm:p-7">
+              <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-lg p-6 sm:p-7">
                 {!isLoggedIn ? (
                   <div className="text-center py-2">
                     <div className="w-12 h-12 rounded-2xl bg-[#00A8B5]/10 text-[#00A8B5] flex items-center justify-center mx-auto mb-3">
@@ -648,7 +648,7 @@ export default function IlanDetayPage() {
                     </Link>
                     <Link
                       href="/ogrenci/kayit"
-                      className="mt-2.5 w-full py-3 bg-white border border-slate-200 hover:border-[#00A8B5] text-slate-700 font-bold rounded-xl text-xs transition"
+                      className="mt-2.5 w-full py-3 bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] text-slate-700 font-bold rounded-3xl text-xs transition"
                     >
                       Hesabım Yok, Kayıt Ol
                     </Link>
@@ -693,7 +693,7 @@ export default function IlanDetayPage() {
                               /* pano erişimi yoksa sessizce geç */
                             }
                           }}
-                          className="w-full py-3 bg-white border border-slate-200 hover:border-[#00A8B5] text-slate-700 font-bold rounded-xl text-xs transition flex items-center justify-center gap-2 cursor-pointer"
+                          className="w-full py-3 bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] text-slate-700 font-bold rounded-3xl text-xs transition flex items-center justify-center gap-2 cursor-pointer"
                         >
                           {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Link2 className="w-4 h-4" />}
                           {copied ? 'Kopyalandı!' : 'Onay Bağlantısını Kopyala'}
@@ -708,7 +708,7 @@ export default function IlanDetayPage() {
                     </Link>
                     <Link
                       href="/"
-                      className="mt-2.5 w-full py-3 bg-white border border-slate-200 hover:border-[#00A8B5] text-slate-700 font-bold rounded-xl text-xs transition"
+                      className="mt-2.5 w-full py-3 bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] text-slate-700 font-bold rounded-3xl text-xs transition"
                     >
                       Diğer İlanlara Göz At
                     </Link>
@@ -853,7 +853,7 @@ export default function IlanDetayPage() {
                             value={guardianName}
                             onChange={(e) => setGuardianName(e.target.value)}
                             placeholder="Örn: Ayşe Yılmaz"
-                            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition"
+                            className="w-full px-4 py-2.5 bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] rounded-3xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition"
                           />
                         </div>
                         <div>
@@ -867,7 +867,7 @@ export default function IlanDetayPage() {
                               value={guardianPhone}
                               onChange={(e) => setGuardianPhone(e.target.value)}
                               placeholder="05XX XXX XX XX"
-                              className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition"
+                              className="w-full pl-10 pr-4 py-2.5 bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] rounded-3xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition"
                             />
                           </div>
                           <p className="text-[10px] text-slate-500 mt-1">
@@ -879,7 +879,7 @@ export default function IlanDetayPage() {
                           <select
                             value={guardianRelation}
                             onChange={(e) => setGuardianRelation(e.target.value)}
-                            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition cursor-pointer"
+                            className="w-full px-4 py-2.5 bg-white shadow-[0_10px_40px_rgba(10,25,49,0.07)] rounded-3xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#00A8B5] transition cursor-pointer"
                           >
                             <option value="Anne">Anne</option>
                             <option value="Baba">Baba</option>

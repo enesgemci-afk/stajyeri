@@ -1,7 +1,8 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { CompanyAvatar } from '@/components/JobCard';
 
 export const metadata: Metadata = {
@@ -92,7 +93,7 @@ export default async function IsletmelerPage() {
         </section>
 
         {cards.length === 0 ? (
-          <div className="mt-6 bg-white rounded-3xl border border-slate-200 p-12 text-center">
+          <div className="mt-6 bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-12 text-center">
             <p className="text-sm font-black text-[#0A1931]">Henüz kayıtlı işletme yok</p>
             <p className="text-xs text-slate-500 mt-2">İşletmeniz stajyer aramaya başladıysa ilk ilanı siz verin.</p>
             <Link
@@ -107,7 +108,7 @@ export default async function IsletmelerPage() {
             {cards.map(({ company: c, active, trust }) => (
               <div
                 key={c.id}
-                className="bg-white rounded-3xl border border-slate-200 p-5 flex flex-col hover:border-[#00A8B5] transition"
+                className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-5 flex flex-col transition"
               >
                 <div className="flex items-center gap-3">
                   <CompanyAvatar
@@ -179,6 +180,10 @@ export default async function IsletmelerPage() {
           </div>
         )}
       </main>
+
+      <footer>
+        <SiteFooter />
+      </footer>
     </div>
   );
 }

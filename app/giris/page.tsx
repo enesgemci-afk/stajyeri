@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
@@ -84,7 +84,7 @@ export default function GirisPage() {
 
       {/* Giriş Form Kartı */}
       <main className="max-w-md w-full mx-auto px-4 py-12 flex-1 flex flex-col justify-center">
-        <div className="bg-white p-8 sm:p-10 rounded-3xl border border-slate-200 shadow-xl">
+        <div className="bg-white p-8 sm:p-10 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-xl">
           
           <div className="text-center mb-8">
             <div className="w-12 h-12 rounded-2xl bg-[#00A8B5]/10 text-[#00A8B5] flex items-center justify-center mx-auto mb-3">
