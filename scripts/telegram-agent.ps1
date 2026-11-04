@@ -88,6 +88,8 @@ function Resolve-Command {
   if ($t -in @('seo','denetim','sitedenetimi','seorapor'))         { return 'seo' }
   if ($t -in @('satis','davet','isverendavet'))                    { return 'satis' }
   if ($t -in @('onayla','onay','approve'))                         { return 'onayla' }
+  if ($t -in @('tasarim','tasarimaudit','designaudit'))            { return 'tasarim' }
+  if ($t -in @('yazilim','kodsaglik','codehealth'))                { return 'yazilim' }
   if ($t -in @('status','durum','durumu','sistem','rapor'))        { return 'status' }
   if ($t -in @('deploy','yayinla','gonder','push','yayinaal','yayinla ','yayin')) { return 'deploy' }
   if ($t -in @('build','derle','derleme','yapilandir'))            { return 'build' }
@@ -207,6 +209,16 @@ Sistem Durumu:
       if (Test-Path $s) { return (& $s 2>&1 | Out-String) }
       return 'satis-agent bulunamadi.'
     }
+    'tasarim' {
+      $s = Join-Path $root 'scripts\agents\tasarim-agent.ps1'
+      if (Test-Path $s) { return (& $s 2>&1 | Out-String) }
+      return 'tasarim-agent bulunamadi.'
+    }
+    'yazilim' {
+      $s = Join-Path $root 'scripts\agents\yazilim-agent.ps1'
+      if (Test-Path $s) { return (& $s 2>&1 | Out-String) }
+      return 'yazilim-agent bulunamadi.'
+    }
   }
   return $null
 }
@@ -227,6 +239,8 @@ Komutlar ("/" olsun olmasin):
   pazarlama - sosyal medya post paketi (gercek veri)
   seo       - site denetim raporu
   satis     - pasif isveren davet taslaklari
+  tasarim   - tasarim tutarlilik denetimi (clay/palet/footer)
+  yazilim   - kod saglik denetimi (tsc, todo, console.log, guvenlik)
   onayla    - draft onayla ve yayinla (orn: /onayla blog)
   yardim    - tum komutlar
 

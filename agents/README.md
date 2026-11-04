@@ -23,7 +23,8 @@ Telegram (sen) ──► telegram-agent.ps1 ──► scripts/agents/*.ps1
 | 🔍 SEO | `scripts/agents/seo-agent.ps1` | Sitemap + link + meta denetimi → rapor | Hayır |
 | 📣 Pazarlama | `scripts/agents/pazarlama-agent.ps1` | Gerçek ilan verisinden sosyal post paketi | Hayır |
 | 💼 Satış | `scripts/agents/satis-agent.ps1` | Pasif işverenlere kişiselleştirilmiş IMEP daveti taslağı | Hayır |
-| 🎨 Tasarım | (Faz 2: preview branch akışı) | UI UX Pro Max ile variant önerisi | — |
+| 🎨 Tasarım | `scripts/agents/tasarim-agent.ps1` | Tasarım tutarlılık denetimi: clay kart/chip/palet/footer uyumu; ihlal >10 ise görev kuyruğuna otomatik düşer | Hayır |
+| 💻 Yazılımcı | `scripts/agents/yazilim-agent.ps1` | Kod sağlığı: tsc hataları, TODO/FIXME, console.log sızıntısı, npm audit, canlı site; TS hatası varsa görev kuyruğuna düşer | Hayır |
 | 💻 Kodlama | Cline (VS Code) | `gorevler` kuyruğundan implement + onaylı taslakları siteye merge | — |
 
 ## Onay Akışı (kritik)
