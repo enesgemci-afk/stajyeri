@@ -90,6 +90,7 @@ function Resolve-Command {
   if ($t -in @('onayla','onay','approve'))                         { return 'onayla' }
   if ($t -in @('tasarim','tasarimaudit','designaudit'))            { return 'tasarim' }
   if ($t -in @('yazilim','kodsaglik','codehealth'))                { return 'yazilim' }
+  if ($t -in @('linkedin','lin','linkedinagent'))                  { return 'linkedin' }
   if ($t -in @('status','durum','durumu','sistem','rapor'))        { return 'status' }
   if ($t -in @('deploy','yayinla','gonder','push','yayinaal','yayinla ','yayin')) { return 'deploy' }
   if ($t -in @('build','derle','derleme','yapilandir'))            { return 'build' }
@@ -219,6 +220,11 @@ Sistem Durumu:
       if (Test-Path $s) { return (& $s 2>&1 | Out-String) }
       return 'yazilim-agent bulunamadi.'
     }
+    'linkedin' {
+      $s = Join-Path $root 'scripts\agents\linkedin-agent.ps1'
+      if (Test-Path $s) { return (& $s 2>&1 | Out-String) }
+      return 'linkedin-agent bulunamadi.'
+    }
   }
   return $null
 }
@@ -241,6 +247,7 @@ Komutlar ("/" olsun olmasin):
   satis     - pasif isveren davet taslaklari
   tasarim   - tasarim tutarlilik denetimi (clay/palet/footer)
   yazilim   - kod saglik denetimi (tsc, todo, console.log, guvenlik)
+  linkedin  - haftalik LinkedIn icerik takvimi (veri + 4 hafta rotasyon)
   onayla    - draft onayla ve yayinla (orn: /onayla blog)
   yardim    - tum komutlar
 

@@ -25,6 +25,7 @@ Telegram (sen) ──► telegram-agent.ps1 ──► scripts/agents/*.ps1
 | 💼 Satış | `scripts/agents/satis-agent.ps1` | Pasif işverenlere kişiselleştirilmiş IMEP daveti taslağı | Hayır |
 | 🎨 Tasarım | `scripts/agents/tasarim-agent.ps1` | Tasarım tutarlılık denetimi: clay kart/chip/palet/footer uyumu; ihlal >10 ise görev kuyruğuna otomatik düşer | Hayır |
 | 💻 Yazılımcı | `scripts/agents/yazilim-agent.ps1` | Kod sağlığı: tsc hataları, TODO/FIXME, console.log sızıntısı, npm audit, canlı site; TS hatası varsa görev kuyruğuna düşer | Hayır |
+| 📘 LinkedIn | `scripts/agents/linkedin-agent.ps1` | 5 günlük LinkedIn içerik takvimi (4 hafta rotasyonlu açı seti, gerçek ilan verisi, hashtag + saat önerileri) | Hayır |
 | 💻 Kodlama | Cline (VS Code) | `gorevler` kuyruğundan implement + onaylı taslakları siteye merge | — |
 
 ## Onay Akışı (kritik)
