@@ -32,6 +32,8 @@ import {
   BookOpen,
   Wallet,
   Flag,
+  Layers,
+  Landmark,
 } from 'lucide-react';
 
 interface JobPost {
@@ -346,9 +348,11 @@ export default function HomePage() {
 
                 <Link
                   href="/imep"
-                  className="inline-flex items-center gap-1 mt-4 text-[11px] font-bold text-[#00E5FF] hover:text-white transition"
+                  className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full bg-[#00A8B5]/15 border border-[#00A8B5]/30 text-[#00E5FF] text-[11px] font-bold hover:bg-[#00A8B5]/25 hover:text-white transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2"
                 >
-                  İMEP (İşletmelerde Mesleki Eğitim Programı) nedir? <ChevronRight className="w-3.5 h-3.5" />
+                  <Landmark className="w-3.5 h-3.5" />
+                  İMEP (İşletmelerde Mesleki Eğitim Programı) nedir?
+                  <ChevronRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>
@@ -797,7 +801,7 @@ export default function HomePage() {
           {[
             {
               href: '/meslek',
-              Icon: BookOpen,
+              Icon: Layers,
               color: '#0EA5E9',
               title: 'Meslek Rehberi',
               desc: '41 MESEM alanı: ne iş yapar, çıraktan ustaya yol haritası, aktif ilanlar.',
