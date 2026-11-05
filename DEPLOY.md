@@ -37,6 +37,13 @@ Deploy genelde 1-3 dakika sürer; 200 gelmeden kullanıcıya "yayında" denmez.
 - SQL Editor'de çalıştır, README'deki tabloda "✓ çalıştırıldı" olarak işaretle
 - Sıralı liste değiştiyse installer'ı yeniden üret: `node scripts/build-supabase-install.mjs`
 
+## 7) Tasarım / içerik bakımı (isteğe bağlı araçlar)
+- **Yeni sayfalara toplu SiteFooter:** `node scripts/apply-site-footer.mjs`
+- **Eski kartları clay sistemine çevir:** `powershell -File scripts\agents\clay-migrate.ps1`
+- **Kalan UI emojilerini ikonlaştır:** `powershell -File scripts\agents\emoji-modernize.ps1`
+- **Tasarım tutarlılık denetimi:** Telegram'dan `/tasarim` veya script doğrudan
+- **Kod sağlığı denetimi:** Telegram'dan `/yazilim`
+
 ---
 **Ajan entegrasyonu:** `scripts/telegram-daily.ps1` günlük özette derleme/ilan/başvuru sayar;
 derleme kırmızıysa yayına çıkmadan Telegram'a bildirim düşer (bkz. AGENTS.md iş akışı).
