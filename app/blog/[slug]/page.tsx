@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import { BLOG_POSTS, getPostBySlug, formatBlogDate } from '@/lib/blogYazilari';
-import { ArrowRight, Check, Sparkles } from 'lucide-react';
+import { ArrowRight, BookOpen, Check, Route, Sparkles } from 'lucide-react';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -95,13 +95,13 @@ export default async function BlogDetayPage({ params }: Props) {
               href="/patika"
               className="px-4 py-2.5 bg-[#00A8B5] hover:bg-[#00929e] text-white font-black rounded-full text-[11px] transition"
             >
-              🗺️ Staj Patikamı Oluştur
+              <Route className="w-4 h-4 inline" /> Staj Patikamı Oluştur
             </Link>
             <Link
               href="/meslek"
               className="px-4 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-black rounded-full text-[11px] transition"
             >
-              📚 Alan Rehberleri
+              <BookOpen className="w-4 h-4 inline" /> Alan Rehberleri
             </Link>
             <Link
               href="/ilanlar"

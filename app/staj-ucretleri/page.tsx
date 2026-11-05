@@ -10,6 +10,7 @@ import {
   ArrowRight,
   HelpCircle,
   GraduationCap,
+  Compass,
   Briefcase,
   Award,
 } from 'lucide-react';
@@ -180,7 +181,7 @@ export default function StajUcretleriPage() {
         <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-6 sm:p-8 relative overflow-hidden">
           <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#8B00FF] to-[#0080FF]" />
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B00FF]/10 border border-[#8B00FF]/20 text-[#8B00FF] text-[10px] font-black mb-3">
-            🎓 ÜNİVERSİTE STAJI
+            <GraduationCap className="w-3.5 h-3.5" /> ÜNİVERSİTE STAJI
           </div>
           <h2 className="text-lg sm:text-xl font-black text-[#0A1931]">
             Üniversite öğrencisiysen: ücret ve SGK
@@ -233,7 +234,7 @@ export default function StajUcretleriPage() {
       {/* CTA şeridi */}
       <section className="max-w-6xl w-full mx-auto px-4 pb-16 grid sm:grid-cols-2 gap-4">
         <div className="bg-[#0A1931] rounded-3xl p-6">
-          <p className="text-sm font-black text-white">🧭 Mesleğini mi keşfediyorsun?</p>
+          <p className="text-sm font-black text-white flex items-center gap-2"><Compass className="w-4 h-4" /> Mesleğini mi keşfediyorsun?</p>
           <p className="text-[11px] text-slate-300 mt-1.5">
             41 MESEM alanının rehberine göz at — hangi meslek sana uygun, ne iş yapar, nereye gider.
           </p>

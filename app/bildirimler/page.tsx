@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
-import { Bell, CheckCheck, Loader2 } from 'lucide-react';
+import { Bell, CheckCheck, FileText, Loader2, Shield } from 'lucide-react';
 
 interface NotifRow {
   id: string;
@@ -17,10 +17,10 @@ interface NotifRow {
   created_at: string;
 }
 
-const TYPE_ICON: Record<string, string> = {
-  application: '📄',
-  guardian: '🛡️',
-  info: 'ℹ️',
+const TYPE_ICON: Record<string, typeof Bell> = {
+  application: FileText,
+  guardian: Shield,
+  info: Bell,
 };
 
 export default function BildirimlerPage() {
@@ -120,7 +120,7 @@ export default function BildirimlerPage() {
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <span className="text-xl leading-none">{TYPE_ICON[r.type] ?? '🔔'}</span>
+                    <span className="text-[#00A8B5]">{(() => { const Ic = TYPE_ICON[r.type] ?? Bell; return <Ic className="w-5 h-5" />; })()}</span>
                     <div className="min-w-0 flex-1">
                       <p className={`text-xs ${r.is_read ? 'font-bold text-slate-600' : 'font-black text-[#0A1931]'}`}>
                         {r.title}

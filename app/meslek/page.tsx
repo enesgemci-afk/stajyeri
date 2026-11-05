@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import { FIELD_GUIDES } from '@/lib/meslekRehberi';
-import { ArrowRight, BookOpen, Compass, GraduationCap } from 'lucide-react';
+import { ArrowRight, BookOpen, Compass, GraduationCap, Wallet } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'MESEM Meslek Rehberi — 41 Alan | Stajyeri.net',
@@ -117,7 +117,7 @@ export default function MeslekRehberiPage() {
             href="/staj-ucretleri"
             className="bg-[#FF6B00] text-white rounded-3xl p-6 flex items-center gap-4 hover:bg-[#e05f00] transition"
           >
-            <span className="text-3xl">💰</span>
+            <Wallet className="w-7 h-7" />
             <span>
               <span className="block text-sm font-black">Staj ücreti ne kadar?</span>
               <span className="block text-[11px] text-white/80 mt-0.5">3308 ücret hakları ve hesaplayıcı için tıkla.</span>

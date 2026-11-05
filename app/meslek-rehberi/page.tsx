@@ -13,6 +13,7 @@ import {
 } from '@/lib/meslekSecimRehberi';
 import {
   Compass,
+  Route,
   ArrowRight,
   Check,
   XCircle,
@@ -297,13 +298,13 @@ export default function MeslekSecimRehberiPage() {
             href="/alan-secim"
             className="px-6 py-3 bg-[#00A8B5] hover:bg-[#00929e] text-white font-black rounded-full text-xs transition shadow-lg shadow-[#00A8B5]/30"
           >
-            🧭 Alan Seçim Testini Çöz
+            <Compass className="w-4 h-4 inline" /> Alan Seçim Testini Çöz
           </Link>
           <Link
             href="/patika"
             className="px-6 py-3 bg-[#0A1931] hover:bg-[#10294d] text-white font-black rounded-full text-xs transition"
           >
-            🗺️ Staj Patikamı Oluştur
+            <Route className="w-4 h-4 inline" /> Staj Patikamı Oluştur
           </Link>
           <Link
             href="/ilanlar"

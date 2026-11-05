@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
@@ -330,7 +330,7 @@ export default function OgrenciPanelPage() {
               )}
               {skills.length > 0 && (
                 <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#00A8B5]/10 border border-[#00A8B5]/25 text-[#00A8B5] rounded-full text-[10px] font-extrabold">
-                  ✨ {skills.length} beceri CV'de
+                  <Sparkles className='w-3 h-3 inline' /> {skills.length} beceri CV'de
                 </span>
               )}
             </div>
@@ -411,7 +411,7 @@ export default function OgrenciPanelPage() {
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               <div className="flex-1">
                 <label className="block text-xs font-black text-[#0A1931] mb-1">
-                  🎓 Okulum <span className="text-slate-400 font-bold">(koordinatörünüz sizi buradan takip eder)</span>
+                  <GraduationCap className='w-3.5 h-3.5 inline' /> Okulum <span className="text-slate-400 font-bold">(koordinatörünüz sizi buradan takip eder)</span>
                 </label>
                 <select
                   value={mySchool}

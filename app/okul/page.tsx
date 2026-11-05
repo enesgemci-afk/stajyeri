@@ -6,7 +6,7 @@ import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import {
   School, LogIn, LogOut, AlertCircle, Loader2, Users, FileText, ClipboardList,
-  CheckCircle2, Clock, ShieldAlert, Printer, BadgeCheck,
+  CheckCircle2, Clock, ShieldAlert, Printer, BadgeCheck, GraduationCap,
 } from 'lucide-react';
 
 interface PanelStudent {
@@ -216,7 +216,7 @@ export default function OkulPanelPage() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8">
         <section className="bg-gradient-to-br from-[#0A1931] via-[#0D2244] to-[#0A1931] text-white rounded-3xl p-8 sm:p-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[10px] font-bold mb-4">
-            🎓 OKUL KOORDINATÖR PANELİ
+            <GraduationCap className="w-3.5 h-3.5" /> OKUL KOORDINATÖR PANELİ
           </div>
           <h1 className="text-2xl sm:text-3xl font-black">{data?.school.name}</h1>
           <p className="mt-2 text-slate-300 text-xs sm:text-sm">

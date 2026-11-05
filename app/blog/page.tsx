@@ -3,7 +3,7 @@ import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import { BLOG_POSTS, formatBlogDate } from '@/lib/blogYazilari';
-import { ArrowRight, BookOpen, Clock } from 'lucide-react';
+import { ArrowRight, BookOpen, Clock, Route, Wallet } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Kariyer Blogu — Ücret, Belge ve Staj Rehberleri | Stajyeri.net',
@@ -70,7 +70,7 @@ export default function BlogPage() {
             href="/patika"
             className="bg-[#0A1931] text-white rounded-3xl p-6 flex items-center gap-4 hover:bg-[#10294d] transition"
           >
-            <span className="text-3xl">🗺️</span>
+            <Route className="w-7 h-7" />
             <span>
               <span className="block text-sm font-black">Staj Patikanı oluştur</span>
               <span className="block text-[11px] text-slate-300 mt-0.5">
@@ -82,7 +82,7 @@ export default function BlogPage() {
             href="/staj-ucretleri"
             className="bg-[#FF6B00] text-white rounded-3xl p-6 flex items-center gap-4 hover:bg-[#e05f00] transition"
           >
-            <span className="text-3xl">💰</span>
+            <Wallet className="w-7 h-7" />
             <span>
               <span className="block text-sm font-black">Ücretlerini hesapla</span>
               <span className="block text-[11px] text-white/80 mt-0.5">

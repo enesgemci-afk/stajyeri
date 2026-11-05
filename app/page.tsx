@@ -34,6 +34,7 @@ import {
   Flag,
   Layers,
   Landmark,
+  Mail,
 } from 'lucide-react';
 
 interface JobPost {
@@ -935,7 +936,7 @@ export default function HomePage() {
       {/* 6. Bülten + Footer */}
       <section className="bg-white border-t border-slate-200 py-10 px-4">
         <div className="max-w-md mx-auto p-5 rounded-3xl bg-[#F0FBFC] border border-[#00A8B5]/20">
-          <p className="text-xs font-black text-[#0A1931]">📬 Haftalık staj bülteni</p>
+          <p className="text-xs font-black text-[#0A1931]"><Mail className='w-3.5 h-3.5 inline' /> Haftalık staj bülteni</p>
           <p className="text-[11px] text-slate-500 mt-1">
             Alanına uygun yeni ilanlar ve rehberler e-postana gelsin.
           </p>

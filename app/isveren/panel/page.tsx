@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -10,6 +10,7 @@ import StudentPool from '@/components/StudentPool';
 
 import {
   Building2,
+  Zap,
   LogOut,
   PlusCircle,
   Briefcase,
@@ -414,7 +415,7 @@ export default function IsverenPanelPage() {
                       className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#0080FF]/10 border border-[#0080FF]/25 text-[#0080FF] rounded-full text-[10px] font-extrabold"
                       title={`${respTime.sample_count} sonuçlandırılmış başvurunun ortalaması`}
                     >
-                      ⚡ Ort. {respTime.avg_hours >= 24
+                      <Zap className='w-3.5 h-3.5 inline' /> Ort. {respTime.avg_hours >= 24
                         ? `${Math.round(respTime.avg_hours / 24)} günde dönüyorsunuz`
                         : `${respTime.avg_hours} saatte dönüyorsunuz`}
                     </span>
@@ -605,7 +606,7 @@ export default function IsverenPanelPage() {
                           href={`/ilan-ver?edit=${j.id}`}
                           className="px-4 py-2 rounded-xl text-[11px] font-extrabold transition flex items-center gap-1.5 bg-white border border-slate-200 text-slate-600 hover:border-[#00A8B5] hover:text-[#00A8B5] whitespace-nowrap"
                         >
-                          ✏️ Düzenle
+                          ✏ Düzenle
                         </Link>
                         <button
                           onClick={() => toggleJob(j)}
@@ -637,7 +638,7 @@ export default function IsverenPanelPage() {
                         className="inline-flex items-center gap-1 px-2.5 py-1 bg-sky-50 border border-sky-200 text-sky-700 rounded-full text-[10px] font-extrabold"
                         title={`${respTime.sample_count} sonuçlandırılmış başvurunun ortalaması`}
                       >
-                        ⚡ Ort. {respTime.avg_hours >= 24
+                        <Zap className='w-3.5 h-3.5 inline' /> Ort. {respTime.avg_hours >= 24
                           ? `${Math.round(respTime.avg_hours / 24)} günde dönüyorsunuz`
                           : `${respTime.avg_hours} saatte dönüyorsunuz`}
                       </span>

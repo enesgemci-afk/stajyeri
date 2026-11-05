@@ -1,7 +1,7 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
-import { LogOut, Building2, Briefcase, ClipboardList, Users, MapPin } from 'lucide-react';
+import { LogOut, Building2, Briefcase, ClipboardList, Users, MapPin, Landmark, BookOpen, Wallet, Newspaper } from 'lucide-react';
 import { PANEL_TOKENS } from '@/lib/panelTokens';
 import { type AppStatus } from '@/lib/appStatus';
 
@@ -24,10 +24,10 @@ const NAV: { id: 'jobs' | 'apps' | 'pool'; label: string; icon: typeof Briefcase
 ];
 
 const SOURCES = [
-  { href: '/tesvik-simulasyon', icon: '🏛️', label: 'İMEP teşviki hesapla' },
-  { href: '/imep', icon: '📚', label: 'İMEP nedir?' },
-  { href: '/staj-ucretleri', icon: '💰', label: '3308 ücret tabloları' },
-  { href: '/blog', icon: '📰', label: 'Kariyer Blogu' },
+  { href: '/tesvik-simulasyon', icon: Landmark, label: 'İMEP teşviki hesapla' },
+  { href: '/imep', icon: BookOpen, label: 'İMEP nedir?' },
+  { href: '/staj-ucretleri', icon: Wallet, label: '3308 ücret tabloları' },
+  { href: '/blog', icon: Newspaper, label: 'Kariyer Blogu' },
 ];
 
 export default function IsverenSidebar({
@@ -120,7 +120,7 @@ export default function IsverenSidebar({
             href={s.href}
             className="px-3 py-2 rounded-xl text-[11px] font-bold text-slate-500 hover:text-[#1E293B] hover:bg-slate-50 transition inline-flex items-center gap-2.5 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0080FF] focus-visible:ring-offset-2"
           >
-            <span>{s.icon}</span> {s.label}
+            <s.icon className="w-3.5 h-3.5 flex-shrink-0" /> {s.label}
           </Link>
         ))}
       </nav>

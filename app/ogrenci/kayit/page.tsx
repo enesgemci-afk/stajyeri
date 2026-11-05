@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabaseClient'
 import { MESEM_FIELDS } from '@/lib/constants'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
+import { GraduationCap } from 'lucide-react'
 
 export default function OgrenciKayit() {
   const router = useRouter()
@@ -97,7 +98,7 @@ export default function OgrenciKayit() {
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
         <div className="text-center mb-8">
           <div className="w-12 h-12 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center mx-auto mb-3">
-            🎓
+            <GraduationCap className="w-6 h-6" />
           </div>
           <h1 className="text-2xl font-bold text-slate-800">Öğrenci & Çırak Kaydı</h1>
           <p className="text-sm text-slate-500 mt-1">Staj ve çıraklık fırsatlarına ulaşmak için profil oluşturun.</p>

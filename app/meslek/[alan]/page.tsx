@@ -9,6 +9,9 @@ import {
   CheckCircle2,
   BookOpen,
   Route,
+  Compass,
+  Image,
+  MessageCircle,
   Tag,
   DoorOpen,
   ArrowRight,
@@ -212,19 +215,19 @@ export default async function MeslekDetayPage({
         <h2 className="text-lg font-black text-[#0A1931] mb-4">Yolculuğuna Devam Et</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link href="/alan-secim" className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] transition p-5">
-            <p className="text-xs font-black text-[#0A1931]">🧭 Alan Seçim Testi</p>
+            <p className="text-xs font-black text-[#0A1931] flex items-center gap-1.5"><Compass className="w-4 h-4 text-[#00A8B5]" /> Alan Seçim Testi</p>
             <p className="text-[11px] text-slate-500 mt-1">Bu alan sana uygun mu? 6 soruda keşfet.</p>
           </Link>
           <Link href="/patika" className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] transition p-5">
-            <p className="text-xs font-black text-[#0A1931]">🗺️ Staj Patikası</p>
+            <p className="text-xs font-black text-[#0A1931] flex items-center gap-1.5"><Route className="w-4 h-4 text-[#00A8B5]" /> Staj Patikası</p>
             <p className="text-[11px] text-slate-500 mt-1">Çıraktan ustaya kişisel yol haritanı oluştur.</p>
           </Link>
           <Link href="/cv-ornekleri" className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] transition p-5">
-            <p className="text-xs font-black text-[#0A1931]">🖼️ CV Örnekleri</p>
+            <p className="text-xs font-black text-[#0A1931] flex items-center gap-1.5"><Image className="w-4 h-4 text-[#00A8B5]" /> CV Örnekleri</p>
             <p className="text-[11px] text-slate-500 mt-1">Bu alana özel doldurulmuş örnek CV’lere göz at.</p>
           </Link>
           <Link href="/rehber/mulakat-sorulari" className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] transition p-5">
-            <p className="text-xs font-black text-[#0A1931]">💬 Mülakat Soruları</p>
+            <p className="text-xs font-black text-[#0A1931] flex items-center gap-1.5"><MessageCircle className="w-4 h-4 text-[#00A8B5]" /> Mülakat Soruları</p>
             <p className="text-[11px] text-slate-500 mt-1">Staj mülakatında ne sorulur, nasıl cevaplanır?</p>
           </Link>
         </div>

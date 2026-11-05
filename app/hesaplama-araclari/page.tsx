@@ -11,6 +11,8 @@ import {
   Calendar,
   DoorOpen,
   Sparkles,
+  GraduationCap,
+  Landmark,
 } from 'lucide-react';
 
 // ------------------------------------------------------------
@@ -293,7 +295,7 @@ export default function HesaplamaAraclariPage() {
             href="/staj-ucretleri"
             className="bg-[#0A1931] text-white rounded-3xl p-5 flex items-center gap-4 hover:bg-[#10294d] transition"
           >
-            <span className="text-3xl">🎓</span>
+            <GraduationCap className="w-7 h-7" />
             <span>
               <span className="block text-sm font-black">Staj / çıraklık ücretleri</span>
               <span className="block text-[11px] text-slate-300 mt-0.5">
@@ -305,7 +307,7 @@ export default function HesaplamaAraclariPage() {
             href="/tesvik-simulasyon"
             className="bg-[#FF6B00] text-white rounded-3xl p-5 flex items-center gap-4 hover:bg-[#e05f00] transition"
           >
-            <span className="text-3xl">🏛️</span>
+            <Landmark className="w-7 h-7" />
             <span>
               <span className="block text-sm font-black">İşveren teşvik simülasyonu</span>
               <span className="block text-[11px] text-white/80 mt-0.5">
