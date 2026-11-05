@@ -21,7 +21,7 @@ import {
   Wallet,
 } from 'lucide-react';
 
-const KATEGORILER = [
+const KATEGORILER: { ad: string; renk: string; icon: typeof Wallet; aciklama: string }[] = [
   { ad: 'Ücret & Haklar', renk: '#00A8B5', icon: Wallet, aciklama: 'Ücret tabloları ile haklar' },
   { ad: 'Belgeler & Sınavlar', renk: '#8B00FF', icon: Award, aciklama: 'Belge ve sınav rehberleri' },
   { ad: 'Yol Seçimi', renk: '#FF6B00', icon: Compass, aciklama: 'MESEM mi, meslek lisesi mi?' },
