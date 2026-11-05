@@ -30,7 +30,7 @@ const KATEGORILER: { ad: string; renk: string; icon: typeof Wallet; aciklama: st
   { ad: 'Başvuru & Mülakat', renk: '#6366F1', icon: MessageCircle, aciklama: 'Ön yazı, CV ve mülakat' },
 ];
 
-function renkOf(k) {
+function renkOf(k: string): string {
   return KATEGORILER.find((x) => x.ad === k)?.renk ?? '#00A8B5';
 }
 
