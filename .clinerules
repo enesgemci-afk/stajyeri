@@ -1,0 +1,35 @@
+# Cline Kuralları — Stajyeri.net
+
+# Her görev başlamadan önce DESIGN.md okunmalı ve uyulmalı
+Herhangi bir UI/UX görevine başlamadan önce kök dizindeki DESIGN.md dosyasını oku.
+- Renk: yalnızca DESIGN.md Bölüm 1'deki token'ları kullan (palet dışı hex YASAK)
+- Tipografi: Plus Jakarta Sans (body) + Space Grotesk (display) — Bölüm 2
+- Aralık: 8px ritmi — Bölüm 3
+- Gölge: Claymorphism sistemi (border yerine shadow) — Bölüm 4
+- Bileşen: Clay kart, eyebrow chip, gradient şerit, vibrat blok — Bölüm 5
+- Layout: sidebar dashboard, bento grid, koyu hero — Bölüm 6
+- Erişilebilirlik: tüm interaktif elemanlarda focus-visible:ring-2 — Bölüm 5h
+- Yasaklar: Bölüm 8'deki 7 kuralı ASLA ihlal etme
+
+# Emoji UI ikonu YASAK — lucide-react kullan
+Yeni bileşenlerde emoji (🏛️💰📰 vb.) UI ikonu olarak KULLANMA.
+Yerine lucide-react ikonları kullan: Landmark, BookOpen, Wallet, Newspaper vb.
+İçerik metni içindeki emojiler (blog yazıları, başarı mesajları) serbesttir.
+
+# Yeni sayfa eklerken SiteFooter kullan
+Her yeni sayfanın altına <SiteFooter /> bileşenini ekle (components/SiteFooter.tsx).
+Eski <footer className="bg-white..."> bloklarını KULLANMA.
+
+# Paylaşılan bileşenleri kullan
+- JobCard: 2 kolonlu grid ilan kartı
+- JobRowCard: tam genişlik satır ilan kartı
+- SiteHeader: üst menü (glass + pill nav)
+- SiteFooter: lacivert bento footer
+- FieldJobs: alan bazlı canlı ilanlar
+- NotificationBell: bildirim zili
+
+# Yayın öncesi kontrol
+1. npx tsc --noEmit (0 hata)
+2. npm run build (başarılı)
+3. git push origin main
+4. Canlı smoke test (yeni route 200 dönmeli)
