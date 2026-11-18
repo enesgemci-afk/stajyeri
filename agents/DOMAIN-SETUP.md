@@ -1,37 +1,35 @@
-# 🌐 STAJYERI.NET — DOMAIN BAĞLAMA KILAVUZU
+# 🌐 STAJYERI.NET — DOMAIN BAĞLAMA KILAVUZU (TAMAMLANDI ✅)
 
-## 1. Domain Satın Al (yoksa)
-- Namecheap / GoDaddy / Turhost / İsimtescil → **stajyeri.net** satın al
-- DNS yönetim paneline erişimin olsun
+> **Durum: 18.11.2026 itibarıyla canlıda.** Site `https://www.stajyeri.net` adresinde,
+> `stajyeri.net` → `www` (308) yönlendirmeli. Registrar: **Spaceship** (API ile yönetiliyor).
 
-## 2. Vercel'e Domain Ekle
-1. https://vercel.com/dashboard → **stajyeri** projesi → **Settings** → **Domains**
-2. **Add Domain** → `stajyeri.net` yaz → Add
-3. Aynı şekilde `www.stajyeri.net` da ekle
-4. Vercel sana DNS kayıtlarını gösterecek:
+## Mevcut kurulum (gerçek değerler)
 
-## 3. DNS Kayıtları (domain yönetim paneline gir)
+| Kayıt | Tip | Değer | Nerede |
+|-------|-----|-------|--------|
+| Nameserver | NS | `launch1.spaceship.net`, `launch2.spaceship.net` | Spaceship (provider: basic) |
+| @ | A | `216.198.79.1` VE `64.29.17.1` | Spaceship DNS |
+| www | CNAME | `64137db3c49a10e2.vercel-dns-017.com` | Spaceship DNS (proje-özel) |
 
-### A) Ana domain (stajyeri.net)
-| Tip | Name | Value |
-|-----|------|-------|
-| A | @ | `76.76.21.21` |
+- Vercel doğrulaması: `vercel domains verify stajyeri.net` → **configured_correctly**
+- SSL: Vercel otomatik (Let's Encrypt, http-01) ✅
+- DNS TTL: 300 sn (hızlı değişiklik için bilinçli düşük tutuluyor)
 
-### B) WWW (www.stajyeri.net)
-| Tip | Name | Value |
-|-----|------|-------|
-| CNAME | www | `cname.vercel-dns.com` |
+## DNS değişikliği gerekirse (Spaceship API)
 
-> Not: Vercel panelinde gösterilen değerleri kullan. Yukarıdaki standart Vercel değerleridir.
+```
+PUT https://spaceship.dev/api/v1/dns/records/stajyeri.net
+Headers: X-Api-Key, X-Api-Secret
+Gövde: {"force": true, "items": [{"type":"A","address":"...","name":"@","ttl":300}, ...]}
+```
+- CNAME alanının adı `cname` (örn: `{"type":"CNAME","cname":"...","name":"www"}`)
+- Kayıt silmek: aynı uca `DELETE` + düz array gövde
+- Mevcut kayıtları listelemek: `GET .../dns/records/stajyeri.net?take=100&skip=0`
 
-## 4. DNS Yayılması
-- DNS değişiklikleri 5 dakika - 48 saat içinde yayılır (genelde 10-30 dk)
-- Kontrol: https://dnschecker.org → `stajyeri.net` → A record → 76.76.21.21
-
-## 5. Vercel Doğrulaması
-- DNS yayıldıktan sonra Vercel otomatik SSL sertifikası üretir (Let's Encrypt)
-- Vercel Dashboard → Domains → `stajyeri.net` → **Valid Configuration** yazmalı
-- `stajyeri.vercel.app` otomatik olarak `stajyeri.net`'e yönlendirilir
+### Eski kurulum (kaldırıldı)
+- ~~A @ 76.76.21.21~~ → Vercel'in yeni anycast IP'lerine geçirildi
+- ~~CNAME www cname.vercel-dns.com~~ → proje-özel CNAME'e geçirildi
+- ~~NS1 (Netlify DNS)~~ → Spaceship basic DNS'e alındı (Netlify "çok yakında" sayfası kaldırıldı)
 
 ## 6. Kod Tarafı (ZATEN YAPILDI)
 - ✅ Tüm `stajyeri.vercel.app` → `https://www.stajyeri.net` değiştirildi (14 dosya)
@@ -52,7 +50,9 @@ https://www.stajyeri.net    → anasayfa yüklenmeli
 https://stajyeri.vercel.app → otomatik yönlendirilmeli → stajyeri.net
 ```
 
-## 8. Supabase Auth URL Güncelleme (ÖNEMLİ!)
+## 8. Supabase Auth URL Güncelleme (OPSİYONEL — düşük öncelik)
+> Site tüm girişlerde e-posta+şifre (`signInWithPassword`) kullanıyor; magic link /
+> OAuth yok. Bu yüzden kritik değil. Yine de düzenli olmak istersen:
 1. https://supabase.com/dashboard → proje → **Authentication** → **URL Configuration**
 2. **Site URL:** `https://www.stajyeri.net` olarak değiştir
 3. **Redirect URLs** listesine ekle:
@@ -60,5 +60,3 @@ https://stajyeri.vercel.app → otomatik yönlendirilmeli → stajyeri.net
    - `https://stajyeri.net/**`
    - `http://localhost:3000/**` (geliştirme için)
 4. Save
-
-> Bu adım yapılmazsa login/kayıt sonrası yönlendirme eski URL'ye gider!
