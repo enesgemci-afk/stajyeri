@@ -1,0 +1,3 @@
+# Stajyeri.net — AdSense yetkilendirme dosyası (ads.txt)
+# Yayıncı kimliği app/layout.tsx içindeki AdSense scriptiyle AYNI olmalıdır.
+google.com, pub-9045371456495609, DIRECT, f08c47fec0942fa0

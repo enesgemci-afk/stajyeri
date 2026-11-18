@@ -21,3 +21,34 @@
     box-shadow: none !important;
   }
 }
+
+/* ============================================================
+   UI/UX PRO MAX DENETİMİ — temel a11y + erişilebilirlik kuralları
+   ============================================================ */
+
+/* 1) Klavye odak görünürlüğü (focus-states): tüm etkileşimli öğelerde
+      görünür odak halkası. Bu kural layer'sız olduğu için Tailwind'in
+      focus:outline-none utility'lerini de ezer — hiçbir odak kaybolmaz. */
+:focus-visible {
+  outline: 2px solid #00A8B5;
+  outline-offset: 2px;
+}
+
+/* 2) Hareket azaltma tercihi (reduced-motion): kullanıcı sisteminde
+      "animasyonları azalt" seçtiyse tüm animasyon/geçişler kapanır. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 3) Display font — DESIGN.md Bölüm 2: Space Grotesk
+      (hero başlıkları, panel başlıkları, KPI rakamları için). */
+.font-display {
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+}

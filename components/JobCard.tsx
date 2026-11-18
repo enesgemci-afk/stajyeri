@@ -146,7 +146,9 @@ export default function JobCard({
               onClick={() => onToggleFav(job.id)}
               disabled={favBusy}
               title={isFav ? 'Favorilerden çıkar' : 'Favorilere ekle'}
-              className={`p-1.5 rounded-lg transition cursor-pointer disabled:opacity-50 flex-shrink-0 ${
+              aria-label={isFav ? 'Favorilerden çıkar' : 'Favorilere ekle'}
+              aria-pressed={isFav}
+              className={`relative p-2 rounded-lg transition cursor-pointer disabled:opacity-50 flex-shrink-0 after:content-[''] after:absolute after:-inset-2 after:rounded-lg ${
                 isFav ? 'text-red-500 hover:bg-red-50' : 'text-slate-300 hover:text-red-500 hover:bg-red-50'
               }`}
             >
@@ -199,7 +201,7 @@ export default function JobCard({
 
         <Link
           href={`/ilan/${job.id}`}
-          className="px-4 py-2 bg-[#0A1931] hover:bg-[#FF6B00] text-white rounded-xl text-xs font-bold transition flex items-center gap-1 flex-shrink-0"
+          className="px-4 py-2 min-h-11 justify-center bg-[#0A1931] hover:bg-[#FF6B00] text-white rounded-xl text-xs font-bold transition flex items-center gap-1 flex-shrink-0"
         >
           Başvur <ChevronRight className="w-3.5 h-3.5" />
         </Link>

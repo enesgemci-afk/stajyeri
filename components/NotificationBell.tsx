@@ -36,10 +36,10 @@ export default function NotificationBell() {
   return (
     <Link
       href="/bildirimler"
-      aria-label="Bildirimler"
-      className="relative inline-flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 text-slate-600 hover:text-[#00A8B5] hover:border-[#00A8B5] transition"
+      aria-label={unread > 0 ? `Bildirimler (${unread} okunmamış)` : 'Bildirimler'}
+      className="relative inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 text-slate-600 hover:text-[#00A8B5] hover:border-[#00A8B5] transition after:content-[''] after:absolute after:-inset-1 after:rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]"
     >
-      <Bell className="w-[18px] h-[18px]" />
+      <Bell className="w-5 h-5" />
       {unread > 0 && (
         <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[#FF6B00] text-white text-[10px] font-black flex items-center justify-center">
           {unread > 9 ? '9+' : unread}
