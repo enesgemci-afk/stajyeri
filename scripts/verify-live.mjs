@@ -7,7 +7,7 @@
 //   3) Supabase tablo ve RPC'lerinin canlıda ayakta olduğunu doğrular
 //      (SQL'ler çalıştırılmamışsa "YOK!" der)
 
-const SITE = 'https://stajyeri.vercel.app';
+const SITE = 'https://www.stajyeri.net';
 const SB = 'https://eftlmmunitzrnfenqlbv.supabase.co';
 const ANON =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmdGxtbXVuaXR6cm5mZW5xbGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2NTUwODIsImV4cCI6MjEwMzIzMTA4Mn0.CNoopOgA0URXk8uWXdrWDVJJQQFjPcRuZImfingGFvc';

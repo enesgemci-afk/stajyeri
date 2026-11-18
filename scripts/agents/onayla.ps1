@@ -91,7 +91,7 @@ if ($Target -eq '' -or $Target -eq 'blog') {
 
   $basarili = Git-Publish "Blog yayini: $($j.title) (ajant onayli)"
   if ($basarili) {
-    Send-Tg "🚀 BLOG YAYINDA!`n`n$($j.emoji) $($j.title)`nhttps://stajyeri.vercel.app/blog/$($j.slug)`n`nDeploy 1-2 dk içinde tamamlanır."
+    Send-Tg "🚀 BLOG YAYINDA!`n`n$($j.emoji) $($j.title)`nhttps://www.stajyeri.net/blog/$($j.slug)`n`nDeploy 1-2 dk içinde tamamlanır."
     Write-Output "Yayınlandı: /blog/$($j.slug)"
   } else {
     Send-Tg '⚠ Merge yapıldı ama push başarısız — git durumunu kontrol et.'

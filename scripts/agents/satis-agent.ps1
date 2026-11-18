@@ -78,8 +78,8 @@ Küçük bir hatırlatma: İMEP kapsamında çırak öğrenci eğitirseniz
 - işletmenize öğrenci başına brüt asgari ücretin %30'u tutarında destek ödenir,
 - belgeli usta öğreticiniz varsa kayıt 1 dakika sürer.
 
-İlanınızı 1 dakikada yayınlayın: https://stajyeri.vercel.app/ilan-ver
-$(if ($sehir) { "Bölgenizdeki öğrenci talebini görmek için: https://stajyeri.vercel.app/ilanlar" })
+İlanınızı 1 dakikada yayınlayın: https://www.stajyeri.net/ilan-ver
+$(if ($sehir) { "Bölgenizdeki öğrenci talebini görmek için: https://www.stajyeri.net/ilanlar" })
 
 İyi çalışmalar!
 Stajyeri.net Ekibi

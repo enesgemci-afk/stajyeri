@@ -10,7 +10,7 @@
 $ErrorActionPreference = 'Continue'
 $ProgressPreference = 'SilentlyContinue'
 $root    = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
-$site    = 'https://stajyeri.vercel.app'
+$site    = 'https://www.stajyeri.net'
 $draftDir = Join-Path $root 'drafts\seo'
 New-Item -ItemType Directory -Force -Path $draftDir | Out-Null
 

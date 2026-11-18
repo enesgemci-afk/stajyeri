@@ -125,7 +125,7 @@ Stajyeri Ajan - Komutlar ("/" ile veya direkt yazin):
       $branch = git -C $root rev-parse --abbrev-ref HEAD 2>$null
       $last   = git -C $root log --oneline -1 2>$null
       try {
-        $r = Invoke-WebRequest -Uri 'https://stajyeri.vercel.app' -UseBasicParsing -TimeoutSec 15
+        $r = Invoke-WebRequest -Uri 'https://www.stajyeri.net' -UseBasicParsing -TimeoutSec 15
         $site = "Canli site: OK (HTTP $($r.StatusCode))"
       } catch { $site = 'Canli site: ERISILEMIYOR' }
       $temiz = if ($git) { "Commit edilmemis degisiklik: $($git.Count) dosya" } else { 'Calisma dizini temiz.' }
@@ -159,7 +159,7 @@ Sistem Durumu:
     }
     'test' {
       try {
-        $r = Invoke-WebRequest -Uri 'https://stajyeri.vercel.app' -UseBasicParsing -TimeoutSec 15
+        $r = Invoke-WebRequest -Uri 'https://www.stajyeri.net' -UseBasicParsing -TimeoutSec 15
         $site = "Site OK (HTTP $($r.StatusCode))"
       } catch { $site = 'Site ERISILEMIYOR' }
       try {

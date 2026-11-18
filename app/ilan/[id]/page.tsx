@@ -390,7 +390,7 @@ export default function IlanDetayPage() {
         });
         if (!consentError) {
           const origin =
-            typeof window !== 'undefined' ? window.location.origin : 'https://stajyeri.vercel.app';
+            typeof window !== 'undefined' ? window.location.origin : 'https://www.stajyeri.net';
           setGuardianLink(`${origin}/veli-onay/${token}`);
         } else {
           // Tablo yoksa (SQL henüz çalıştırılmadıysa) başvuru yine geçerli; onay akışı devre dışı kalır

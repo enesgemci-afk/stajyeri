@@ -62,7 +62,7 @@ $rapor.Add("4) npm güvenlik açığı (prod): $guvenlik")
 
 # --- 5) Canlı site ---
 try {
-  $r = Invoke-WebRequest -Uri 'https://stajyeri.vercel.app/' -UseBasicParsing -TimeoutSec 15
+  $r = Invoke-WebRequest -Uri 'https://www.stajyeri.net/' -UseBasicParsing -TimeoutSec 15
   $rapor.Add("5) Canlı site: HTTP $($r.StatusCode)")
 } catch {
   $rapor.Add("5) Canlı site: ERİŞİLEMEDİ")

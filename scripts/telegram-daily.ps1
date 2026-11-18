@@ -47,7 +47,7 @@ $satirlar += "STAJYERI.NET GUNLUK OZET - $(Get-Date -Format 'dd.MM.yyyy')"
 
 # 1. Canli site
 try {
-  $r = Invoke-WebRequest -Uri 'https://stajyeri.vercel.app' -UseBasicParsing -TimeoutSec 15
+  $r = Invoke-WebRequest -Uri 'https://www.stajyeri.net' -UseBasicParsing -TimeoutSec 15
   $satirlar += "Canli site: OK (HTTP $($r.StatusCode))"
 } catch {
   $satirlar += 'Canli site: ERISILEMIYOR'

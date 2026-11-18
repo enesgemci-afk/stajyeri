@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { supabase } from '@/lib/supabaseClient';
 
-const SITE_URL = 'https://stajyeri.vercel.app';
+const SITE_URL = 'https://www.stajyeri.net';
 
 interface JobMeta {
   id: string;

@@ -4,7 +4,7 @@ import { MESEM_FIELDS, TURKEY_CITIES } from '@/lib/constants';
 import { FIELD_GUIDES, slugifyTr } from '@/lib/meslekRehberi';
 import { BLOG_POSTS } from '@/lib/blogYazilari';
 
-const SITE_URL = 'https://stajyeri.vercel.app';
+const SITE_URL = 'https://www.stajyeri.net';
 
 // Her istekte güncel üretilir — yeni ilanlar anında sitemap'e düşer
 export const dynamic = 'force-dynamic';

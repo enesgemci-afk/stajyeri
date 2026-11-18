@@ -49,7 +49,7 @@ type FilterKey = 'all' | AppStatus;
 const consentLink = (token: string) =>
   typeof window !== 'undefined'
     ? `${window.location.origin}/veli-onay/${token}`
-    : `https://stajyeri.vercel.app/veli-onay/${token}`;
+    : `https://www.stajyeri.net/veli-onay/${token}`;
 
 // GUVEN_KATMANI — puanlama kriterleri (trainer_ratings kolonlarıyla birebir)
 const RATING_CRITERIA: {

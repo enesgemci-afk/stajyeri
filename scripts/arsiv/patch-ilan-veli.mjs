@@ -145,7 +145,7 @@ try {
 ${gcLines}
       });
     if (!__gcErr) {
-      const __origin = typeof window !== 'undefined' ? window.location.origin : 'https://stajyeri.vercel.app';
+      const __origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.stajyeri.net';
       setGuardianLink(__origin + '/veli-onay/' + __token);
     }
   }

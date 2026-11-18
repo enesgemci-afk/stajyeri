@@ -7,7 +7,7 @@ import { slugifyTr } from '@/lib/meslekRehberi';
 import JobCard, { type JobCardData } from '@/components/JobCard';
 import SiteHeader from '@/components/SiteHeader';
 
-const SITE_URL = 'https://stajyeri.vercel.app';
+const SITE_URL = 'https://www.stajyeri.net';
 
 const CITY_BY_SLUG = new Map(TURKEY_CITIES.map((c) => [slugifyTr(c), c]));
 const FIELD_BY_SLUG = new Map(MESEM_FIELDS.map((f) => [slugifyTr(f), f]));
