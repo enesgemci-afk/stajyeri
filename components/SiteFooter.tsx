@@ -58,8 +58,8 @@ export default function SiteFooter({ note }: { note?: string }) {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Marka */}
           <div>
-            <img src="/logo.png" alt="Stajyeri.net" className="h-10 w-auto object-contain" />
-            <p className="mt-4 text-[11px] text-slate-400 leading-relaxed max-w-xs">
+            <img src="/logo.png" alt="Stajyeri.net" width={160} height={40} className="h-10 w-auto object-contain" />
+            <p className="mt-4 text-xs text-slate-400 leading-relaxed max-w-xs">
               Geleceğin mesleğini sahada öğren, doğru staj yerini keşfet. 3308 güvencesiyle
               MESEM ve meslek lisesi stajını işletmelerle buluşturuyoruz.
             </p>
@@ -89,7 +89,7 @@ export default function SiteFooter({ note }: { note?: string }) {
                   <li key={l.href}>
                     <Link
                       href={l.href}
-                      className="text-[11px] font-bold text-slate-300 hover:text-[#00E5FF] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] rounded"
+                      className="text-xs font-bold text-slate-300 hover:text-[#00E5FF] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] rounded"
                     >
                       {l.label}
                     </Link>
@@ -101,21 +101,21 @@ export default function SiteFooter({ note }: { note?: string }) {
         </div>
 
         <div className="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[10px] text-slate-500">
+          <p className="text-[11px] text-slate-400">
             &copy; 2026 Stajyeri.net — Tüm Hakları Saklıdır.
           </p>
           <div className="flex items-center gap-4">
-            <Link href="/kvkk" className="text-[10px] font-bold text-slate-400 hover:text-[#00E5FF] transition">
+            <Link href="/kvkk" className="text-xs font-bold text-slate-400 hover:text-[#00E5FF] transition">
               KVKK Aydınlatma Metni
             </Link>
-            <Link href="/ilan-ver" className="text-[10px] font-bold text-slate-400 hover:text-[#00E5FF] transition">
+            <Link href="/ilan-ver" className="text-xs font-bold text-slate-400 hover:text-[#00E5FF] transition">
               İşveren: İlan Ver
             </Link>
           </div>
         </div>
 
         {note && (
-          <p className="mt-4 text-center text-[10px] text-slate-500">{note}</p>
+          <p className="mt-4 text-center text-[11px] text-slate-400">{note}</p>
         )}
       </div>
     </footer>

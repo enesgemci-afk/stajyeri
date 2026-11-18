@@ -201,6 +201,18 @@ export default function SiteHeader({
     return () => document.removeEventListener('mousedown', onDown);
   }, [openKey, setOpenKey]);
 
+  // Escape: açık dropdown/mobil menüyü kapat (a11y: escape-routes)
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        setOpenKey(null);
+        setMobileOpen(false);
+      }
+    }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [setOpenKey, setMobileOpen]);
+
   // Kaydırınca clay gölge — UI UX Pro Max: sticky header derinliği
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -328,14 +340,14 @@ export default function SiteHeader({
             type="button"
             aria-label="Menüyü aç/kapat"
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden inline-flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 text-slate-600 hover:text-[#00A8B5] hover:border-[#00A8B5] transition cursor-pointer"
+            className="lg:hidden inline-flex items-center justify-center w-11 h-11 rounded-xl border border-slate-200 text-slate-600 hover:text-[#00A8B5] hover:border-[#00A8B5] transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]"
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
           {showBack && (
             <Link
               href={backHref}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[#00A8B5] transition"
+              className="inline-flex items-center gap-1.5 px-2 py-2.5 min-h-11 rounded-xl text-xs font-bold text-slate-600 hover:text-[#00A8B5] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]"
             >
               <ArrowLeft className="w-4 h-4" /> {backLabel}
             </Link>

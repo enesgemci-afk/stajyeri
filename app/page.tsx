@@ -334,10 +334,10 @@ export default function HomePage() {
                   <Sparkles className="w-3.5 h-3.5" /> MESEM, Meslek Lisesi ve Üniversite Öğrencilerine Özel
                 </div>
 
-                <h1 className="text-3xl sm:text-5xl font-black leading-[1.08] tracking-tight">
+                <h1 className="font-display text-3xl sm:text-5xl font-black leading-[1.08] tracking-tight">
                   Geleceğin Mesleğini <span className="text-[#00A8B5]">Sahada</span> Öğren,
                   <br className="hidden sm:block" />
-                  <span className="bg-gradient-to-r from-[#00E5FF] via-[#7DE3EE] to-[#FF9E4D] bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-[#00E5FF] via-[#00E5FF] to-[#FF9E4D] bg-clip-text text-transparent">
                     {' '}Doğru Stajı Keşfet
                   </span>
                 </h1>
@@ -972,14 +972,15 @@ export default function HomePage() {
               value={newsEmail}
               onChange={(e) => setNewsEmail(e.target.value)}
               placeholder="e-posta adresin"
+              aria-label="E-posta adresin"
               className="flex-1 min-w-0 px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:border-[#00A8B5] focus:ring-2 focus:ring-[#00A8B5]/20 outline-none"
             />
             <button
               type="submit"
               disabled={newsBusy}
-              className="px-4 py-2.5 rounded-xl bg-[#00A8B5] hover:bg-[#008f9a] disabled:opacity-50 text-white text-xs font-black transition cursor-pointer whitespace-nowrap"
+              className="px-4 py-2.5 min-h-11 rounded-xl bg-[#00A8B5] hover:bg-[#008f9a] disabled:opacity-50 text-white text-xs font-black transition cursor-pointer whitespace-nowrap"
             >
-              {newsBusy ? '...' : 'Abone Ol'}
+              {newsBusy ? 'Gönderiliyor…' : 'Abone Ol'}
             </button>
           </form>
           {newsMsg && (

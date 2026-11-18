@@ -19,7 +19,9 @@ import {
   User, 
   LogIn, 
   LogOut, 
-  AlertCircle 
+  AlertCircle,
+  BadgeCheck,
+  Clock 
 } from 'lucide-react';
 
 // ---- Tip tanımları ----
@@ -540,9 +542,13 @@ export default function AdminDashboardPage() {
                       className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-slate-100 rounded-xl p-4"
                     >
                       <div>
-                        <p className="text-xs font-black text-[#0A1931]">
+                        <p className="text-xs font-black text-[#0A1931] flex items-center gap-1">
                           {s.school_name}
-                          {s.verified ? ' ✅' : ' ⏳'}
+                          {s.verified ? (
+                            <BadgeCheck className="w-3.5 h-3.5 text-emerald-600" aria-label="Doğrulanmış" />
+                          ) : (
+                            <Clock className="w-3.5 h-3.5 text-amber-500" aria-label="Doğrulama bekliyor" />
+                          )}
                         </p>
                         <p className="text-[11px] text-slate-500">
                           {[s.district, s.city].filter(Boolean).join(', ') || 'Konum yok'} · {s.student_count} eşleşen öğrenci

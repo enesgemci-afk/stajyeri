@@ -196,3 +196,41 @@ Yasak: `border border-slate-200` + `shadow-sm` kombinasyonu.
 5. Emoji UI ikonu olarak (yerine lucide-react)
 6. `!important` kullanımı
 7. Yeni renk icat etmek
+
+---
+
+## 9. UI/UX PRO MAX TEMEL KURALLARI (audit sonrası eklendi)
+
+> Kaynak: github.com/nextlevelbuilder/ui-ux-pro-max-skill — quick-reference öncelik
+> tablosuna göre projeye uyarlanmıştır. globals.css'teki temel kurallarla birlikte çalışır.
+
+### 9a) Erişilebilirlik (CRITICAL)
+| Kural | Uygulama |
+|-------|----------|
+| Klavye odak görünürlüğü | `:focus-visible` global halka (globals.css) — her etkileşimli öğede garantili |
+| Skip link | layout.tsx'te "İçeriğe atla" → `#ana-icerik` |
+| aria-label | Tüm icon-only butonlarda zorunlu; durum değişen butonlara `aria-pressed`/`aria-expanded` |
+| Emoji ikon yasağı | UI'da yalnızca lucide-react; emoji yalnızca içerik metninde |
+| Kontrast | Koyu zeminde (`#0A1931`) en az `text-slate-400`; `text-slate-500` koyu zeminde YASAK (3.66:1) |
+
+### 9b) Dokunma Hedefi (CRITICAL)
+| Kural | Uygulama |
+|-------|----------|
+| Min hedef | 44×44px (görsel küçükse `after:-inset-*` ile vurma alanı büyütülür) |
+| Buton yüksekliği | Metinli butonlarda `min-h-11`; icon butonlarda `w-10 h-10` + hit-area |
+| Escape | Açılır menü/modal/mobil panel `Escape` ile kapanır |
+
+### 9c) Performans (HIGH)
+| Kural | Uygulama |
+|-------|----------|
+| Tailwind CDN YASAK | `@tailwindcss/postcss` + `app/globals.css` import (layout.tsx) kullanılır |
+| Font | Google Fonts + `preconnect`; Space Grotesk `&family=Space+Grotesk` ile aynı istekte |
+| CLS | `img` etiketlerinde `width` + `height` ver |
+
+### 9d) Tipografi & Hareket (MEDIUM)
+| Kural | Uygulama |
+|-------|----------|
+| Min metin | Nav/body/link metinleri en az `text-xs` (12px); `text-[9px]`–`text-[10px]` yalnızca chip/micro badge |
+| Display font | Hero/panel başlık + KPI: `font-display` sınıfı (Space Grotesk) |
+| Reduced motion | `prefers-reduced-motion: reduce` → animasyonlar kapalı (globals.css) |
+| Loading feedback | Async butonlarda `disabled` + anlamlı metin/spinner ('...' değil) |
