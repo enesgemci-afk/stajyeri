@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import { MESEM_FIELDS, TURKEY_CITIES } from '@/lib/constants';
 import { slugifyTr } from '@/lib/meslekRehberi';
+import { pageOpenGraph } from '@/lib/seo';
 import JobCard, { type JobCardData } from '@/components/JobCard';
 import SiteHeader from '@/components/SiteHeader';
 
@@ -23,12 +24,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const city = CITY_BY_SLUG.get(sehir);
   const field = FIELD_BY_SLUG.get(alan);
   if (!city || !field) {
-    return { title: 'Sayfa Bulunamadı | Stajyeri.net', robots: { index: false, follow: false } };
+    return { title: 'Sayfa Bulunamadı', robots: { index: false, follow: false } };
   }
   return {
-    title: `${city} ${field} Staj ve Çıraklık İlanları | Stajyeri.net`,
+    title: `${city} ${field} Staj ve Çıraklık İlanları`,
     description: `${city} üzerinde ${field} alanındaki güncel MESEM çıraklık, meslek lisesi ve yaz stajı ilanları. Ücretsiz üye ol, tek tıkla başvur.`,
+    keywords: [
+      `${city} staj ilanları`,
+      `${city} ${field} staj`,
+      `${city} çıraklık`,
+      `${field} stajyer`,
+      'MESEM ilanları',
+    ],
     alternates: { canonical: `/ilanlar/${sehir}/${alan}` },
+    openGraph: pageOpenGraph({
+      title: `${city} ${field} Staj ve Çıraklık İlanları`,
+      description: `${city} içindeki güncel ${field} staj ve çıraklık ilanları — tek sayfada.`,
+      path: `/ilanlar/${sehir}/${alan}`,
+    }),
   };
 }
 

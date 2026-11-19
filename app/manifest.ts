@@ -13,9 +13,13 @@ export default function manifest(): MetadataRoute.Manifest {
     background_color: '#F8FAFC',
     theme_color: '#00A8B5',
     lang: 'tr',
+    dir: 'ltr',
+    // Gerçek (kare) ikon dosyaları — daha önce 2172x724 yatay logo 512x512
+    // olarak bildiriliyordu; kurulumda ikon kırpılıyordu.
     icons: [
-      { src: '/logo.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-      { src: '/logo.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+      { src: '/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+      { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
     ],
   };
 }

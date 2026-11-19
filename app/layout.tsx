@@ -1,9 +1,83 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import JsonLd from "@/components/JsonLd";
+import { SITE, SITE_URL, organizationLd, websiteLd } from "@/lib/seo";
+
+// Google Search Console / Yandex doğrulama kodları ortam değişkeninden okunur.
+// Vercel > Settings > Environment Variables: GOOGLE_SITE_VERIFICATION, YANDEX_VERIFICATION
+const googleVerification = process.env.GOOGLE_SITE_VERIFICATION;
+const yandexVerification = process.env.YANDEX_VERIFICATION;
 
 export const metadata: Metadata = {
-  title: "Stajyeri.net - MESEM ve Meslek Lisesi Staj Platformu",
-  description: "Geleceğin mesleğini sahada öğren, doğru staj yerini keşfet.",
+  // metadataBase: tüm göreli canonical/OG URL'lerinin mutlak hale gelmesini sağlar
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "MESEM ve Meslek Lisesi Staj İlanları | Stajyeri.net",
+    template: "%s | Stajyeri.net",
+  },
+  description: SITE.description,
+  applicationName: SITE.name,
+  category: "education",
+  keywords: [
+    "staj ilanları",
+    "MESEM staj",
+    "meslek lisesi stajı",
+    "çıraklık ilanları",
+    "stajyer aranıyor",
+    "ücretsiz staj",
+    "meslek lisesi stajyeri",
+    "MESEM çıraklık",
+    "üniversite zorunlu staj",
+    "staj ücreti 2026",
+  ],
+  authors: [{ name: SITE.name, url: SITE_URL }],
+  creator: SITE.name,
+  publisher: SITE.name,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: SITE.locale,
+    siteName: SITE.name,
+    title: "MESEM ve Meslek Lisesi Staj İlanları | Stajyeri.net",
+    description: SITE.description,
+  },
+  twitter: {
+    // Başlık/açıklama/görsel verilmez: X bunları og:* etiketlerinden devralır,
+    // böylece her sayfa kendi OG başlığını kullanır.
+    card: "summary_large_image",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  verification: {
+    google: googleVerification,
+    yandex: yandexVerification,
+  },
+  formatDetection: { telephone: false, email: false, address: false },
+  icons: {
+    // favicon.ico app/ klasöründen otomatik geliyor; burada yalnızca Apple ikonu.
+    apple: [{ url: '/icon-192.png', sizes: '192x192', type: 'image/png' }],
+  },
+  other: {
+    // Google AdSense site doğrulaması
+    "google-adsense-account": "ca-pub-9045371456495609",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#00A8B5",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -14,8 +88,6 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <head>
-        {/* Google AdSense — site doğrulama meta etiketi */}
-        <meta name="google-adsense-account" content="ca-pub-9045371456495609" />
         {/* Google AdSense — reklam scripti (Google talimatı: head içine, async) */}
         <script
           async
@@ -36,6 +108,8 @@ export default function RootLayout({
         `}</style>
       </head>
       <body className="bg-[#F8FAFC] text-slate-800 antialiased m-0 p-0">
+        {/* Site geneli yapılandırılmış veri: marka + arama kutusu */}
+        <JsonLd data={[organizationLd(), websiteLd()]} />
         {/* Klavye kullanıcıları için içerik atlama bağlantısı (a11y: skip-links) */}
         <a
           href="#ana-icerik"

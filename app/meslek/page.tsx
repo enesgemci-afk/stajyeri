@@ -3,10 +3,11 @@ import type { Metadata } from 'next';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import { FIELD_GUIDES } from '@/lib/meslekRehberi';
+import { pageOpenGraph } from '@/lib/seo';
 import { ArrowRight, BookOpen, Compass, GraduationCap, Wallet } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'MESEM Meslek Rehberi — 41 Alan | Stajyeri.net',
+  title: 'MESEM Meslek Rehberi — 41 Alan',
   description:
     'MESEM ve meslek liselerinin 41 meslek alanının tamamı: ne iş yapar, nerede staj yapılır, çıraktan ustaya yol haritası ve 3308 ücret hakları. Her alan için aktif staj ilanları.',
   keywords: [
@@ -16,6 +17,13 @@ export const metadata: Metadata = {
     'meslek lisesi alanları',
     '3308 mesleki eğitim',
   ],
+  alternates: { canonical: '/meslek' },
+  openGraph: pageOpenGraph({
+    title: 'MESEM Meslek Rehberi — 41 Alan',
+    description:
+      '41 MESEM alanının tamamı: ne iş yapar, nerede staj yapılır, çıraktan ustaya yol haritası ve 3308 ücret hakları.',
+    path: '/meslek',
+  }),
 };
 
 export default function MeslekRehberiPage() {

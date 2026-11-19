@@ -3,13 +3,21 @@ import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import { FIELD_GUIDES, type FieldGuide } from '@/lib/meslekRehberi';
+import { pageOpenGraph } from '@/lib/seo';
 import { ArrowRight, FileText, PenLine } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Stajyer CV Örnekleri — Alanına Göre Hazır Şablonlar | Stajyeri.net',
+  title: 'Stajyer CV Örnekleri — Alanına Göre Hazır Şablonlar',
   description:
     'Elektrik, bilişim, makine, muhasebe ve daha fazlası için MESEM öğrencilerine özel CV örnekleri; hakkımda kalıbı, beceriler ve dersler hazır. Ücretsiz CV oluştur.',
   keywords: ['stajyer cv örneği', 'çırak cv', 'MESEM cv', 'deneyimsiz cv örneği'],
+  alternates: { canonical: '/cv-ornekleri' },
+  openGraph: pageOpenGraph({
+    title: 'Stajyer CV Örnekleri — Alanına Göre Hazır Şablonlar',
+    description:
+      'Elektrik, bilişim, makine ve muhasebe alanları için MESEM öğrencilerine özel CV örnekleri. Ücretsiz CV oluştur.',
+    path: '/cv-ornekleri',
+  }),
 };
 
 // Galeride gösterilecek öne çıkan alanlar (FIELD_GUIDES ile eşleşen tam adlar)

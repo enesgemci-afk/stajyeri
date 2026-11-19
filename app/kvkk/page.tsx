@@ -1,7 +1,21 @@
 ﻿import Link from 'next/link';
+import type { Metadata } from 'next';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
+import { pageOpenGraph } from '@/lib/seo';
 import { ShieldCheck, Database, Share2, UserCheck, Clock, Scale } from 'lucide-react';
+
+const title = 'KVKK Aydınlatma Metni ve Gizlilik Politikası';
+const description =
+  "Stajyeri.net olarak hangi kişisel verileri, hangi amaçla ve hangi hukuki sebebe dayanarak işlediğimizi; 6698 sayılı KVKK kapsamındaki haklarınızı ve veri güvenliği önlemlerini açıkladık.";
+
+export const metadata: Metadata = {
+  title,
+  description,
+  keywords: ['KVKK aydınlatma metni', 'gizlilik politikası', 'kişisel verilerin korunması', 'stajyeri gizlilik'],
+  alternates: { canonical: '/kvkk' },
+  openGraph: pageOpenGraph({ title, description, path: '/kvkk' }),
+};
 
 const SECTIONS: { icon: typeof Database; title: string; body: React.ReactNode }[] = [
   {

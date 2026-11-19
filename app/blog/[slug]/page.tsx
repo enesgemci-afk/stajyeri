@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
+import JsonLd from '@/components/JsonLd';
+import { absoluteUrl, articleLd, breadcrumbLd } from '@/lib/seo';
 import { BLOG_POSTS, getPostBySlug, formatBlogDate } from '@/lib/blogYazilari';
 import { ArrowRight, BookOpen, Check, Route, Sparkles } from 'lucide-react';
 
@@ -17,10 +19,30 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = getPostBySlug(slug);
-  if (!post) return { title: 'Yazı bulunamadı | Stajyeri.net' };
+  if (!post) return { title: 'Yazı bulunamadı', robots: { index: false, follow: false } };
   return {
-    title: `${post.title} | Stajyeri.net`,
+    title: `${post.title}`,
     description: post.description,
+    keywords: [post.category, 'staj rehberi', 'mesleki eğitim', 'MESEM'],
+    alternates: { canonical: `/blog/${post.slug}` },
+    openGraph: {
+      type: 'article',
+      locale: 'tr_TR',
+      url: absoluteUrl(`/blog/${post.slug}`),
+      siteName: 'Stajyeri.net',
+      title: post.title,
+      description: post.description,
+      publishedTime: post.date,
+      section: post.category,
+      images: [
+        {
+          url: absoluteUrl('/opengraph-image'),
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
   };
 }
 
@@ -33,6 +55,22 @@ export default async function BlogDetayPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
+      <JsonLd
+        data={[
+          articleLd({
+            title: post.title,
+            description: post.description,
+            path: `/blog/${post.slug}`,
+            datePublished: post.date,
+            section: post.category,
+          }),
+          breadcrumbLd([
+            { name: 'Ana Sayfa', path: '/' },
+            { name: 'Kariyer Blogu', path: '/blog' },
+            { name: post.title, path: `/blog/${post.slug}` },
+          ]),
+        ]}
+      />
       <SiteHeader backHref="/blog" backLabel="Blog" />
 
       <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-10">

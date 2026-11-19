@@ -4,12 +4,20 @@ import { supabase } from '@/lib/supabaseClient';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import { CompanyAvatar } from '@/components/JobCard';
+import { pageOpenGraph } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'İşletmeler Rehberi — Stajyer Alan İşletmeler | Stajyeri.net',
+  title: 'İşletmeler Rehberi — Stajyer Alan İşletmeler',
   description:
     'MESEM ve meslek lisesi öğrencilerini stajyer alan işletmeleri keşfedin: aktif ilan sayıları, konumlar ve stajyer değerlendirmelerine dayalı Güvenli İşyeri rozetleri.',
+  keywords: ['stajyer alan işletmeler', 'MESEM işletmeleri', 'güvenli işyeri', 'çırak alan firmalar'],
   alternates: { canonical: '/isletmeler' },
+  openGraph: pageOpenGraph({
+    title: 'İşletmeler Rehberi — Stajyer Alan İşletmeler',
+    description:
+      'Stajyer alan işletmeleri keşfedin: aktif ilan sayıları, konumlar ve Güvenli İşyeri rozetleri.',
+    path: '/isletmeler',
+  }),
 };
 
 interface CompanyRow {

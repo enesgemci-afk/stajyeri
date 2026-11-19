@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { ArrowLeft, ChevronDown, Menu, X, PlusCircle } from 'lucide-react';
@@ -246,7 +247,14 @@ export default function SiteHeader({
         {/* Sol: Logo (+ ekstra başlık) + Ana gezinti */}
         <div className="flex items-center gap-4 min-w-0">
           <Link href="/" className="flex-shrink-0 flex items-center">
-            <img src="/logo.png" alt="Stajyeri.net" className="h-10 w-auto object-contain" />
+            <Image
+              src="/logo-640.png"
+              alt="Stajyeri.net — MESEM ve meslek lisesi staj platformu"
+              width={160}
+              height={53}
+              priority
+              className="h-10 w-auto object-contain"
+            />
           </Link>
           {children}
 

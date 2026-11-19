@@ -4,6 +4,7 @@ import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import { FIELD_GROUPS } from '@/lib/fieldQuiz';
 import { slugifyTr } from '@/lib/meslekRehberi';
+import { pageOpenGraph } from '@/lib/seo';
 import {
   REHBER_STEPS,
   GROUP_GUIDES,
@@ -23,7 +24,7 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Meslek Seçim Rehberi — 5 Adımda Doğru Mesleği Bul | Stajyeri.net',
+  title: 'Meslek Seçim Rehberi — 5 Adımda Doğru Mesleği Bul',
   description:
     '8. sınıf sonrası meslek seçimi için kapsamlı rehber: kendini tanı, 6 ilgi grubunu tanı (günün akışı, iş bulma, dikkat edilmesi gerekenler), gerçeklerle karşılaştır, yol haritası çiz. Ebeveyn köşesi ve karar matrisi dahil.',
   keywords: [
@@ -33,6 +34,13 @@ export const metadata: Metadata = {
     'hangi mesleği seçmeliyim',
     'mesleki rehberlik',
   ],
+  alternates: { canonical: '/meslek-rehberi' },
+  openGraph: pageOpenGraph({
+    title: 'Meslek Seçim Rehberi — 5 Adımda Doğru Mesleği Bul',
+    description:
+      '8. sınıf sonrası meslek seçimi için 5 adımlı rehber: kendini tanı, ilgi gruplarını keşfet, gerçeklerle karşılaştır, yol haritası çiz.',
+    path: '/meslek-rehberi',
+  }),
 };
 
 export default function MeslekSecimRehberiPage() {

@@ -1,4 +1,7 @@
 ﻿import Link from 'next/link';
+import type { Metadata } from 'next';
+import JsonLd from '@/components/JsonLd';
+import { breadcrumbLd, faqLd, pageOpenGraph } from '@/lib/seo';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import type { LucideIcon } from 'lucide-react';
@@ -128,9 +131,37 @@ const FAQS: { q: string; a: string }[] = [
   },
 ];
 
+const PAGE_TITLE = 'İMEP Nedir? İşletmelerde Mesleki Eğitim Programı Rehberi (3308)';
+const PAGE_DESC =
+  'İMEP (İşletmelerde Mesleki Eğitim Programı) nedir, kimler katılır, ücret ve sigorta nasıl işler? MESEM çıraklıktan kalfalığa 4+1 eğitim modelinin tamamı sade dille.';
+
+export const metadata: Metadata = {
+  title: PAGE_TITLE,
+  description: PAGE_DESC,
+  keywords: [
+    'İMEP nedir',
+    'işletmelerde mesleki eğitim',
+    'MESEM çıraklık',
+    '3308 mesleki eğitim kanunu',
+    '4+1 eğitim modeli',
+    'çırak sigortası',
+  ],
+  alternates: { canonical: '/imep' },
+  openGraph: pageOpenGraph({ title: PAGE_TITLE, description: PAGE_DESC, path: '/imep' }),
+};
+
 export default function ImepPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between font-sans">
+      <JsonLd
+        data={[
+          breadcrumbLd([
+            { name: 'Ana Sayfa', path: '/' },
+            { name: 'İMEP Rehberi', path: '/imep' },
+          ]),
+          faqLd(FAQS),
+        ]}
+      />
       <SiteHeader />
 
       {/* Hero — bento/clay dili (gradient şerit + logo renkli orb'lar) */}

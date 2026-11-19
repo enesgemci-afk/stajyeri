@@ -1,49 +1,45 @@
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
-import { supabase } from '@/lib/supabaseClient';
+import JsonLd from '@/components/JsonLd';
+import { SITE_URL, absoluteUrl, breadcrumbLd } from '@/lib/seo';
+import { getJobForPage } from './job';
 
-const SITE_URL = 'https://www.stajyeri.net';
-
-interface JobMeta {
-  id: string;
-  title: string;
-  description: string | null;
-  field_name: string | null;
-  city: string | null;
-  district: string | null;
-  created_at: string | null;
-  is_active: boolean | null;
-  company_details?: { company_name?: string | null } | null;
-}
-
-async function getJob(id: string): Promise<JobMeta | null> {
-  const { data } = await supabase
-    .from('job_posts')
-    .select(
-      'id, title, description, field_name, city, district, created_at, is_active, company_details(company_name)'
-    )
-    .eq('id', id)
-    .maybeSingle();
-  return (data ?? null) as unknown as JobMeta | null;
-}
-
-// İlan başına SEO meta (sayfa 'use client' olduğu için layout üstlenir)
+// İlan başına SEO meta (sayfa istemci bileşeni olduğu için layout üstlenir)
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const job = await getJob(id);
+  const job = await getJobForPage(id);
   if (!job) {
-    return { title: 'İlan Bulunamadı | Stajyeri.net', robots: { index: false, follow: false } };
+    return { title: 'İlan Bulunamadı', robots: { index: false, follow: false } };
   }
   const city = job.city ? ` — ${job.city}` : '';
   const desc = (job.description ?? '').replace(/\s+/g, ' ').trim().slice(0, 155);
+  const title = `${job.title}${city}`;
+  const description =
+    desc || `${job.title} — ${job.field_name ?? 'staj'} ilanı${city}. Ücretsiz üye ol, hemen başvur.`;
   return {
-    title: `${job.title}${city} | Stajyeri.net`,
-    description: desc || `${job.title} — ${job.field_name ?? 'staj'} ilanı${city}. Ücretsiz üye ol, hemen başvur.`,
+    title,
+    description,
     alternates: { canonical: `/ilan/${id}` },
+    openGraph: {
+      type: 'website',
+      locale: 'tr_TR',
+      url: absoluteUrl(`/ilan/${id}`),
+      siteName: 'Stajyeri.net',
+      title,
+      description,
+      images: [
+        {
+          url: absoluteUrl('/opengraph-image'),
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
     robots: job.is_active ? undefined : { index: false, follow: false },
   };
 }
@@ -57,11 +53,16 @@ export default async function IlanLayout({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const job = await getJob(id);
+  const job = await getJobForPage(id);
 
   if (!job || !job.is_active) return <>{children}</>;
 
   const plain = (job.description ?? '').replace(/\s+/g, ' ').trim().slice(0, 4000);
+
+  // Google Jobs ilan ömrü: yayın + 60 gün (site ilanları 60 günde arşivlenir)
+  const validThrough = job.created_at
+    ? new Date(new Date(job.created_at).getTime() + 60 * 24 * 60 * 60 * 1000).toISOString()
+    : undefined;
 
   const ld = {
     '@context': 'https://schema.org',
@@ -70,7 +71,10 @@ export default async function IlanLayout({
     description: plain || job.title,
     identifier: { '@type': 'PropertyValue', name: 'Stajyeri.net', value: job.id },
     datePosted: job.created_at ?? undefined,
+    validThrough,
     employmentType: 'INTERN',
+    // Başvurular doğrudan Stajyeri.net üzerinden alınıyor (Google Jobs: direct apply)
+    directApply: true,
     industry: job.field_name ?? undefined,
     occupationalCategory: job.field_name ?? undefined,
     hiringOrganization: {
@@ -92,7 +96,16 @@ export default async function IlanLayout({
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
+      <JsonLd
+        data={[
+          ld,
+          breadcrumbLd([
+            { name: 'Ana Sayfa', path: '/' },
+            { name: 'Staj İlanları', path: '/ilanlar' },
+            { name: job.title, path: `/ilan/${job.id}` },
+          ]),
+        ]}
+      />
       {children}
     </>
   );

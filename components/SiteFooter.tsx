@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 // ============================================================
 // SITE FOOTER — tüm alt sayfalarda ortak (UI UX Pro Max: bento dil)
@@ -58,7 +59,13 @@ export default function SiteFooter({ note }: { note?: string }) {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Marka */}
           <div>
-            <img src="/logo.png" alt="Stajyeri.net" width={160} height={40} className="h-10 w-auto object-contain" />
+            <Image
+              src="/logo-640.png"
+              alt="Stajyeri.net — MESEM ve meslek lisesi staj platformu"
+              width={160}
+              height={53}
+              className="h-10 w-auto object-contain"
+            />
             <p className="mt-4 text-xs text-slate-400 leading-relaxed max-w-xs">
               Geleceğin mesleğini sahada öğren, doğru staj yerini keşfet. 3308 güvencesiyle
               MESEM ve meslek lisesi stajını işletmelerle buluşturuyoruz.
@@ -105,6 +112,12 @@ export default function SiteFooter({ note }: { note?: string }) {
             &copy; 2026 Stajyeri.net — Tüm Hakları Saklıdır.
           </p>
           <div className="flex items-center gap-4">
+            <Link href="/hakkimizda" className="text-xs font-bold text-slate-400 hover:text-[#00E5FF] transition">
+              Hakkımızda
+            </Link>
+            <Link href="/iletisim" className="text-xs font-bold text-slate-400 hover:text-[#00E5FF] transition">
+              İletişim
+            </Link>
             <Link href="/kvkk" className="text-xs font-bold text-slate-400 hover:text-[#00E5FF] transition">
               KVKK Aydınlatma Metni
             </Link>

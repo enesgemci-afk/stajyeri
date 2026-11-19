@@ -1,6 +1,8 @@
 ﻿import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import JsonLd from '@/components/JsonLd';
+import { breadcrumbLd, pageOpenGraph } from '@/lib/seo';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import FieldJobs from '@/components/FieldJobs';
@@ -18,10 +20,21 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ alan: string }> }): Promise<Metadata> {
   const { alan } = await params;
   const g = getFieldBySlug(alan);
-  if (!g) return { title: 'Alan Bulunamadı | Stajyeri.net' };
+  if (!g) return { title: 'Alan Bulunamadı', robots: { index: false, follow: false } };
+  const title = g.name + ' Staj & MESEM Rehberi';
+  const description = g.name + ' alanında MESEM stajı: ' + g.tagline;
   return {
-    title: g.name + ' Staj & MESEM Rehberi | Stajyeri.net',
-    description: g.name + ' alanında MESEM stajı: ' + g.tagline,
+    title,
+    description,
+    keywords: [
+      g.name + ' staj',
+      g.name + ' çıraklık',
+      g.name + ' MESEM',
+      g.name + ' iş ilanları',
+      'meslek lisesi ' + g.name.toLowerCase(),
+    ],
+    alternates: { canonical: '/meslek/' + g.slug },
+    openGraph: pageOpenGraph({ title, description, path: '/meslek/' + g.slug }),
   };
 }
 
@@ -38,6 +51,13 @@ export default async function MeslekDetayPage({ params }: { params: Promise<{ al
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
+      <JsonLd
+        data={breadcrumbLd([
+          { name: 'Ana Sayfa', path: '/' },
+          { name: 'Meslek Rehberi', path: '/meslek' },
+          { name: guide.name, path: '/meslek/' + guide.slug },
+        ])}
+      />
       <SiteHeader />
 
       <section className="relative overflow-hidden bg-gradient-to-br from-[#0A1931] to-[#10294d] pt-12 pb-14 px-4">

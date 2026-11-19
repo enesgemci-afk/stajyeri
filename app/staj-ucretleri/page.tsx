@@ -1,5 +1,7 @@
 ﻿import Link from 'next/link';
 import type { Metadata } from 'next';
+import JsonLd from '@/components/JsonLd';
+import { breadcrumbLd, faqLd, pageOpenGraph } from '@/lib/seo';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import WageCalculator from '@/components/WageCalculator';
@@ -16,7 +18,7 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Staj ve Çıraklık Ücretleri (3308) — Ne Kadar Kazanırım? | Stajyeri.net',
+  title: 'Staj ve Çıraklık Ücretleri (3308) — Ne Kadar Kazanırım?',
   description:
     'MESEM çırağı, kalfa ve meslek lisesi stajyeri ne kadar ücret alır? 3308 Sayılı Kanun ücret hakları, İMEP desteği, sigorta güvencesi ve anlık hesaplayıcı.',
   keywords: [
@@ -27,6 +29,13 @@ export const metadata: Metadata = {
     'stajyer ne kadar alır',
     'kalfa ücreti',
   ],
+  alternates: { canonical: '/staj-ucretleri' },
+  openGraph: pageOpenGraph({
+    title: 'Staj ve Çıraklık Ücretleri (3308) — Ne Kadar Kazanırım?',
+    description:
+      'MESEM çırağı, kalfa ve meslek lisesi stajyeri ne kadar ücret alır? 3308 ücret hakları, İMEP desteği ve anlık hesaplayıcı.',
+    path: '/staj-ucretleri',
+  }),
 };
 
 const MODELS = [
@@ -100,6 +109,15 @@ const FAQS = [
 export default function StajUcretleriPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
+      <JsonLd
+        data={[
+          breadcrumbLd([
+            { name: 'Ana Sayfa', path: '/' },
+            { name: 'Staj ve Çıraklık Ücretleri', path: '/staj-ucretleri' },
+          ]),
+          faqLd(FAQS),
+        ]}
+      />
       <SiteHeader />
 
       {/* Hero */}
