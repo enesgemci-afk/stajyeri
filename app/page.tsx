@@ -319,79 +319,97 @@ export default function HomePage() {
         }
       />
 
-      {/* 2. HERO — Claymorphism + Bento Grid (UI UX Pro Max: Educational/Youth · logo paleti) */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#EBFAFC] via-[#F8FAFC] to-[#F8FAFC] px-4 pt-16 pb-20">
-        <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full bg-[#00A8B5]/20 blur-3xl pointer-events-none" />
-        <div className="absolute top-40 -right-24 w-80 h-80 rounded-full bg-[#FF6B00]/15 blur-3xl pointer-events-none" />
+      {/* 2. HERO — Koyu imza alanı + büyük tipografi + canlı istatistikler */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#0A1931] via-[#0D2244] to-[#10294D] px-4 pt-14 pb-20 text-white">
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#00A8B5] via-[#00E5FF] to-[#FF6B00]" />
+        <div className="absolute -top-24 -left-20 w-80 h-80 rounded-full bg-[#00A8B5]/20 blur-3xl pointer-events-none" />
+        <div className="absolute top-40 -right-24 w-96 h-96 rounded-full bg-[#FF6B00]/15 blur-3xl pointer-events-none" />
 
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Bento A — Lacivert imza blok */}
-            <div className="md:col-span-2 bg-[#0A1931] rounded-[2rem] p-8 sm:p-10 text-white relative overflow-hidden text-left">
-              <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-[#00A8B5]/25 blur-2xl pointer-events-none" />
-              <div className="absolute -bottom-20 -left-10 w-48 h-48 rounded-full bg-[#FF6B00]/20 blur-2xl pointer-events-none" />
+          <div className="grid grid-cols-1 lg:grid-cols-[1.35fr_1fr] gap-8 items-stretch">
+            {/* Ana mesaj — güçlü tipografi ve tek birincil aksiyon */}
+            <div className="rounded-[2rem] bg-white/5 border border-white/10 p-7 sm:p-10 text-left relative overflow-hidden shadow-[0_24px_70px_rgba(10,25,49,0.24)]">
+              <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-[#00E5FF] to-[#FF6B00]" />
+              <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-[#00A8B5]/20 blur-2xl pointer-events-none" />
               <div className="relative">
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00A8B5]/15 border border-[#00A8B5]/30 text-[#00E5FF] text-[11px] font-bold mb-6">
                   <Sparkles className="w-3.5 h-3.5" /> MESEM, Meslek Lisesi ve Üniversite Öğrencilerine Özel
                 </div>
 
-                <h1 className="font-display text-3xl sm:text-5xl font-black leading-[1.08] tracking-tight">
-                  Geleceğin Mesleğini <span className="text-[#00A8B5]">Sahada</span> Öğren,
+                <h1 className="font-display text-4xl sm:text-6xl font-black leading-[1.04] tracking-tight">
+                  Geleceğin mesleğini <span className="text-[#00E5FF]">sahada</span> öğren,
                   <br className="hidden sm:block" />
-                  <span className="bg-gradient-to-r from-[#00E5FF] via-[#00E5FF] to-[#FF9E4D] bg-clip-text text-transparent">
-                    {' '}Doğru Stajı Keşfet
+                  <span className="bg-gradient-to-r from-[#00E5FF] to-[#FF9E4D] bg-clip-text text-transparent">
+                    {' '}doğru stajı keşfet
                   </span>
                 </h1>
 
-                <p className="mt-5 text-slate-300 text-xs sm:text-sm max-w-xl leading-relaxed">
+                <p className="mt-6 text-slate-300 text-sm sm:text-base max-w-xl leading-relaxed">
                   3308 sayılı Meslekî Eğitim Kanunu güvencesiyle çıraklık ve meslek lisesi stajı
                   arayan öğrencileri onaylı işletmelerle anında eşleştiriyoruz.
                 </p>
 
-                <div className="flex flex-wrap items-center gap-2 mt-4">
+                <div className="flex flex-wrap items-center gap-3 mt-7">
+                  <Link
+                    href="#ilanlar"
+                    className="inline-flex items-center justify-center gap-2 min-h-12 px-6 rounded-2xl bg-[#FF6B00] text-white text-sm font-black hover:bg-[#E05F00] shadow-lg shadow-[#FF6B00]/25 transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+                  >
+                    Stajını Bul <ArrowRight className="w-4 h-4" />
+                  </Link>
                   <Link
                     href="/mesem"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FF6B00] text-white text-[11px] font-black hover:bg-orange-600 transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+                    className="inline-flex items-center gap-2 min-h-12 px-5 rounded-2xl bg-white/10 border border-white/15 text-white text-xs font-black hover:bg-white/15 transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]"
                   >
-                    <GraduationCap className="w-3.5 h-3.5" />
-                    MESEM nedir, nasıl başvurulur?
-                    <ChevronRight className="w-3.5 h-3.5" />
+                    <GraduationCap className="w-4 h-4" /> MESEM nedir?
                   </Link>
                   <Link
                     href="/imep"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00A8B5]/15 border border-[#00A8B5]/30 text-[#00E5FF] text-[11px] font-bold hover:bg-[#00A8B5]/25 hover:text-white transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2"
+                    className="inline-flex items-center gap-2 min-h-12 px-5 rounded-2xl text-[#00E5FF] text-xs font-black hover:bg-[#00A8B5]/15 transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5]"
                   >
-                    <Landmark className="w-3.5 h-3.5" />
-                    İMEP nedir?
-                    <ChevronRight className="w-3.5 h-3.5" />
+                    <Landmark className="w-4 h-4" /> İMEP nedir?
                   </Link>
+                </div>
+
+                <div className="flex flex-wrap gap-x-5 gap-y-2 mt-7 text-[11px] font-bold text-slate-300">
+                  <span className="inline-flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-[#00E5FF]" /> 3308 güvencesi</span>
+                  <span className="inline-flex items-center gap-1.5"><Layers className="w-4 h-4 text-[#00E5FF]" /> 41 resmi meslek alanı</span>
+                  <span className="inline-flex items-center gap-1.5"><GraduationCap className="w-4 h-4 text-[#00E5FF]" /> Lise + üniversite</span>
                 </div>
               </div>
             </div>
 
-            {/* Bento B — İstatistik yığını (clay kartlar) */}
-            <div className="flex flex-col gap-4">
-              {[
-                { v: `${MESEM_FIELDS.length}`, l: 'Resmi Meslek Alanı', c: 'text-[#00A8B5]' },
-                { v: '544B+', l: 'MEB MESEM Öğrencisi', c: 'text-[#0A1931]' },
-                { v: '%30-%50', l: 'Garantili Öğrenci Ücreti', c: 'text-[#FF6B00]' },
-              ].map((s) => (
-                <div
-                  key={s.l}
-                  className="flex-1 bg-white rounded-[1.75rem] p-5 flex flex-col justify-center shadow-[0_10px_40px_rgba(10,25,49,0.07)] hover:-translate-y-0.5 transition-transform duration-200"
-                >
-                  <p className={`text-3xl font-black leading-tight ${s.c}`}>{s.v}</p>
-                  <p className="text-[11px] text-slate-500 font-bold mt-1">{s.l}</p>
-                </div>
-              ))}
+            {/* İstatistikler — okunaklı, yüksek kontrastlı bento kartlar */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2 bg-[#00A8B5] rounded-[1.75rem] p-6 shadow-[0_18px_50px_rgba(0,168,181,0.24)] flex flex-col justify-center">
+                <p className="font-display text-5xl font-black leading-none">544B+</p>
+                <p className="text-xs font-extrabold mt-2">MEB MESEM öğrencisi</p>
+                <p className="text-[11px] text-white/80 mt-1">Mesleki eğitimin güçlü topluluğuyla tanış.</p>
+              </div>
+              <div className="bg-white text-[#0A1931] rounded-[1.75rem] p-5 flex flex-col justify-center shadow-[0_18px_50px_rgba(10,25,49,0.18)]">
+                <p className="font-display text-4xl font-black text-[#00A8B5]">{MESEM_FIELDS.length}</p>
+                <p className="text-[11px] text-slate-500 font-extrabold mt-1">Resmi meslek alanı</p>
+              </div>
+              <div className="bg-[#FF6B00] rounded-[1.75rem] p-5 flex flex-col justify-center shadow-[0_18px_50px_rgba(255,107,0,0.2)]">
+                <p className="font-display text-4xl font-black">%30–%50</p>
+                <p className="text-[11px] text-white/85 font-extrabold mt-1">Garantili öğrenci ücreti</p>
+              </div>
             </div>
           </div>
 
           {/* 3. Standart Dropdown Arama Çubuğu (Paket 2: anahtar kelime araması eklendi) */}
-          <div className="mt-4 bg-white p-3 rounded-[1.75rem] shadow-[0_20px_60px_rgba(10,25,49,0.12)] border border-slate-100 max-w-6xl mx-auto text-left">
+          <div className="mt-10 bg-white p-4 sm:p-5 rounded-[2rem] shadow-[0_24px_70px_rgba(10,25,49,0.24)] border border-[#00A8B5]/20 max-w-6xl mx-auto text-left">
+            <div className="flex items-center justify-between gap-3 px-1 pb-3">
+              <div>
+                <p className="font-display text-lg font-black text-[#0A1931]">Sana uygun stajı bul</p>
+                <p className="text-xs text-slate-500 mt-0.5">Alan, şehir ve program seç; sonuçları anında gör.</p>
+              </div>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00A8B5]/10 text-[#00A8B5] text-[10px] font-black whitespace-nowrap">
+                <span className="w-2 h-2 rounded-full bg-[#00A8B5]" /> CANLI İLANLAR
+              </span>
+            </div>
 
             {/* Anahtar Kelime Araması */}
-            <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 mb-2">
+            <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3.5 mb-3">
               <Search className="w-4 h-4 text-[#00A8B5] flex-shrink-0" />
               <input
                 type="text"
@@ -520,7 +538,7 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => document.getElementById('ilanlar')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="w-full py-3 bg-[#00A8B5] hover:bg-[#00929e] text-white font-extrabold rounded-xl sm:rounded-full text-xs transition flex items-center justify-center gap-1.5 shadow-md shadow-[#00A8B5]/25 cursor-pointer"
+                  className="w-full min-h-12 py-3 bg-[#FF6B00] hover:bg-[#E05F00] text-white font-black rounded-xl sm:rounded-2xl text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-[#FF6B00]/25 cursor-pointer"
                 >
                   <Search className="w-3.5 h-3.5" /> Staj Bul
                 </button>

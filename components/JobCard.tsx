@@ -64,7 +64,7 @@ export function CompanyAvatar({
       ? 'w-8 h-8 text-sm rounded-lg'
       : size === 'lg'
         ? 'w-16 h-16 text-2xl rounded-2xl'
-        : 'w-10 h-10 text-base rounded-xl';
+        : 'w-12 h-12 text-lg rounded-2xl';
 
   // Hazır sektör sembolü (logo_url = 'icon:fabrika' vb.)
   const preset = resolveCompanyIcon(logo);
@@ -127,11 +127,11 @@ export default function JobCard({
     !!job.created_at && PAGE_LOADED_AT - new Date(job.created_at).getTime() < 3 * 24 * 60 * 60 * 1000;
 
   return (
-    <div className="bg-white p-5 sm:p-6 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] hover:shadow-[0_18px_50px_rgba(0,168,181,0.16)] hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between gap-4 group">
+    <div className="relative overflow-hidden bg-white p-5 sm:p-6 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] hover:shadow-[0_18px_50px_rgba(0,168,181,0.16)] hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between gap-4 group before:content-[''] before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-gradient-to-r before:from-[#00A8B5] before:via-[#00E5FF] before:to-[#FF6B00]">
       <div>
         <div className="flex items-start justify-between gap-2 mb-3">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="px-3 py-1 bg-[#00A8B5]/10 text-[#00A8B5] text-[11px] font-extrabold rounded-full">
+            <span className="px-3 py-1 bg-[#00A8B5]/10 text-[#00A8B5] text-xs font-extrabold rounded-full">
               {programLabel}
             </span>
             {isNew && (
@@ -160,7 +160,7 @@ export default function JobCard({
         <div className="flex items-start gap-3">
           <CompanyAvatar job={job} />
           <div className="min-w-0">
-            <h3 className="text-base font-bold text-[#0A1931] group-hover:text-[#00A8B5] transition line-clamp-1">
+            <h3 className="font-display text-lg font-black text-[#0A1931] group-hover:text-[#00A8B5] transition line-clamp-1">
               {job.title}
             </h3>
             <p className="text-xs font-bold text-slate-600 mt-0.5 flex items-center gap-1.5 truncate">
@@ -201,7 +201,7 @@ export default function JobCard({
 
         <Link
           href={`/ilan/${job.id}`}
-          className="px-4 py-2 min-h-11 justify-center bg-[#0A1931] hover:bg-[#FF6B00] text-white rounded-xl text-xs font-bold transition flex items-center gap-1 flex-shrink-0"
+          className="px-4 py-2 min-h-11 justify-center bg-[#FF6B00] hover:bg-[#E05F00] text-white rounded-xl text-xs font-black shadow-lg shadow-[#FF6B00]/20 transition flex items-center gap-1 flex-shrink-0"
         >
           Başvur <ChevronRight className="w-3.5 h-3.5" />
         </Link>
