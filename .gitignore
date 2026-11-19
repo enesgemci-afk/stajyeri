@@ -45,3 +45,6 @@ next-env.d.ts
 # Telegram ajan calisma ani durum dosyalari
 scripts/.tg-state.json
 scripts/bekleyen-gorevler.txt
+
+# SEO denetim ciktilari (ajan raporlari — yerel kalir)
+/drafts/seo/

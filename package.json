@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seo": "node scripts/seo-audit.mjs",
+    "seo:local": "node scripts/seo-audit.mjs --base http://localhost:3100",
+    "seo:strict": "node scripts/seo-audit.mjs --strict"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.4",
