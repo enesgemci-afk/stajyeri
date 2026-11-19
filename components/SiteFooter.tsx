@@ -61,7 +61,7 @@ export default function SiteFooter({ note }: { note?: string }) {
           {/* Marka */}
           <div>
             <Image
-              src="/logo-transparent.png"
+              src="/logo-white.png"
               alt="Stajyeri.net — MESEM ve meslek lisesi staj platformu"
               width={160}
               height={53}
