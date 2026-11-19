@@ -14,7 +14,7 @@ export const SITE = {
   description:
     'MESEM çıraklık, meslek lisesi ve üniversite staj ilanları tek platformda. 41 meslek alanı rehberi, 3308 staj ücreti hesaplayıcı, ücretsiz CV oluşturucu ve mülakat hazırlığı.',
   email: 'destek@stajyeri.net',
-  logo: `${SITE_URL}/logo.png`,
+  logo: `${SITE_URL}/logo-transparent.png`,
 } as const;
 
 /** Göreli yolu mutlak URL'ye çevirir (JSON-LD ve canonical için). */

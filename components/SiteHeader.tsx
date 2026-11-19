@@ -249,7 +249,7 @@ export default function SiteHeader({
         <div className="flex items-center gap-4 min-w-0">
           <Link href="/" className="flex-shrink-0 flex items-center">
             <Image
-              src="/logo-640.png"
+              src="/logo-transparent.png"
               alt="Stajyeri.net — MESEM ve meslek lisesi staj platformu"
               width={160}
               height={53}
