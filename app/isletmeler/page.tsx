@@ -6,6 +6,10 @@ import SiteFooter from '@/components/SiteFooter';
 import { CompanyAvatar } from '@/components/JobCard';
 import { pageOpenGraph } from '@/lib/seo';
 
+// İşletme ve ilan verileri her istekte Supabase'den taze okunur.
+// Statik ön üretim, silinen işletmelerin sayfada kalmasına neden olmasın.
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'İşletmeler Rehberi — Stajyer Alan İşletmeler',
   description:
