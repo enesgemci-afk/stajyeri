@@ -17,7 +17,7 @@ import {
 
 const title = 'Hakkımızda — MESEM ve Meslek Lisesi Staj Platformu';
 const description =
-  "Stajyeri.net kim, ne yapıyor? MESEM çıraklığı ve meslek lisesi stajını 3308 sayılı kanun çerçevesinde işletmelerle buluşturan ücretsiz platformun amacı, çalışma modeli ve ilkeleri.";
+  "Stajyeri.net kim, ne yapıyor? MESEM çıraklığı ve meslek lisesi stajını 3308 sayılı kanun çerçevesinde işletmelerle buluşturan ücretsiz platformun amacı ve ilkeleri.";
 
 export const metadata: Metadata = {
   title,

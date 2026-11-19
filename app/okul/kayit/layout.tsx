@@ -3,7 +3,7 @@ import { pageOpenGraph } from '@/lib/seo';
 
 const title = 'MESEM Okul ve Koordinatörlük Kaydı';
 const description =
-  'Meslek lisesi ve MESEM koordinatörlükleri için ücretsiz kurum kaydı: öğrencilerinizi staj ilanlarıyla eşleştirin, eğitim sözleşmelerini ve veli onaylarını dijital yönetin.';
+  'Meslek lisesi ve MESEM koordinatörlükleri için ücretsiz kurum kaydı: öğrencilerinizi staj ilanlarıyla eşleştirin, sözleşmeleri dijital yönetin.';
 
 export const metadata: Metadata = {
   title,

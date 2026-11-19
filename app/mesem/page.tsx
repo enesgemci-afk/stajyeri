@@ -25,7 +25,7 @@ import {
 
 const PAGE_TITLE = 'MESEM Nedir? Mesleki Eğitim Merkezi Rehberi (2026)';
 const PAGE_DESC =
-  "MESEM (Mesleki Eğitim Merkezi) nedir, kimler başvurabilir, nasıl kayıt olunur? 4+1 eğitim modeli, çırak ve kalfa ücretleri, sigorta, kalfalık-ustalık belgeleri ve 41 meslek alanı — 3308 sayılı kanuna göre sade dille.";
+  "MESEM nedir, kimler başvurabilir, nasıl kayıt olunur? 4+1 model, çırak-kalfa ücretleri, sigorta, kalfalık ve ustalık belgeleri — sade dille.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,

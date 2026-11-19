@@ -117,6 +117,7 @@ function analyze(path, res, html) {
 
 const critical = [];
 const warnings = [];
+const info = [];
 const addCritical = (page, msg) => critical.push({ path: page.path, msg });
 const addWarning = (page, msg) => warnings.push({ path: page.path, msg });
 
@@ -130,14 +131,23 @@ function evaluate(pages, site) {
       continue;
     }
 
-    // Googlebot'a göre kanonik hedef: BASE + path
-    const expected = norm(`${site.base}${page.path === '/' ? '/' : page.path}`);
+    // Googlebot'a göre kanonik hedef: sayfanın kendi yolu (host'tan bağımsız).
+    // Yerel doğrulamada (--base localhost) sitemap üretim URL'leri döndürür;
+    // bu yüzden tam URL değil, pathname karşılaştırılır.
+    const pathnameOf = (value) => {
+      try {
+        return new URL(value).pathname.replace(/\/+$/, '') || '/';
+      } catch {
+        return null;
+      }
+    };
+    const expected = pathnameOf(`${site.base}${page.path === '/' ? '/' : page.path}`);
 
     if (!page.canonical) {
       addCritical(page, 'canonical etiketi yok');
     } else if (!/^https?:\/\//i.test(page.canonical)) {
       addCritical(page, `canonical mutlak URL değil: ${page.canonical}`);
-    } else if (norm(page.canonical) !== expected) {
+    } else if (pathnameOf(page.canonical) !== expected) {
       addCritical(page, `canonical sayfanın kendisini göstermiyor: ${page.canonical}`);
     }
 
@@ -159,7 +169,25 @@ function evaluate(pages, site) {
     if (page.title) {
       const lower = page.title.toLowerCase();
       titleMap.set(lower, [...(titleMap.get(lower) ?? []), page.path]);
-      if (page.title.length > 65) addWarning(page, `title ${page.title.length} karakter (65 üstü kesilir)`);
+      if (page.title.length > 65) {
+        // Google başlığın SONUNU keser. Taşma yalnızca marka ekindeyse
+        // anahtar kelime kaybı yok — bilgi notu. İçerik kısmı taşıyorsa uyarı.
+        const brandMatch = page.title.match(/\s*[|—–-]\s*Stajyeri\.net\s*$/i);
+        const contentLength = brandMatch
+          ? page.title.length - brandMatch[0].length
+          : page.title.length;
+        if (contentLength > 65) {
+          addWarning(
+            page,
+            `title ${page.title.length} karakter — anahtar kelime kesiliyor (marka öncesi ${contentLength})`
+          );
+        } else {
+          info.push({
+            path: page.path,
+            msg: `title ${page.title.length} karakter — yalnızca marka eki kesiliyor`,
+          });
+        }
+      }
       if (page.title.length < 20) addWarning(page, `title çok kısa (${page.title.length})`);
     } else {
       addCritical(page, 'title yok');
@@ -285,16 +313,24 @@ async function main() {
     process.exit(1);
   }
 
-  const targets = LIMIT > 0 ? sitemapUrls.slice(0, LIMIT) : sitemapUrls;
+  const targets = (LIMIT > 0 ? sitemapUrls.slice(0, LIMIT) : sitemapUrls).map((url) => {
+    // Sitemap her zaman üretim URL'lerini döndürür. --base verildiğinde
+    // aynı yolu o host üzerinden test et (yerel build doğrulaması).
+    try {
+      const path = new URL(url).pathname || '/';
+      return { url: `${BASE}${path}`, path: path.replace(/\/+$/, '') || '/' };
+    } catch {
+      return { url, path: url };
+    }
+  });
   process.stdout.write(`  ${sitemapUrls.length} URL bulundu, ${targets.length} tanesi denetleniyor\n\n`);
 
-  const pages = await pool(targets, CONCURRENCY, async (url) => {
-    const path = url.startsWith(BASE) ? url.slice(BASE.length) || '/' : url;
+  const pages = await pool(targets, CONCURRENCY, async (target) => {
     try {
-      const { res, text } = await get(url);
-      return analyze(path, res, text);
+      const { res, text } = await get(target.url);
+      return analyze(target.path, res, text);
     } catch (error) {
-      return { path, status: 0, error: error.message, words: 0, h1Count: 0, ldTypes: [] };
+      return { path: target.path, status: 0, error: error.message, words: 0, h1Count: 0, ldTypes: [] };
     }
   });
 
@@ -350,6 +386,15 @@ async function main() {
     process.stdout.write('\nTemiz: kritik bulgu ve uyarı yok.\n');
   }
 
+  if (info.length > 0) {
+    process.stdout.write(`\nBİLGİ (${info.length}) — --verbose ile listelenir\n`);
+    if (has('--verbose')) {
+      for (const item of info.sort((a, b) => a.path.localeCompare(b.path))) {
+        process.stdout.write(`  i ${item.path} — ${item.msg}\n`);
+      }
+    }
+  }
+
   if (JSON_OUT) {
     const { writeFileSync, mkdirSync } = await import('node:fs');
     const { dirname } = await import('node:path');
@@ -364,6 +409,7 @@ async function main() {
           pages,
           critical,
           warnings,
+          info,
           robotsProblems,
         },
         null,

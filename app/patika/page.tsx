@@ -5,7 +5,7 @@ import PatikaClient from './PatikaClient';
 export const metadata: Metadata = {
   title: 'Staj Patikası — Çıraktan Ustaya Yol Haritan',
   description:
-    'Durumunu ve hedefini seç; çıraklık, kalfalık, ustalık, üniversite ve iş bulma yol haritanı dakikalar içinde oluştur. 3308 ücret hakları ve belgeler dahil, tamamen ücretsiz.',
+    'Durumunu ve hedefini seç; çıraklık, kalfalık, ustalık ve üniversite yol haritanı dakikalar içinde oluştur. 3308 ücret hakları dahil, tamamen ücretsiz.',
   keywords: [
     'staj patikası',
     'çıraktan ustaya',

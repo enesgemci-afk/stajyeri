@@ -26,7 +26,7 @@ import {
 export const metadata: Metadata = {
   title: 'Meslek Seçim Rehberi — 5 Adımda Doğru Mesleği Bul',
   description:
-    '8. sınıf sonrası meslek seçimi için kapsamlı rehber: kendini tanı, 6 ilgi grubunu tanı (günün akışı, iş bulma, dikkat edilmesi gerekenler), gerçeklerle karşılaştır, yol haritası çiz. Ebeveyn köşesi ve karar matrisi dahil.',
+    '8. sınıf sonrası meslek seçimi rehberi: kendini tanı, 6 ilgi grubunu keşfet, gerçeklerle karşılaştır ve yol haritanı çiz. Ebeveyn köşesi dahil.',
   keywords: [
     'meslek seçim rehberi',
     '8. sınıf meslek seçimi',

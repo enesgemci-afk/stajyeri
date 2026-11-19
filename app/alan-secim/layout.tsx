@@ -3,7 +3,7 @@ import { pageOpenGraph } from '@/lib/seo';
 
 const title = 'MESEM Meslek Alanı Seçim Testi — 6 Soruda Sana Uygun Alan';
 const description =
-  '9. sınıfa geçenler için meslek alanı seçim testi: 6 soruda ilgi ve becerilerini ölç, 41 MESEM alanı arasından sana en uygun 3 alanı ve o alanların staj ilanlarını gör.';
+  '9. sınıfa geçenler için meslek alanı seçim testi: 6 soruda ilgi ve becerilerini ölç, 41 MESEM alanı arasından sana en uygun 3 alanı keşfet.';
 
 export const metadata: Metadata = {
   title,

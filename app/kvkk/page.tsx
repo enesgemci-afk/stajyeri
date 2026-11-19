@@ -7,7 +7,7 @@ import { ShieldCheck, Database, Share2, UserCheck, Clock, Scale } from 'lucide-r
 
 const title = 'KVKK Aydınlatma Metni ve Gizlilik Politikası';
 const description =
-  "Stajyeri.net olarak hangi kişisel verileri, hangi amaçla ve hangi hukuki sebebe dayanarak işlediğimizi; 6698 sayılı KVKK kapsamındaki haklarınızı ve veri güvenliği önlemlerini açıkladık.";
+  "Hangi kişisel verileri, hangi amaçla ve hangi hukuki sebebe dayanarak işlediğimizi; KVKK kapsamındaki haklarınızı ve veri güvenliği önlemlerini açıkladık.";
 
 export const metadata: Metadata = {
   title,

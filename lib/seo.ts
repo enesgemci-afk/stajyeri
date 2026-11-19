@@ -12,7 +12,7 @@ export const SITE = {
   locale: 'tr_TR',
   lang: 'tr',
   description:
-    'MESEM çıraklık, meslek lisesi ve üniversite staj ilanları tek platformda. 41 meslek alanı rehberi, 3308 staj ücreti hesaplayıcı, ücretsiz CV oluşturucu ve mülakat hazırlığı.',
+    'MESEM çıraklık, meslek lisesi ve üniversite staj ilanları tek platformda. 41 meslek alanı rehberi, 3308 ücret hesaplayıcı ve ücretsiz CV oluşturucu.',
   email: 'destek@stajyeri.net',
   logo: `${SITE_URL}/logo-transparent.png`,
 } as const;

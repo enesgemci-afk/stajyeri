@@ -188,9 +188,9 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     slug: 'mesem-yas-siniri-ve-kayit-sartlari',
-    title: 'MESEM yaş sınırı var mı? Kayıt şartları ve kimler başvurabilir (2026)',
+    title: 'MESEM yaş sınırı ve kayıt şartları (2026)',
     description:
-      'MESEM’e kaç yaşında girilir, üst yaş sınırı var mı, açık liseye geçenler başvurabilir mi? MESEM kayıt şartlarını, gerekli belgeleri ve sık yapılan hataları madde madde anlattık.',
+      'MESEM’e kaç yaşında girilir, üst yaş sınırı var mı, açık liseye geçenler başvurabilir mi? Kayıt şartlarını, gerekli belgeleri ve sık yapılan hataları anlattık.',
     date: '2026-11-19',
     category: 'Yol Seçimi',
     emoji: '🎯',

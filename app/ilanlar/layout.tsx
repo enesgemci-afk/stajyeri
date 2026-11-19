@@ -3,7 +3,7 @@ import { pageOpenGraph } from '@/lib/seo';
 
 const title = 'Staj ve Çıraklık İlanları — MESEM, Meslek Lisesi, Üniversite';
 const description =
-  'Türkiye genelinde güncel MESEM çıraklık, meslek lisesi stajyeri ve üniversite zorunlu staj ilanları. Şehir, meslek alanı ve staj modeline göre filtrele, ücretsiz başvur.';
+  'Güncel MESEM çıraklık, meslek lisesi ve üniversite staj ilanları. Şehir, meslek alanı ve staj modeline göre filtrele, ücretsiz başvur.';
 
 export const metadata: Metadata = {
   // Alt segmentler (/ilanlar/[sehir]/[alan]) şablonu devralır; bu yüzden title nesne.

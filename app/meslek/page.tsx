@@ -9,7 +9,7 @@ import { ArrowRight, BookOpen, Compass, GraduationCap, Wallet } from 'lucide-rea
 export const metadata: Metadata = {
   title: 'MESEM Meslek Rehberi — 41 Alan',
   description:
-    'MESEM ve meslek liselerinin 41 meslek alanının tamamı: ne iş yapar, nerede staj yapılır, çıraktan ustaya yol haritası ve 3308 ücret hakları. Her alan için aktif staj ilanları.',
+    'MESEM ve meslek liselerinin 41 meslek alanının tamamı: ne iş yapar, nerede staj yapılır, çıraktan ustaya yol haritası ve 3308 ücret hakları.',
   keywords: [
     'MESEM alanları',
     'meslek rehberi',

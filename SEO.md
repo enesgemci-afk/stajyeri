@@ -134,6 +134,48 @@ Her iki yazı da Article + Breadcrumb şeması taşır ve pillar sayfaya/ilanlar
 
 ---
 
+## 3.6) SEO ajanı + denetim aracı (19 Kasım 2026, 3. faz)
+
+### Araç: `scripts/seo-audit.mjs`
+Bağımlılıksız (Node 18+ fetch). `npm run seo` / `seo:local` / `seo:strict`.
+Sitemap'teki tüm URL'leri gezer; canonical, OG, H1, JSON-LD, başlık/açıklama,
+ince içerik, robots kuralları ve `lastmod` tazeliğini doğrular.
+
+Tasarım kararları:
+- **Marka eki ayrımı:** 65 karakteri aşan başlıkta taşma yalnızca
+  `| Stajyeri.net` ekindeyse *bilgi* notu (Google zaten sonu keser, anahtar
+  kelime kaybı yok); içerik kısmı taşıyorsa *uyarı*.
+- **`--base` gerçekten yerel test eder:** sitemap üretim URL'i döndürse de
+  aynı yol verilen host üzerinden çekilir.
+- **robots.txt:** Google'ın "en uzun eşleşme kazanır, eşitlikte Allow" kuralı
+  uygulanır (`Allow: /okul/kayit` vs `Disallow: /okul` yanlış pozitifi engellenir).
+
+### Ajanlar (`.opencode/agents/`)
+| Ajan | Tip | Yetki |
+|---|---|---|
+| `seo` | primary | Düzenler, build eder; `git push` onay ister |
+| `seo-audit` | subagent | Salt okur (edit/shell kapalı, sadece audit komutu) |
+
+`seo-audit`, ana oturumla aynı modelde eşzamanlı istek sınırına takıldığı için
+`evren/glm-5.3` modeline bağlandı.
+
+### Bu turda düzeltilenler (denetim: 47 → 11 uyarı, 0 kritik)
+- 11 sayfada `description` 165 karakterin altına indirildi
+  (`lib/seo.ts`, `/mesem`, `/meslek`, `/meslek-rehberi`, `/patika`, `/ilanlar`,
+  `/alan-secim`, `/kvkk`, `/hakkimizda`, `/okul/kayit`, blog yazısı).
+- `mesem-yas-siniri` başlığı 84 → 59 karakter (anahtar kelime kesilmesi giderildi).
+- `/ilanlar`'a `BreadcrumbList` eklendi; ilan varsa `ItemList` de ekleniyor.
+- Araçtaki iki hata düzeltildi (canonical host karşılaştırması, `--base` yönlendirmesi).
+
+### Kalan 11 uyarı — hepsi ince içerik (sonraki ajan görevi)
+`/isletmeler` 140 · `/okul/kayit` 156 · `/patika` 202 · `/alan-secim` 203 ·
+`/hesaplama-araclari` 209 · `/iletisim` 219 · `/blog` 221 · `/tesvik-rehberi` 279 ·
+`/rehber/mulakat-provasi` 273 · iki blog yazısı 290/293 kelime.
+
+Öncelik: `/isletmeler` (işveren dönüşümü) ve `/alan-secim` (öğrenci dönüşümü).
+
+---
+
 ## 4) Sonraki içerik/otorite adımları (öncelik sırası)
 
 1. **MESEM kümesini genişlet (aylık 2 yazı)**: "MESEM kayıt tarihleri 2026",
