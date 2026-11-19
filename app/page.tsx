@@ -34,6 +34,7 @@ import {
   Flag,
   Layers,
   Landmark,
+  GraduationCap,
   Mail,
 } from 'lucide-react';
 
@@ -347,14 +348,24 @@ export default function HomePage() {
                   arayan öğrencileri onaylı işletmelerle anında eşleştiriyoruz.
                 </p>
 
-                <Link
-                  href="/imep"
-                  className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full bg-[#00A8B5]/15 border border-[#00A8B5]/30 text-[#00E5FF] text-[11px] font-bold hover:bg-[#00A8B5]/25 hover:text-white transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2"
-                >
-                  <Landmark className="w-3.5 h-3.5" />
-                  İMEP (İşletmelerde Mesleki Eğitim Programı) nedir?
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </Link>
+                <div className="flex flex-wrap items-center gap-2 mt-4">
+                  <Link
+                    href="/mesem"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FF6B00] text-white text-[11px] font-black hover:bg-orange-600 transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+                  >
+                    <GraduationCap className="w-3.5 h-3.5" />
+                    MESEM nedir, nasıl başvurulur?
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </Link>
+                  <Link
+                    href="/imep"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00A8B5]/15 border border-[#00A8B5]/30 text-[#00E5FF] text-[11px] font-bold hover:bg-[#00A8B5]/25 hover:text-white transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A8B5] focus-visible:ring-offset-2"
+                  >
+                    <Landmark className="w-3.5 h-3.5" />
+                    İMEP nedir?
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
             </div>
 
@@ -887,6 +898,61 @@ export default function HomePage() {
         <p className="text-center text-[11px] text-slate-400 mt-8">
           4904 sayılı kanun gereğince öğrencilerden iş bulma karşılığında ücret alınmaz — tüm araçlar ücretsizdir.
         </p>
+      </section>
+
+      {/* MESEM REHBERİ — "MESEM" aramasından gelenler için ana giriş noktası */}
+      <section className="max-w-6xl mx-auto px-4 pb-16 w-full">
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-[0_10px_40px_rgba(10,25,49,0.06)] p-6 sm:p-8">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-6">
+            <div className="flex-1">
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00A8B5]/10 border border-[#00A8B5]/20 text-[#00A8B5] text-[10px] font-black">
+                <GraduationCap className="w-3 h-3" /> MESEM REHBERİ
+              </span>
+              <h2 className="mt-3 text-xl sm:text-2xl font-black text-[#0A1931]">
+                MESEM nedir, nasıl başvurulur?
+              </h2>
+              <p className="mt-2 text-xs sm:text-sm text-slate-500 leading-relaxed max-w-2xl">
+                <strong className="text-slate-700">MESEM (Mesleki Eğitim Merkezi)</strong>, haftada
+                4 gün işletmede çalışıp 1 gün okula giderek mesleği sahada öğrendiğin, çırak olarak
+                ücret aldığın resmî eğitim modelidir. Kimler başvurabilir, kayıt şartları neler,
+                kalfalık ve ustalık belgesi nasıl alınır — hepsi tek rehberde.
+              </p>
+              <div className="flex flex-wrap gap-2 mt-4">
+                <Link
+                  href="/mesem"
+                  className="px-4 py-2.5 bg-[#00A8B5] hover:bg-[#00929e] text-white text-[11px] font-black rounded-full transition inline-flex items-center gap-1.5"
+                >
+                  MESEM Rehberini Oku <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <Link
+                  href="/blog/mesem-yas-siniri-ve-kayit-sartlari"
+                  className="px-4 py-2.5 bg-[#F8FAFC] border border-slate-200 hover:border-[#00A8B5] text-[#0A1931] text-[11px] font-black rounded-full transition"
+                >
+                  MESEM yaş sınırı ve kayıt şartları
+                </Link>
+                <Link
+                  href="/blog/mesem-staj-yeri-nasil-bulunur"
+                  className="px-4 py-2.5 bg-[#F8FAFC] border border-slate-200 hover:border-[#FF6B00] text-[#0A1931] text-[11px] font-black rounded-full transition"
+                >
+                  MESEM staj yeri nasıl bulunur?
+                </Link>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3 lg:w-72 flex-shrink-0">
+              {[
+                { v: '41', l: 'Meslek alanı' },
+                { v: '4+1', l: 'İşletme + okul' },
+                { v: '%30-%50', l: 'Ücret tabanı' },
+                { v: '12 ay', l: 'Kesintisiz eğitim' },
+              ].map((s) => (
+                <div key={s.l} className="bg-[#F8FAFC] border border-slate-200 rounded-2xl p-3 text-center">
+                  <p className="text-base font-black text-[#00A8B5]">{s.v}</p>
+                  <p className="text-[10px] font-bold text-slate-500 mt-0.5">{s.l}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* KARİYER REHBERİ YAZILARI — kariyer.net blog deseni (SEO + güven içeriği) */}

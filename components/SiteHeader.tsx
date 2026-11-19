@@ -62,6 +62,7 @@ function getMenu(role: HeaderRole): NavGroup[] {
       key: 'yolun',
       label: 'Yolunu Seç',
       items: [
+        { href: '/mesem', label: 'MESEM Nedir?', desc: 'Mesleki Eğitim Merkezi rehberi: kayıt, ücret, belgeler' },
         { href: '/meslek-rehberi', label: 'Meslek Seçim Rehberi', desc: '5 adımda bilinçli meslek kararı' },
         { href: '/meslek', label: 'Meslek Rehberi', desc: '41 MESEM alanı: ne iş yapar, nereye gider' },
         { href: '/patika', label: 'Staj Patikası', desc: 'Çıraktan ustaya kişisel yol haritan' },

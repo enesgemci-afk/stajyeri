@@ -11,6 +11,7 @@ const COLS: { title: string; chip: 'teal' | 'orange' | 'violet'; links: { href: 
     title: 'Keşfet',
     chip: 'teal',
     links: [
+      { href: '/mesem', label: 'MESEM Nedir?' },
       { href: '/meslek-rehberi', label: 'Meslek Seçim Rehberi' },
       { href: '/meslek', label: '41 Alan Rehberi' },
       { href: '/alan-secim', label: 'Alan Seçim Testi' },

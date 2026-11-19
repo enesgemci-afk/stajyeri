@@ -44,6 +44,12 @@ export default function MeslekRehberiPage() {
             Hangi meslek sana uygun? Tüm MESEM alanlarını; ne iş yaptığını, hangi dersleri göreceğini,
             çıraktan ustaya yol haritasını ve o alandaki canlı staj ilanlarıyla birlikte keşfet.
           </p>
+          <Link
+            href="/mesem"
+            className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[11px] font-black transition"
+          >
+            MESEM nedir, nasıl başvurulur? <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 pt-6 border-t border-white/10">
             <div>
