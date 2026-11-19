@@ -8,6 +8,8 @@ import { Compass, Search, ArrowRight } from 'lucide-react';
 export const metadata: Metadata = {
   title: 'Sayfa Bulunamadı',
   description: 'Aradığınız sayfa taşınmış veya kaldırılmış olabilir.',
+  // 404 sayfası kök canonical'ı devralmasın (noindex zaten var).
+  alternates: { canonical: null },
   robots: { index: false, follow: true },
 };
 
