@@ -65,8 +65,10 @@ export const metadata: Metadata = {
   },
   formatDetection: { telephone: false, email: false, address: false },
   icons: {
-    // favicon.ico app/ klasöründen otomatik geliyor; burada yalnızca Apple ikonu.
-    apple: [{ url: '/icon-192.png', sizes: '192x192', type: 'image/png' }],
+    // Sekme favicon'u ve mobil ana ekran ikonları — logodaki mezuniyet + konum simgesi.
+    icon: [{ url: '/icon.png', sizes: '512x512', type: 'image/png' }],
+    shortcut: [{ url: '/icon.png', type: 'image/png' }],
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
   },
   other: {
     // Google AdSense site doğrulaması
