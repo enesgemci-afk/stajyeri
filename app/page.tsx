@@ -326,9 +326,9 @@ export default function HomePage() {
         <div className="absolute top-40 -right-24 w-96 h-96 rounded-full bg-[#FF6B00]/15 blur-3xl pointer-events-none" />
 
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.35fr_1fr] gap-8 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.65fr_0.85fr] gap-8 items-stretch">
             {/* Ana mesaj — güçlü tipografi ve tek birincil aksiyon */}
-            <div className="rounded-[2rem] bg-white/5 border border-white/10 p-7 sm:p-10 text-left relative overflow-hidden shadow-[0_24px_70px_rgba(10,25,49,0.24)]">
+            <div className="rounded-[2rem] bg-white/5 border border-white/10 p-8 sm:p-12 lg:min-h-[540px] flex flex-col justify-center text-left relative overflow-hidden shadow-[0_24px_70px_rgba(10,25,49,0.24)]">
               <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-[#00E5FF] to-[#FF6B00]" />
               <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-[#00A8B5]/20 blur-2xl pointer-events-none" />
               <div className="relative">
@@ -336,7 +336,7 @@ export default function HomePage() {
                   <Sparkles className="w-3.5 h-3.5" /> MESEM, Meslek Lisesi ve Üniversite Öğrencilerine Özel
                 </div>
 
-                <h1 className="font-display text-4xl sm:text-6xl font-black leading-[1.04] tracking-tight">
+                <h1 className="font-display text-4xl sm:text-6xl xl:text-7xl font-black leading-[1.04] tracking-tight">
                   Geleceğin mesleğini <span className="text-[#00E5FF]">sahada</span> öğren,
                   <br className="hidden sm:block" />
                   <span className="bg-gradient-to-r from-[#00E5FF] to-[#FF9E4D] bg-clip-text text-transparent">
@@ -380,18 +380,18 @@ export default function HomePage() {
 
             {/* İstatistikler — okunaklı, yüksek kontrastlı bento kartlar */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="col-span-2 bg-[#00A8B5] rounded-[1.75rem] p-6 shadow-[0_18px_50px_rgba(0,168,181,0.24)] flex flex-col justify-center">
+              <div className="col-span-2 bg-[#00A8B5]/20 backdrop-blur-xl border border-[#00E5FF]/25 rounded-[1.75rem] p-6 shadow-[0_18px_50px_rgba(0,168,181,0.16)] flex flex-col justify-center">
                 <p className="font-display text-5xl font-black leading-none">544B+</p>
                 <p className="text-xs font-extrabold mt-2">MEB MESEM öğrencisi</p>
-                <p className="text-[11px] text-white/80 mt-1">Mesleki eğitimin güçlü topluluğuyla tanış.</p>
+                <p className="text-[11px] text-white/75 mt-1">Mesleki eğitimin güçlü topluluğuyla tanış.</p>
               </div>
-              <div className="bg-white text-[#0A1931] rounded-[1.75rem] p-5 flex flex-col justify-center shadow-[0_18px_50px_rgba(10,25,49,0.18)]">
-                <p className="font-display text-4xl font-black text-[#00A8B5]">{MESEM_FIELDS.length}</p>
-                <p className="text-[11px] text-slate-500 font-extrabold mt-1">Resmi meslek alanı</p>
+              <div className="bg-white/10 backdrop-blur-xl border border-white/15 text-white rounded-[1.75rem] p-5 flex flex-col justify-center shadow-[0_18px_50px_rgba(10,25,49,0.18)]">
+                <p className="font-display text-4xl font-black text-[#00E5FF]">{MESEM_FIELDS.length}</p>
+                <p className="text-[11px] text-slate-300 font-extrabold mt-1">Resmi meslek alanı</p>
               </div>
-              <div className="bg-[#FF6B00] rounded-[1.75rem] p-5 flex flex-col justify-center shadow-[0_18px_50px_rgba(255,107,0,0.2)]">
+              <div className="bg-[#FF6B00]/20 backdrop-blur-xl border border-[#FF9E4D]/30 rounded-[1.75rem] p-5 flex flex-col justify-center shadow-[0_18px_50px_rgba(255,107,0,0.14)]">
                 <p className="font-display text-4xl font-black">%30–%50</p>
-                <p className="text-[11px] text-white/85 font-extrabold mt-1">Garantili öğrenci ücreti</p>
+                <p className="text-[11px] text-white/75 font-extrabold mt-1">Garantili öğrenci ücreti</p>
               </div>
             </div>
           </div>
