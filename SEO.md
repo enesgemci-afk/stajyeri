@@ -91,9 +91,55 @@ Canlı site 77 URL ile tarandı. Tespit edilen kritik eksikler:
 
 ---
 
+## 3.5) MESEM araması için kurulan küme (19 Kasım 2026, 2. faz)
+
+Amaç: "MESEM" ve türevlerinde (MESEM nedir, MESEM başvuru, MESEM yaş sınırı,
+MESEM ücret, MESEM alanları) organik görünürlük.
+
+### Pillar sayfa: `/mesem`
+- Hedef başlık: **"MESEM Nedir? Mesleki Eğitim Merkezi Rehberi (2026)"**
+- 1.419 kelime, 10 H2, içindekiler menüsü (anchor'lı).
+- Şema: `Article` + `FAQPage` (8 soru) + `BreadcrumbList`.
+- İlk paragrafta tanım doğrudan verildi (featured snippet / AI özeti hedefi).
+- Bölümler: MESEM nedir · kimler başvurabilir (yaş) · 4 adımda kayıt · 4+1 modeli ·
+  ücret-sigorta · kalfalık-ustalık-usta öğreticilik · 41 alan · MESEM vs meslek lisesi · SSS.
+- Alt bağlantılar: /ilanlar, /staj-ucretleri, /imep, /tesvik-rehberi, /meslek/{alan},
+  /blog/kalfalik-belgesi-nasil-alinir, /blog/usta-belgesi-ile-isyeri-acma, /patika, /alan-secim.
+
+### Destek yazıları (blog)
+| URL | Hedef sorgu |
+|---|---|
+| `/blog/mesem-yas-siniri-ve-kayit-sartlari` | "MESEM yaş sınırı", "MESEM kayıt şartları", "MESEM'e kimler başvurabilir" |
+| `/blog/mesem-staj-yeri-nasil-bulunur` | "MESEM staj yeri nasıl bulunur", "çırak işletme bulma" |
+
+Her iki yazı da Article + Breadcrumb şeması taşır ve pillar sayfaya/ilanlara bağlanır.
+
+### İç bağlantı ağı
+- **Header** → "Yolunu Seç" menüsünün ilk maddesi: "MESEM Nedir?"
+- **Footer** → "Keşfet" kolonunun ilk maddesi: "MESEM Nedir?"
+- **Ana sayfa** → hero'da turuncu "MESEM nedir, nasıl başvurulur?" butonu +
+  "MESEM REHBERİ" bandı (4 istatistik + 3 iç bağlantı).
+- **/meslek** → hero altında "MESEM nedir, nasıl başvurulur?" bağlantısı.
+- **Sitemap** → `/mesem` priority 0.95 ile eklendi.
+
+### Canlı doğrulama
+- `/mesem`: 200, canonical doğru, OG görseli var, 1 H1, 3 JSON-LD bloğu (Article/FAQ/Breadcrumb),
+  8 SSS sorusu geçerli şemada.
+- İki blog yazısı 200 + canonical + Article şeması.
+- 73 URL tarandı: kırık yok, canonical/OG eksik yok, yinelenen başlık yok.
+
+> Not: İlan verisi temizlendiği için sitemap 80 → 73 URL'ye düştü (ilan sayfaları azaldı).
+> Boş ilan listesi hem dönüşüm hem SEO açısından zayıf; gerçek ilan eklendikçe
+> `/ilan/{id}` ve `/ilanlar/{sehir}/{alan}` sayfaları sitemap'e otomatik geri döner.
+
+---
+
 ## 4) Sonraki içerik/otorite adımları (öncelik sırası)
 
-1. **Şehir × alan sayfalarını besle**: şu an 287 kelime civarı. Her kombinasyona
+1. **MESEM kümesini genişlet (aylık 2 yazı)**: "MESEM kayıt tarihleri 2026",
+   "MESEM'den üniversiteye geçiş", "MESEM sigortası nasıl sorgulanır",
+   "MESEM kalfalık sınavı soruları", "MESEM'de alan değiştirme".
+2. **Şehir × alan sayfalarını besle**: şu an 287 kelime civarı. Her kombinasyona
    "bu şehirde alanın durumu, ortalama ücret, ulaşım, sık sorulanlar" blokları ekle.
 2. **Blog takvimi (aylık 4 yazı)**: "MESEM nedir", "çıraklık yaşı", "staj sigortası",
    "12. sınıf staj ücreti", "kalfalık sınavı soruları" gibi arama hacmi yüksek konular.
@@ -112,6 +158,10 @@ Canlı site 77 URL ile tarandı. Tespit edilen kritik eksikler:
 
 - Yeni sayfa eklerken: `app/sitemap.ts`'e URL, sayfaya `alternates.canonical` +
   `pageOpenGraph(...)` ekle.
+- Yeni MESEM içeriği eklerken `/mesem` pillar sayfasına iç bağlantı ver (küme otoritesi
+  tek sayfada toplanır; birbirine rakip iki "MESEM nedir" sayfası açma).
+- Ücret tutarları veya mevzuat değiştiğinde `/mesem` sayfasının sonundaki
+  "Son güncelleme" notunu ve `articleLd` tarihini birlikte güncelle.
 - Statik içerik güncellendiğinde `app/sitemap.ts` içindeki `CONTENT_UPDATED`
   tarihini ilerlet.
 - Başlık yazarken `| Stajyeri.net` ekleme — şablon otomatik ekliyor.
