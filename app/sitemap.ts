@@ -20,7 +20,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticUrls: MetadataRoute.Sitemap = [
     { url: `${SITE_URL}/`, lastModified: updated, changeFrequency: 'daily', priority: 1 },
-    { url: `${SITE_URL}/ilanlar`, lastModified: updated, changeFrequency: 'daily', priority: 0.9 },
     { url: `${SITE_URL}/isletmeler`, lastModified: updated, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/meslek`, lastModified: updated, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${SITE_URL}/mesem`, lastModified: updated, changeFrequency: 'monthly', priority: 0.95 },
@@ -67,6 +66,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .limit(1000);
 
     if (data && data.length > 0) {
+      const listingUrls: MetadataRoute.Sitemap = [
+        { url: `${SITE_URL}/ilanlar`, lastModified: updated, changeFrequency: 'daily', priority: 0.9 },
+      ];
       const citySet = new Set(TURKEY_CITIES);
       const fieldSet = new Set(MESEM_FIELDS);
       // Şehir+alan kombinasyonu -> o kombinasyondaki en yeni ilan tarihi
@@ -103,7 +105,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         };
       });
 
-      return [...staticUrls, ...fieldUrls, ...blogUrls, ...comboUrls, ...jobUrls];
+      return [...listingUrls, ...staticUrls, ...fieldUrls, ...blogUrls, ...comboUrls, ...jobUrls];
     }
   } catch {
     /* DB erişilemezse statik kısmla devam et */

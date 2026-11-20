@@ -3,6 +3,7 @@ import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import JsonLd from '@/components/JsonLd';
+import AdPlacement from '@/components/ads/AdPlacement';
 import { articleLd, breadcrumbLd, faqLd, pageOpenGraph } from '@/lib/seo';
 import { FIELD_GUIDES } from '@/lib/meslekRehberi';
 import {
@@ -342,6 +343,7 @@ export default function MesemPage() {
           </ol>
         </section>
 
+        <AdPlacement route="/mesem" slot="mesem-mid-fluid" />
         {/* EĞİTİM MODELİ */}
         <section id="egitim-modeli" className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-6 sm:p-9">
           <h2 className="text-lg sm:text-xl font-black text-[#0A1931] flex items-center gap-2">
@@ -570,6 +572,7 @@ export default function MesemPage() {
         </section>
       </main>
 
+      <AdPlacement route="/mesem" slot="mesem-end-horizontal" />
       <SiteFooter note={`Son güncelleme: 19 Kasım 2026 · Kaynak: 3308 sayılı Kanun, MEB mevzuatı`} />
     </div>
   );

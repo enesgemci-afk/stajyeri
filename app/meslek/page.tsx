@@ -4,6 +4,7 @@ import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import { FIELD_GUIDES } from '@/lib/meslekRehberi';
 import { pageOpenGraph } from '@/lib/seo';
+import AdPlacement from '@/components/ads/AdPlacement';
 import { ArrowRight, BookOpen, Compass, GraduationCap, Wallet } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -103,6 +104,7 @@ export default function MeslekRehberiPage() {
           ))}
         </div>
 
+        <AdPlacement route="/meslek" slot="meslek-mid-fluid" />
         {/* Çapraz bağlantılar */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-12 max-w-4xl mx-auto">
           <Link
@@ -141,7 +143,8 @@ export default function MeslekRehberiPage() {
       </section>
 
       <footer>
-        <SiteFooter />
+        <AdPlacement route="/meslek" slot="meslek-end-horizontal" />
+      <SiteFooter />
       </footer>
     </div>
   );

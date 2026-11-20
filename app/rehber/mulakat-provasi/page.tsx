@@ -9,6 +9,7 @@ import {
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
+import AdPlacement from '@/components/ads/AdPlacement';
 import {
   Sparkles,
   ChevronRight,
@@ -219,6 +220,7 @@ export default function MulakatProvasiPage() {
           </section>
         )}
 
+        <AdPlacement route="/rehber/mulakat-provasi" slot="prova-mid-fluid" />
         {/* N+1. SONUÇ */}
         {step === Q_COUNT + 1 && (
           <section className="max-w-3xl mx-auto">
@@ -294,7 +296,8 @@ export default function MulakatProvasiPage() {
       </main>
 
       <footer>
-        <SiteFooter />
+        <AdPlacement route="/rehber/mulakat-provasi" slot="prova-end-horizontal" />
+      <SiteFooter />
       </footer>
     </div>
   );

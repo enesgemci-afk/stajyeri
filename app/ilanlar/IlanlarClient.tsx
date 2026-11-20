@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import { MESEM_FIELDS, UNIVERSITY_FIELDS, TURKEY_CITIES, PROGRAM_TYPES } from '@/lib/constants';
@@ -22,6 +22,8 @@ import {
   SlidersHorizontal,
 } from 'lucide-react';
 import JobRowCard from '@/components/JobRowCard';
+import JobFeedAd from '@/components/ads/JobFeedAd';
+import AdPlacement from '@/components/ads/AdPlacement';
 
 interface JobPost {
   id: string;
@@ -592,6 +594,7 @@ export default function IlanlarPage({ initialJobs = [] }: { initialJobs?: JobPos
             ))}
           </div>
         ) : sortedJobs.length === 0 ? (
+          <>
           <div className="bg-white p-12 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] text-center">
             <Building2 className="w-10 h-10 text-slate-300 mx-auto mb-2" />
             <p className="text-slate-700 font-bold text-sm">Seçtiğiniz kriterlere uygun ilan bulunamadı.</p>
@@ -608,16 +611,20 @@ export default function IlanlarPage({ initialJobs = [] }: { initialJobs?: JobPos
               </button>
             )}
           </div>
+          <AdPlacement route="/ilanlar" slot="jobs-empty-horizontal" />
+          </>
         ) : (
           <div className="space-y-4">
-            {sortedJobs.map((job) => (
+            {sortedJobs.map((job, index) => (
+              <Fragment key={job.id}>
               <JobRowCard
-                key={job.id}
                 job={job}
                 isFav={isLoggedIn && favIds.has(job.id)}
                 favBusy={favBusyId === job.id}
                 onToggleFav={toggleFav}
               />
+              <JobFeedAd route="/ilanlar" jobCount={sortedJobs.length} index={index} />
+              </Fragment>
             ))}
           </div>
         )}

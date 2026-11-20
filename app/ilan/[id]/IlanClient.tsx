@@ -9,6 +9,7 @@ import { ONYAZI_EXAMPLES } from '@/lib/onyaziExamples';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
+import AdPlacement from '@/components/ads/AdPlacement';
 import { CompanyAvatar } from '@/components/JobCard';
 import {
   Briefcase,
@@ -600,6 +601,7 @@ export default function IlanDetayPage({ initialJob = null }: { initialJob?: JobD
 
                 {/* İç bağlantılar: alan rehberi + şehir/alan listesi + ücret rehberi.
                     Bu blok sunucuda da üretilir (initialJob SSR) — tarama derinliği. */}
+                <AdPlacement route="/ilan/[id]" slot="job-detail-end-horizontal" />
                 <nav className="mt-6 pt-4 border-t border-slate-100 flex flex-wrap gap-2" aria-label="İlgili sayfalar">
                   <Link
                     href={`/meslek/${slugifyTr(job.field_name)}`}
@@ -956,6 +958,9 @@ export default function IlanDetayPage({ initialJob = null }: { initialJob?: JobD
                     </p>
                   </form>
                 )}
+              </div>
+              <div className="hidden lg:block">
+                <AdPlacement route="/ilan/[id]" slot="job-detail-sidebar-rectangle" />
               </div>
             </div>
           </div>

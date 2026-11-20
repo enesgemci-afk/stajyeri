@@ -1,9 +1,11 @@
 ﻿import type { Metadata } from 'next';
+import { Fragment } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import JsonLd from '@/components/JsonLd';
+import AdPlacement from '@/components/ads/AdPlacement';
 import { absoluteUrl, articleLd, breadcrumbLd } from '@/lib/seo';
 import { BLOG_POSTS, getPostBySlug, formatBlogDate } from '@/lib/blogYazilari';
 import { ArrowRight, BookOpen, Check, Route, Sparkles } from 'lucide-react';
@@ -52,6 +54,8 @@ export default async function BlogDetayPage({ params }: Props) {
   if (!post) notFound();
 
   const related = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 2);
+  const wordCount = post.blocks.reduce((total, block) => total + block.text.trim().split(/\s+/).length, 0);
+  const showInlineAd = wordCount >= 600;
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
@@ -73,7 +77,9 @@ export default async function BlogDetayPage({ params }: Props) {
       />
       <SiteHeader backHref="/blog" backLabel="Blog" />
 
-      <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-10">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-10">
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-8">
+          <div className="min-w-0">
         {/* Başlık */}
         <div className="text-center">
           <span className="text-4xl">{post.emoji}</span>
@@ -91,33 +97,40 @@ export default async function BlogDetayPage({ params }: Props) {
         {/* İçerik */}
         <article className="mt-8 bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] p-6 sm:p-9 space-y-4">
           {post.blocks.map((b, i) => {
-            if (b.type === 'h2')
+            const content = (() => {
+              if (b.type === 'h2')
+                return (
+                  <h2 className="text-base font-black text-[#0A1931] pt-2">
+                    {b.text}
+                  </h2>
+                );
+              if (b.type === 'li')
+                return (
+                  <p className="flex items-start gap-2 text-xs text-slate-700 leading-relaxed">
+                    <Check className="w-4 h-4 text-[#00A8B5] flex-shrink-0 mt-0.5" />
+                    {b.text}
+                  </p>
+                );
+              if (b.type === 'note')
+                return (
+                  <div className="bg-[#FF6B00]/10 border border-[#FF6B00]/20 rounded-2xl p-4 text-xs text-slate-700 leading-relaxed flex items-start gap-2">
+                    <Sparkles className="w-4 h-4 text-[#FF6B00] flex-shrink-0 mt-0.5" />
+                    {b.text}
+                  </div>
+                );
               return (
-                <h2 key={i} className="text-base font-black text-[#0A1931] pt-2">
-                  {b.text}
-                </h2>
-              );
-            if (b.type === 'li')
-              return (
-                <p key={i} className="flex items-start gap-2 text-xs text-slate-700 leading-relaxed">
-                  <Check className="w-4 h-4 text-[#00A8B5] flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-slate-700 leading-relaxed">
                   {b.text}
                 </p>
               );
-            if (b.type === 'note')
-              return (
-                <div
-                  key={i}
-                  className="bg-[#FF6B00]/10 border border-[#FF6B00]/20 rounded-2xl p-4 text-xs text-slate-700 leading-relaxed flex items-start gap-2"
-                >
-                  <Sparkles className="w-4 h-4 text-[#FF6B00] flex-shrink-0 mt-0.5" />
-                  {b.text}
-                </div>
-              );
+            })();
             return (
-              <p key={i} className="text-xs text-slate-700 leading-relaxed">
-                {b.text}
-              </p>
+              <Fragment key={i}>
+                {content}
+                {i === 1 && showInlineAd && (
+                  <AdPlacement route="/blog/[slug]" slot="blog-second-paragraph-fluid" />
+                )}
+              </Fragment>
             );
           })}
         </article>
@@ -174,6 +187,14 @@ export default async function BlogDetayPage({ params }: Props) {
             ))}
           </div>
         </section>
+        <AdPlacement route="/blog/[slug]" slot="blog-end-horizontal" />
+          </div>
+          <aside className="hidden lg:block">
+            <div className="sticky top-24">
+              <AdPlacement route="/blog/[slug]" slot="blog-sidebar-rectangle" />
+            </div>
+          </aside>
+        </div>
       </main>
 
       <footer>

@@ -11,6 +11,7 @@ import {
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
+import AdPlacement from '@/components/ads/AdPlacement';
 import {
   Sparkles,
   ChevronRight,
@@ -260,6 +261,7 @@ export default function AlanSecimPage() {
               ))}
             </div>
 
+            <AdPlacement route="/alan-secim" slot="alan-result-fluid" />
             {/* Seçilen alanlarla ilanlara git */}
             <div className="mt-8 bg-[#0A1931] rounded-3xl p-6 sm:p-8 text-center">
               <h3 className="text-sm font-black text-white">

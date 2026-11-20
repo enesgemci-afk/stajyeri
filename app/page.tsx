@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useEffect, useState } from 'react';
+import { type FormEvent, Fragment, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { MESEM_FIELDS, PROGRAM_TYPES, TURKEY_CITIES, programTypeLabel } from '@/lib/constants';
 import { BLOG_POSTS, formatBlogDate } from '@/lib/blogYazilari';
@@ -8,6 +8,8 @@ import { ShieldCheck } from 'lucide-react';
 import SiteFooter from '@/components/SiteFooter';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import JobFeedAd from '@/components/ads/JobFeedAd';
+import AdPlacement from '@/components/ads/AdPlacement';
 
 import { 
   Wrench, 
@@ -234,7 +236,7 @@ export default function HomePage() {
     )
   ).sort((a, b) => a.localeCompare(b, 'tr-TR'));
 
-  const featuredJobs = sortedJobs.slice(0, 6);
+  const featuredJobs = sortedJobs.slice(0, 12);
 
   // Öne çıkan işletmeler — aktif ilanlardan şirket bazlı gruplama (kariyer.net deseni)
   const topCompanies = (() => {
@@ -267,6 +269,31 @@ export default function HomePage() {
       window.history.replaceState(null, '', window.location.pathname + window.location.hash);
     }
   };
+
+  async function handleNewsletterSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const email = newsEmail.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setNewsMsg({ type: 'err', text: 'Geçerli bir e-posta gir.' });
+      return;
+    }
+    setNewsBusy(true);
+    setNewsMsg(null);
+    const { error } = await supabase
+      .from('newsletter_subscribers')
+      .insert({ email });
+    setNewsBusy(false);
+    if (error && /duplicate|unique/i.test(error.message)) {
+      setNewsMsg({ type: 'ok', text: 'Zaten abonisin — teşekkürler! ✓' });
+    } else if (error && /row-level security|does not exist/i.test(error.message)) {
+      setNewsMsg({ type: 'err', text: 'Şu an abonelik alınamıyor (veritabanı güncellemesi gerekli).' });
+    } else if (error) {
+      setNewsMsg({ type: 'err', text: 'Abonelik alınamadı, tekrar deneyin.' });
+    } else {
+      setNewsMsg({ type: 'ok', text: 'Abone oldun! Yeni ilanları kaçırma. ✓' });
+      setNewsEmail('');
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between font-sans">
@@ -668,14 +695,42 @@ export default function HomePage() {
             ))}
           </div>
         ) : filteredJobs.length === 0 ? (
-          <div className="bg-white p-12 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] text-center">
-            <Building2 className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-            <p className="text-slate-700 font-bold text-sm">Seçtiğiniz kriterlere uygun ilan bulunamadı.</p>
-            <p className="text-xs text-slate-400 mt-1">Farklı bir meslek alanı veya şehir seçerek tekrar deneyebilirsiniz.</p>
+          <>
+          <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] text-center">
+            <Mail className="w-9 h-9 text-[#00A8B5] mx-auto mb-3" />
+            <h2 className="font-display text-lg font-black text-[#0A1931]">Yeni ilanlar ekleniyor — haber listeme katıl</h2>
+            <p className="mt-2 text-xs text-slate-500">
+              Uygun ilanlar yayınlandığında e-postana gönderelim. Ücretsizdir; istediğin zaman ayrılabilirsin.
+            </p>
+            <form onSubmit={handleNewsletterSubmit} className="mx-auto mt-5 flex max-w-md flex-col gap-2 sm:flex-row">
+              <input
+                type="email"
+                value={newsEmail}
+                onChange={(e) => setNewsEmail(e.target.value)}
+                placeholder="e-posta adresin"
+                aria-label="E-posta adresin"
+                className="min-h-11 flex-1 rounded-xl border border-slate-200 px-4 text-xs outline-none focus:border-[#00A8B5] focus:ring-2 focus:ring-[#00A8B5]/20"
+              />
+              <button
+                type="submit"
+                disabled={newsBusy}
+                className="min-h-11 rounded-xl bg-[#00A8B5] px-5 text-xs font-black text-white transition hover:bg-[#00929E] disabled:opacity-50"
+              >
+                {newsBusy ? 'Gönderiliyor…' : 'Haber Ver'}
+              </button>
+            </form>
+            {newsMsg && (
+              <p className={`mt-3 text-[11px] font-bold ${newsMsg.type === 'ok' ? 'text-emerald-600' : 'text-red-500'}`} role="status">
+                {newsMsg.text}
+              </p>
+            )}
           </div>
+          <AdPlacement route="/" slot="home-empty-horizontal" />
+          </>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {featuredJobs.map((job) => (
+            {featuredJobs.map((job, index) => (
+              <Fragment key={job.id}>
               <div
                 key={job.id}
                 className="bg-white p-6 rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] hover:shadow-[0_18px_50px_rgba(0,168,181,0.16)] hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between gap-5 group"
@@ -754,6 +809,8 @@ export default function HomePage() {
                   </Link>
                 </div>
               </div>
+              <JobFeedAd route="/" jobCount={featuredJobs.length} index={index} />
+              </Fragment>
             ))}
           </div>
         )}
@@ -1017,33 +1074,7 @@ export default function HomePage() {
           <p className="text-[11px] text-slate-500 mt-1">
             Alanına uygun yeni ilanlar ve rehberler e-postana gelsin.
           </p>
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              const email = newsEmail.trim().toLowerCase();
-              if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                setNewsMsg({ type: 'err', text: 'Geçerli bir e-posta gir.' });
-                return;
-              }
-              setNewsBusy(true);
-              setNewsMsg(null);
-              const { error } = await supabase
-                .from('newsletter_subscribers')
-                .insert({ email });
-              setNewsBusy(false);
-              if (error && /duplicate|unique/i.test(error.message)) {
-                setNewsMsg({ type: 'ok', text: 'Zaten abonisin — teşekkürler! ✓' });
-              } else if (error && /row-level security|does not exist/i.test(error.message)) {
-                setNewsMsg({ type: 'err', text: 'Şu an abonelik alınamıyor (veritabanı güncellemesi gerekli).' });
-              } else if (error) {
-                setNewsMsg({ type: 'err', text: 'Abonelik alınamadı, tekrar deneyin.' });
-              } else {
-                setNewsMsg({ type: 'ok', text: 'Abone oldun! Yeni ilanları kaçırma. ✓' });
-                setNewsEmail('');
-              }
-            }}
-            className="mt-3 flex gap-2"
-          >
+          <form onSubmit={handleNewsletterSubmit} className="mt-3 flex gap-2">
             <input
               type="email"
               value={newsEmail}

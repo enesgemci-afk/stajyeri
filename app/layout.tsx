@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import JsonLd from "@/components/JsonLd";
+import AdSenseScript from "@/components/ads/AdSenseScript";
+import CookieConsent from "@/components/CookieConsent";
 import { SITE, SITE_URL, organizationLd, websiteLd } from "@/lib/seo";
 
 // Google Search Console / Yandex doğrulama kodları ortam değişkeninden okunur.
@@ -90,12 +92,8 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <head>
-        {/* Google AdSense — reklam scripti (Google talimatı: head içine, async) */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9045371456495609"
-          crossOrigin="anonymous"
-        ></script>
+        {/* AdSense loader yalnızca NEXT_PUBLIC_ADS_ENABLED=true ve izin varsa yüklenir. */}
+        <AdSenseScript />
         {/* Font optimizasyonu — UI/UX Pro Max: performans (preconnect) */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -120,6 +118,7 @@ export default function RootLayout({
           İçeriğe atla
         </a>
         <div id="ana-icerik">{children}</div>
+        <CookieConsent />
       </body>
     </html>
   );

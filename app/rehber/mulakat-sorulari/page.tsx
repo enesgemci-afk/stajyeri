@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
+import AdPlacement from '@/components/ads/AdPlacement';
 import { MESEM_FIELDS } from '@/lib/constants';
 import {
   GENERAL_QUESTIONS,
@@ -84,6 +85,7 @@ export default function MulakatSorulariPage() {
             ))}
           </div>
 
+          <AdPlacement route="/rehber/mulakat-sorulari" slot="sorular-mid-fluid" />
           {/* Alan bazlı sorular */}
           <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(10,25,49,0.07)] shadow-sm p-6 sm:p-7">
             <h2 className="text-sm font-black text-[#0A1931] mb-1 flex items-center gap-2">
@@ -154,7 +156,8 @@ export default function MulakatSorulariPage() {
       </main>
 
       <footer>
-        <SiteFooter />
+            <AdPlacement route="/rehber/mulakat-sorulari" slot="sorular-end-horizontal" />
+      <SiteFooter />
       </footer>
     </div>
   );

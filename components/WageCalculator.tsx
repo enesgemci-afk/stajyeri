@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Calculator } from 'lucide-react';
+import AdPlacement from '@/components/ads/AdPlacement';
 
 const fmt = (n: number) => n.toLocaleString('tr-TR', { maximumFractionDigits: 0 });
 
@@ -102,6 +103,9 @@ export default function WageCalculator() {
             meslek hastalığı) MEB/Hazine tarafından karşılanır.
           </p>
         </div>
+      )}
+      {base > 0 && (
+        <AdPlacement route="/staj-ucretleri" slot="wage-result-fluid" />
       )}
     </div>
   );

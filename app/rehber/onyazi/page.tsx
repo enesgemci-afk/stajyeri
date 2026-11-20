@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
+import AdPlacement from '@/components/ads/AdPlacement';
 import { ONYAZI_EXAMPLES } from '@/lib/onyaziExamples';
 import {
   FileText,
@@ -73,6 +74,7 @@ export default function OnyaziRehberPage() {
             </ul>
           </div>
 
+          <AdPlacement route="/rehber/onyazi" slot="onyazi-mid-fluid" />
           {/* Şablonlar */}
           <h2 className="text-sm font-black text-[#0A1931] mb-3 flex items-center gap-2">
             <FileText className="w-4 h-4 text-[#00A8B5]" /> Hazır Şablonlar
@@ -137,7 +139,8 @@ export default function OnyaziRehberPage() {
       </main>
 
       <footer>
-        <SiteFooter />
+            <AdPlacement route="/rehber/onyazi" slot="onyazi-end-horizontal" />
+      <SiteFooter />
       </footer>
     </div>
   );

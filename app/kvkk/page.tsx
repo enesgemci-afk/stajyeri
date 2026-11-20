@@ -75,6 +75,41 @@ const SECTIONS: { icon: typeof Database; title: string; body: React.ReactNode }[
       </ul>
     ),
   },
+  {
+    icon: ShieldCheck,
+    title: '6. Çerezler ve Reklam Teknolojileri',
+    body: (
+      <div className="space-y-2">
+        <p>
+          Zorunlu çerezler ve benzeri yerel depolama kayıtları oturum, güvenlik ve tercihlerinizi
+          hatırlamak için kullanılır. Reklam tercihiniz tarayıcınızın yerel depolamasında
+          <code> stajyeri_ads_consent</code> anahtarıyla saklanır; Kabul/Reddet seçiminizi dilediğiniz
+          zaman değiştirebilirsiniz.
+        </p>
+        <p>
+          Reklam gösterimi açıksa ve siz izin verdiyseniz Google AdSense ile DoubleClick çerezleri
+          kullanılabilir. Google ve iş ortakları, reklamları kişiselleştirmek ve ölçümlemek için
+          çerez/cihaz bilgilerini kendi politikaları kapsamında işleyebilir. Reddetmeniz hâlinde
+          reklam kodu ve reklam alanları yüklenmez.
+        </p>
+        <p>
+          Ayrıntılar için{' '}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer" className="font-bold text-[#00A8B5] hover:underline">
+            Google Gizlilik Politikası
+          </a>
+          ,{' '}
+          <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noreferrer" className="font-bold text-[#00A8B5] hover:underline">
+            Google Reklam Teknolojileri
+          </a>{' '}
+          ve{' '}
+          <a href="https://adssettings.google.com" target="_blank" rel="noreferrer" className="font-bold text-[#00A8B5] hover:underline">
+            Google Reklam Ayarları
+          </a>
+          .
+        </p>
+      </div>
+    ),
+  },
 ];
 
 export default function KvkkPage() {

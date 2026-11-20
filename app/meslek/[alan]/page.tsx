@@ -2,6 +2,7 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import JsonLd from '@/components/JsonLd';
+import AdPlacement from '@/components/ads/AdPlacement';
 import { breadcrumbLd, pageOpenGraph } from '@/lib/seo';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
@@ -138,6 +139,7 @@ export default async function MeslekDetayPage({ params }: { params: Promise<{ al
             </div>
           </section>
 
+          <AdPlacement route="/meslek/[alan]" slot="meslek-alan-mid-fluid" />
           <FieldJobs field={guide.name} />
 
           <section className="mt-10">
@@ -179,6 +181,7 @@ export default async function MeslekDetayPage({ params }: { params: Promise<{ al
         </aside>
       </div>
 
+      <AdPlacement route="/meslek/[alan]" slot="meslek-alan-end-horizontal" />
       <footer><SiteFooter /></footer>
     </div>
   );

@@ -1,6 +1,7 @@
 ﻿import Link from 'next/link';
 import type { Metadata } from 'next';
 import JsonLd from '@/components/JsonLd';
+import AdPlacement from '@/components/ads/AdPlacement';
 import { breadcrumbLd, faqLd, pageOpenGraph } from '@/lib/seo';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
@@ -236,6 +237,7 @@ export default function ImepPage() {
         </div>
       </section>
 
+      <AdPlacement route="/imep" slot="imep-mid-fluid" />
       {/* Eğitim Süreci */}
       <section className="bg-white border-y border-slate-200 py-14 px-4">
         <div className="max-w-4xl mx-auto">
@@ -321,7 +323,8 @@ export default function ImepPage() {
       </section>
 
       <footer>
-        <SiteFooter />
+        <AdPlacement route="/imep" slot="imep-end-horizontal" />
+      <SiteFooter />
       </footer>
     </div>
   );

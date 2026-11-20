@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import JsonLd from '@/components/JsonLd';
 import { SITE_URL, absoluteUrl, breadcrumbLd } from '@/lib/seo';
 import { getJobForPage } from './job';
+import { getActiveJobCount } from '@/lib/jobStats';
 
 // İlan başına SEO meta (sayfa istemci bileşeni olduğu için layout üstlenir)
 export async function generateMetadata({
@@ -11,9 +12,9 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const job = await getJobForPage(id);
+  const [job, activeCount] = await Promise.all([getJobForPage(id), getActiveJobCount()]);
   if (!job) {
-    return { title: 'İlan Bulunamadı', robots: { index: false, follow: false } };
+    return { title: 'İlan Bulunamadı', robots: { index: false, follow: activeCount === 0 } };
   }
   const city = job.city ? ` — ${job.city}` : '';
   const desc = (job.description ?? '').replace(/\s+/g, ' ').trim().slice(0, 155);
@@ -40,7 +41,11 @@ export async function generateMetadata({
         },
       ],
     },
-    robots: job.is_active ? undefined : { index: false, follow: false },
+    robots: activeCount === 0
+      ? { index: false, follow: true }
+      : job.is_active
+        ? undefined
+        : { index: false, follow: false },
   };
 }
 

@@ -144,11 +144,23 @@ export default function HakkimizdaPage() {
             <div className="mt-2 bg-[#F0FBFC] border border-[#00A8B5]/20 rounded-2xl p-5">
               <p className="text-xs font-black text-[#0A1931]">Bize ulaşın</p>
               <p className="text-[11px] text-slate-600 leading-relaxed mt-1">
-                Görüş, hata bildirimi ve iş birliği için{' '}
+                Stajyeri.net, MESEM, meslek lisesi ve üniversite öğrencilerinin güvenli ve ücretli
+                staj fırsatlarına ulaşmasını kolaylaştırmak için kuruldu. Amacımız, öğrencileri
+                usta öğretici bilgisi doğrulanmış işletmelerle buluştururken başvuru sürecini
+                anlaşılır, hızlı ve herkes için ücretsiz tutmak.
+              </p>
+              <p className="text-[11px] text-slate-600 leading-relaxed mt-2">
+                Küçük ve orta ölçekli işletmelerin de stajyer bulmasını destekliyoruz: ücretsiz ilan
+                yayını, aday takibi ve İMEP/3308 rehberleriyle işverenlerin mevzuata uygun karar
+                vermesine yardımcı oluyoruz. Platform, 4904 sayılı kanun gereği öğrencilerden iş
+                bulma karşılığında ücret almaz.
+              </p>
+              <p className="text-[11px] text-slate-600 leading-relaxed mt-2">
+                İletişim için <strong>destek@stajyeri.net</strong> adresine yazabilir veya{' '}
                 <Link href="/iletisim" className="text-[#00A8B5] font-bold hover:underline">
                   iletişim sayfamızı
                 </Link>{' '}
-                kullanabilirsiniz.
+                kullanabilirsiniz. Hata bildirimleri ve işletme doğrulama talepleri bu kanaldan yanıtlanır.
               </p>
               <div className="flex flex-wrap gap-2 mt-4">
                 <Link
