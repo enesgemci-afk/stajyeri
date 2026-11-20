@@ -17,7 +17,6 @@ MESEM çırak adayları, meslek lisesi ve üniversite öğrencileriyle stajyer a
 - **Staj Patikası** (`/patika`) — çıraktan ustaya kişisel yol haritası (MESEM + MTAL rotaları)
 - **CV Oluşturucu** (`/cv-olustur`) + **CV Örnekleri** (`/cv-ornekleri`) — alan bazlı şablonlar, PDF çıktı
 - **Mülakat hazırlığı** — soru bankası (`/rehber/mulakat-sorulari`) + kronometreli prova (`/rehber/mulakat-provasi`)
-- **Hesaplama araçları** (`/hesaplama-araclari`) — brüt-net, fazla mesai, yıllık izin, kıdem/ihbar
 - **Staj ücretleri** (`/staj-ucretleri`) — 3308 taban ücretler + hesaplayıcı
 - **Üniversite stajı altyapısı** — 24 bölüm, zorunlu/gönüllü staj filtreleri, SGK rehberi
 - Başvuru takibi (`/basvurularim`), favoriler + **iş alarmı** (`/favorilerim`), bildirim merkezi (`/bildirimler`)

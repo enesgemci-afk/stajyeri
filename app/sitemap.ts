@@ -29,7 +29,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/alan-secim`, lastModified: updated, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE_URL}/patika`, lastModified: updated, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE_URL}/cv-ornekleri`, lastModified: updated, changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${SITE_URL}/hesaplama-araclari`, lastModified: updated, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${SITE_URL}/blog`, lastModified: updated, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/rehber/mulakat-provasi`, lastModified: updated, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE_URL}/cv-olustur`, lastModified: updated, changeFrequency: 'monthly', priority: 0.7 },

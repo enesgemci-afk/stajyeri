@@ -35,7 +35,6 @@ const COLS: { title: string; chip: 'teal' | 'orange' | 'violet'; links: { href: 
     chip: 'violet',
     links: [
       { href: '/staj-ucretleri', label: 'Staj Ücretleri (3308)' },
-      { href: '/hesaplama-araclari', label: 'Hesaplama Araçları' },
       { href: '/imep', label: 'İMEP Rehberi' },
       { href: '/tesvik-rehberi', label: 'Teşvik Rehberi' },
       { href: '/isletmeler', label: 'İşletmeler Rehberi' },

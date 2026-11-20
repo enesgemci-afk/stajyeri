@@ -41,7 +41,6 @@ const FILES = [
 const HERO_FILES = [
   'app/blog/page.tsx',
   'app/cv-ornekleri/page.tsx',
-  'app/hesaplama-araclari/page.tsx',
   'app/meslek/page.tsx',
   'app/meslek-rehberi/page.tsx',
   'app/staj-ucretleri/page.tsx',

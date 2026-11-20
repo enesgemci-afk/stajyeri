@@ -68,7 +68,6 @@ function getMenu(role: HeaderRole): NavGroup[] {
         { href: '/patika', label: 'Staj Patikası', desc: 'Çıraktan ustaya kişisel yol haritan' },
         { href: '/alan-secim', label: 'Alan Seçim Testi', desc: '9. sınıflar için 6 soruluk rehber' },
         { href: '/staj-ucretleri', label: 'Staj Ücretleri', desc: '3308 ücret hakları + hesaplayıcı' },
-        { href: '/hesaplama-araclari', label: 'Hesaplama Araçları', desc: 'Brüt-net, mesai, izin, tazminat' },
         { href: '/blog', label: 'Kariyer Blogu', desc: 'Ücret, belge ve kariyer rehberleri' },
       ],
     });

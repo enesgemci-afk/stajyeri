@@ -879,13 +879,6 @@ export default function HomePage() {
               desc: 'Başvurunu güçlendiren hazır ön yazı şablonları ve yazım rehberi.',
             },
             {
-              href: '/hesaplama-araclari',
-              Icon: Wallet,
-              color: '#0EA5E9',
-              title: 'Hesaplama Araçları',
-              desc: 'Brüt-net maaş, fazla mesai, yıllık izin ve tazminat hesaplayıcıları.',
-            },
-            {
               href: '/blog',
               Icon: BookOpen,
               color: '#10B981',
