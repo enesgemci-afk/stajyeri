@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import JsonLd from "@/components/JsonLd";
 import AdSenseScript from "@/components/ads/AdSenseScript";
@@ -9,6 +10,22 @@ import { SITE, SITE_URL, organizationLd, websiteLd } from "@/lib/seo";
 // Vercel > Settings > Environment Variables: GOOGLE_SITE_VERIFICATION, YANDEX_VERIFICATION
 const googleVerification = process.env.GOOGLE_SITE_VERIFICATION;
 const yandexVerification = process.env.YANDEX_VERIFICATION;
+
+// Mobil LCP: fontlar build sırasında self-host edilir, harici Google Fonts isteği yok.
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin-ext"],
+  weight: "variable",
+  variable: "--font-jakarta",
+  display: "swap",
+  preload: false,
+});
+const grotesk = Space_Grotesk({
+  subsets: ["latin-ext"],
+  weight: "variable",
+  variable: "--font-display",
+  display: "swap",
+  preload: false,
+});
 
 export const metadata: Metadata = {
   // metadataBase: tüm göreli canonical/OG URL'lerinin mutlak hale gelmesini sağlar
@@ -94,20 +111,9 @@ export default function RootLayout({
       <head>
         {/* AdSense loader yalnızca NEXT_PUBLIC_ADS_ENABLED=true ve izin varsa yüklenir. */}
         <AdSenseScript />
-        {/* Font optimizasyonu — UI/UX Pro Max: performans (preconnect) */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap"
-          rel="stylesheet"
-        />
-        <style>{`
-          * {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-          }
-        `}</style>
+        {/* Fontlar next/font ile self-host edilir; preload ve display=swap aktif. */}
       </head>
-      <body className="bg-[#F8FAFC] text-slate-800 antialiased m-0 p-0">
+      <body className={`${jakarta.variable} ${grotesk.variable} bg-[#F8FAFC] text-slate-800 antialiased m-0 p-0`}>
         {/* Site geneli yapılandırılmış veri: marka + arama kutusu */}
         <JsonLd data={[organizationLd(), websiteLd()]} />
         {/* Klavye kullanıcıları için içerik atlama bağlantısı (a11y: skip-links) */}

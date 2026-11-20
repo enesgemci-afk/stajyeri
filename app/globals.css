@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-jakarta);
+}
+
+/* next/font self-host: body fontu değişkenle gelir, fallback metrikleri korunur. */
+body {
+  font-family: var(--font-jakarta), sans-serif;
+}
+
+/* next/font aileleri: body Plus Jakarta Sans, display Space Grotesk. */
+
 /* CV Oluşturucu yazdırma stilleri: yalnızca CV önizlemesi kağıda/PDF'e geçer */
 @media print {
   body {
@@ -50,5 +61,5 @@
 /* 3) Display font — DESIGN.md Bölüm 2: Space Grotesk
       (hero başlıkları, panel başlıkları, KPI rakamları için). */
 .font-display {
-  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-display), var(--font-jakarta), sans-serif;
 }
