@@ -62,8 +62,8 @@ export default function SiteFooter({ note }: { note?: string }) {
             <Image
               src="/logo-white.png"
               alt="Stajyeri.net — MESEM ve meslek lisesi staj platformu"
-              width={160}
-              height={53}
+              width={200}
+              height={50}
               className="h-10 w-auto object-contain"
             />
             <p className="mt-4 text-xs text-slate-400 leading-relaxed max-w-xs">
