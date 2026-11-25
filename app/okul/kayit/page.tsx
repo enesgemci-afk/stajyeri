@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+import { notifyNewUser } from '@/lib/notifyNewUser';
 import { TURKEY_CITIES } from '@/lib/constants';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
@@ -53,6 +54,17 @@ export default function OkulKayitPage() {
         });
       if (schoolError) throw schoolError;
 
+      void notifyNewUser({
+        userId,
+        role: 'school',
+        fullName: coordinatorName,
+        email,
+        accessToken: authData.session?.access_token,
+        schoolName,
+        coordinatorTitle,
+        city,
+        district,
+      });
       router.push('/okul');
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : '';

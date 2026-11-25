@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
+import { notifyNewUser } from '@/lib/notifyNewUser'
 import { MESEM_FIELDS } from '@/lib/constants'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
@@ -88,6 +89,22 @@ export default function OgrenciKayit() {
     }
 
     // Doğrudan ana sayfaya yönlendir
+    if (!userId) {
+      setError('Kullanıcı hesabı oluşturulamadı.')
+      setLoading(false)
+      return
+    }
+
+    void notifyNewUser({
+      userId,
+      role: 'student',
+      fullName,
+      email,
+      accessToken: data.session?.access_token,
+      field,
+      educationLevel,
+      schoolName,
+    })
     router.push('/panel')
   }
 

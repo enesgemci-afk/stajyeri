@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+import { notifyNewUser } from '@/lib/notifyNewUser';
 import { MESEM_FIELDS, TURKEY_CITIES } from '@/lib/constants';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
@@ -103,6 +104,16 @@ export default function KayitPage() {
           });
 
         if (stError) throw stError;
+        void notifyNewUser({
+          userId,
+          role: 'student',
+          fullName,
+          email,
+          accessToken: authData.session?.access_token,
+          field: studentField,
+          educationLevel,
+          schoolName,
+        });
         router.push('/panel');
       } else {
         const { error: compError } = await supabase
@@ -116,6 +127,16 @@ export default function KayitPage() {
           });
 
         if (compError) throw compError;
+        void notifyNewUser({
+          userId,
+          role: 'employer',
+          fullName,
+          email,
+          accessToken: authData.session?.access_token,
+          companyName,
+          city,
+          district,
+        });
         router.push('/isveren/panel');
       }
 

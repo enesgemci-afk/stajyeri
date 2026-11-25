@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+import { notifyNewUser } from '@/lib/notifyNewUser';
 import { TURKEY_CITIES } from '@/lib/constants';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
@@ -71,6 +72,16 @@ export default function IsverenKayitPage() {
 
       if (compError) throw compError;
 
+      void notifyNewUser({
+        userId,
+        role: 'employer',
+        fullName: authorizedName,
+        email,
+        accessToken: authData.session?.access_token,
+        companyName,
+        city,
+        district,
+      });
       router.push('/isveren/panel');
     } catch (err: any) {
       const msg = err?.message || '';
